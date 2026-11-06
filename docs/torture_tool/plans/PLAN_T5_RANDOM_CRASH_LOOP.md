@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T5**  
 > Component: Crash Scheduler, Iteration Lifecycle Coordinator, Mid-Flight Kill Injection  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/07_RANDOM_CRASH_INJECTION.md`, `docs/torture_tool/08_SEEDS_AND_REPRODUCTION.md`, `docs/torture_tool/10_TORTURE_TEST_MODES.md`
 
 ---
@@ -94,8 +94,8 @@ Construct the end-to-end iteration crash loop that repeatedly executes the full 
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Complete 100 consecutive automated crash iterations without harness crashes or deadlocks.
-- [ ] Log proves kills occurred while operations were actively in-flight (`in_flight > 0`).
-- [ ] Post-recovery `kvdb check` and `kvdb dump` executed on every iteration.
-- [ ] Ctrl+C cleanly terminates the loop and all background threads.
+- [x] Complete 100 consecutive automated crash iterations without harness crashes or deadlocks.
+- [x] Log proves kills occurred while operations were actively in-flight (`in_flight > 0`).
+- [x] Post-recovery `kvdb check` and `kvdb dump` executed on every iteration.
+- [x] Ctrl+C cleanly terminates the loop and all background threads.
 

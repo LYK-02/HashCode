@@ -364,3 +364,14 @@ Implement Phase T4 as outlined in `docs/torture_tool/plans/PLAN_T4_DISPATCHER_AN
 
 ---
 
+### Prompt (2026-11-06 18:07:49)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Implement Phase T5 using `docs/torture_tool/plans/PLAN_T5_RANDOM_CRASH_LOOP.md`. Build the complete crash-injection loop with seeded kill timing, concurrent in-flight operations, process recovery, and post-crash consistency checks against the independent oracle. Test repeated crash scenarios and edge cases, fix all failures, and update the checklist. Keep the implementation within T5; don't start T6.
+```
+
+---
+

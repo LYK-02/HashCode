@@ -288,7 +288,7 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 | T2 Oracle | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_oracle.py` | None |
 | T3 Process manager | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_process.py` | None |
 | T4 Workers | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_concurrency.py` | None |
-| T5 Random kill | NOT STARTED | — | — | — |
+| T5 Random kill | COMPLETED | — | 3 passing unit tests in `torture_tool/tests/test_runner.py` | None |
 | T6 Verification | NOT STARTED | — | — | — |
 | T7 Large workloads | NOT STARTED | — | — | — |
 | T8 Targeted modes | NOT STARTED | — | — | — |

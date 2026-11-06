@@ -418,3 +418,11 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-06 18:07:49] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T5 using `docs/torture_tool/plans/PLAN_T5_RANDOM_CRASH_LOOP.md`. Build the complete crash-injection loop with seeded kill timing, concurrent in-flight operations, process recovery, and post-crash consistency checks against the independent oracle. Test repeated crash scenarios and edge cases, fix all failures, and update the checklist. Keep the implementation within T5; don't start T6.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
