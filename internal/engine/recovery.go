@@ -79,7 +79,7 @@ func RecoverLog(dataFile *os.File, fileSize uint64) (*RecoveryResult, error) {
 			}
 			if hasAhead {
 				// Middle-of-file corruption: fail closed immediately!
-				return nil, err
+				return nil, fmt.Errorf("%w: %w", format.ErrCorruptFrameHeader, err)
 			}
 			// Corrupt frame header at tail: truncate torn tail and sync
 			if err := repairTornTail(dataFile, offset, fileSize, err.Error()); err != nil {

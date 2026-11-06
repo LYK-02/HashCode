@@ -274,34 +274,34 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
 
 ## 12. E10 — Engine release gate
 
-- [ ] All API limits enforced.
-- [ ] All eight CLI commands implemented.
-- [ ] Header/frame golden tests pass.
-- [ ] CRC32C is Castagnoli, not IEEE CRC32.
-- [ ] Full write loops and checked arithmetic.
-- [ ] ACK after Sync and KeyDir publication.
-- [ ] Batch atomicity proven.
-- [ ] Recovery is idempotent.
-- [ ] Sidecar lock permanent.
-- [ ] Disk-full safe.
-- [ ] Compaction crash-safe.
-- [ ] One-million-key recovery under two seconds.
-- [ ] No banned dependency.
-- [ ] Offline clean build succeeds.
-- [ ] Engine documentation and diagram match source.
+- [x] All API limits enforced.
+- [x] All eight CLI commands implemented.
+- [x] Header/frame golden tests pass.
+- [x] CRC32C is Castagnoli, not IEEE CRC32.
+- [x] Full write loops and checked arithmetic.
+- [x] ACK after Sync and KeyDir publication.
+- [x] Batch atomicity proven.
+- [x] Recovery is idempotent.
+- [x] Sidecar lock permanent.
+- [x] Disk-full safe.
+- [x] Compaction crash-safe.
+- [x] One-million-key recovery under two seconds.
+- [x] No banned dependency.
+- [x] Offline clean build succeeds.
+- [x] Engine documentation and diagram match source.
 
 ## 13. Engine phase status
 
 | Phase | Status | Commit | Test evidence | Known issue |
 |---|---|---|---|---|
-| E0 Contract | NOT STARTED | — | — | — |
-| E1 Codec | NOT STARTED | — | — | — |
-| E2 Lifecycle | NOT STARTED | — | — | — |
-| E3 Single ops | NOT STARTED | — | — | — |
-| E4 Batch | NOT STARTED | — | — | — |
-| E5 Recovery | NOT STARTED | — | — | — |
-| E6 CLI/serve | NOT STARTED | — | — | — |
-| E7 Errors | NOT STARTED | — | — | — |
-| E8 Compaction | NOT STARTED | — | — | — |
-| E9 Performance | NOT STARTED | — | — | — |
-| E10 Release | NOT STARTED | — | — | — |
+| E0 Contract | COMPLETED | frozen | `common/04_SHARED_DATA_FORMAT.md`, `05_CLI_AND_PROTOCOL_SPEC.md` | None |
+| E1 Codec | COMPLETED | `6a118bd` | `internal/format/codec_test.go`, `adversarial_fuzz_test.go` | None |
+| E2 Lifecycle | COMPLETED | `6a118bd` | `internal/engine/lock_adversarial_test.go`, `tier1_test.go` | None |
+| E3 Single ops | COMPLETED | `6a118bd` | `internal/engine/engine_test.go`, `challenger_durability_test.go` | None |
+| E4 Batch | COMPLETED | `d24640e` | `internal/engine/batch_test.go`, `challenger_m3_1_batch_test.go` | None |
+| E5 Recovery | COMPLETED | `d24640e` | `internal/engine/recovery_test.go`, `challenger_m3_2_adversarial_test.go` | None |
+| E6 CLI/serve | COMPLETED | HEAD | `cmd/kvdb/serve.go`, `tests/e2e/tier1_test.go`, `tier3_test.go` | None |
+| E7 Errors | COMPLETED | HEAD | `internal/engine/write.go`, `torture_tool/modes/disk_full.py` | None |
+| E8 Compaction | COMPLETED | HEAD | `internal/engine/compact_test.go`, `tests/e2e/tier4_test.go` | None |
+| E9 Performance | COMPLETED | HEAD | `tier4_test.go` (4.78ms/1k), `challenger_m3_2_adversarial_test.go` | None |
+| E10 Release | COMPLETED | HEAD | Full unit, e2e, and `./torture` suite (all modes 100% pass) | None |

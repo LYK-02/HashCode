@@ -11,18 +11,18 @@ The following table documents the critical failure boundaries in the engine's wr
 
 | # | Exact Location / Function | Physical Disk State at Crash | Action Taken by `open()` on Next Recovery |
 | :-: | :--- | :--- | :--- |
-| **1** | `storage/log.go:WriteFrame` before `pwrite` completes | Previous committed log intact; 0 or partial bytes in OS buffer; uncommitted | Scanner validates preceding valid frame; stops at EOF; partial uncommitted bytes truncated. |
-| **2** | `storage/log.go:WriteFrame` during 1MB payload write | Partial record bytes on disk; Trailer CRC32C missing; no ACK sent | Scanner detects missing/invalid Trailer CRC at EOF; safely truncates file to `valid_eof`. Key absent. |
-| **3** | `storage/log.go:WriteFrame` after `pwrite` but before `Sync()` | Entire UABE frame in volatile OS page cache; not yet fsynced to platter | If bytes persisted, valid CRC loads key; if dropped, file truncated to last fsync. Zero corruption. |
-| **4** | `storage/log.go:WriteFrame` after `Sync()` returns before `ACK` | UABE frame is 100% durable on disk media; caller did not receive ACK | Scanner verifies valid Frame and Trailer CRC; applies key to `KeyDir`. Acknowledged or unacknowledged write survives durably. |
-| **5** | `engine/engine.go:Delete` after tombstone write before `Sync()` | Tombstone frame in OS buffer; old value on disk | Unacknowledged delete; if dropped on crash, old value remains visible; if durable, key absent. Never corrupt. |
-| **6** | `engine/engine.go:Batch` after 5 of 10 operations encoded | Frame in userspace RAM; 0 bytes written to disk | Entire batch absent; previous committed state remains authoritative. |
-| **7** | `compaction/compact.go:Run` during temp file rewrite | Incomplete `<path>.compact.tmp` on disk; original database untouched | Original file is authoritative. `open()` detects orphan `.compact.tmp` and unlinks it. |
-| **8** | `compaction/compact.go:Run` after temp `Sync()` before `Rename` | `<path>.compact.tmp` fully synced to disk; original database untouched | `Rename` not reached; original database file remains authoritative; orphan temp unlinked. |
-| **9** | `compaction/compact.go:Swap` during `os.Rename` syscall | Filesystem directory inode update in progress | Atomic rename: directory points either to old or new file; both are fully synced and complete. |
-| **10** | `compaction/compact.go:Swap` after `Rename` before directory `fsync` | New file authoritative; directory metadata dirty in VFS cache | On ext4/XFS, new file opens; if metadata reverted on power loss, old file opens. Both are consistent. |
-| **11** | `recovery/recover.go:ReplayLog` during tail truncation `os.Truncate` | Database file truncated halfway through torn tail | Replay is idempotent; next `open()` re-scans from byte 0 to last valid frame and completes truncation. |
-| **12** | `storage/log.go:CheckQuota` on `--max-bytes` violation | Write aborted before I/O; `valid_eof` unchanged | No bytes written; `ErrDiskFull` returned; file remains readable, uncorrupted, and recoverable. |
+| **1** | `internal/engine/write.go:WriteFrame` before `WriteAt` completes | Previous committed log intact; 0 or partial bytes in OS buffer; uncommitted | `RecoverLog` validates preceding valid frame; stops at EOF; partial uncommitted bytes truncated. |
+| **2** | `internal/engine/write.go:WriteFrame` during 1MB payload write | Partial record bytes on disk; Trailer CRC32C missing; no ACK sent | `RecoverLog` detects missing/invalid Trailer CRC at EOF; safely truncates file to `valid_eof`. Key absent. |
+| **3** | `internal/engine/write.go:WriteFrame` after `WriteAt` but before `Sync()` | Entire UABE frame in volatile OS page cache; not yet fsynced to platter | If bytes persisted, valid CRC loads key; if dropped, file truncated to last fsync. Zero corruption. |
+| **4** | `internal/engine/write.go:WriteFrame` after `Sync()` returns before `ACK` | UABE frame is 100% durable on disk media; caller did not receive ACK | `RecoverLog` verifies valid Frame and Trailer CRC; applies key to `KeyDir`. Acknowledged or unacknowledged write survives durably. |
+| **5** | `internal/engine/engine.go:Delete` after tombstone write before `Sync()` | Tombstone frame in OS buffer; old value on disk | Unacknowledged delete; if dropped on crash, old value remains visible; if durable, key absent. Never corrupt. |
+| **6** | `internal/engine/batch.go:Batch` after 5 of 10 operations encoded | Frame in userspace RAM; 0 bytes written to disk | Entire batch absent; previous committed state remains authoritative. |
+| **7** | `internal/engine/compact.go:Compact` during temp file rewrite | Incomplete `<path>.compact.tmp` on disk; original database untouched | Original file is authoritative. `open()` detects orphan `.compact.tmp` and unlinks it. |
+| **8** | `internal/engine/compact.go:Compact` after temp `Sync()` before `Rename` | `<path>.compact.tmp` fully synced to disk; original database untouched | `Rename` not reached; original database file remains authoritative; orphan temp unlinked. |
+| **9** | `internal/engine/compact.go:Compact` during `os.Rename` syscall | Filesystem directory inode update in progress | Atomic rename: directory points either to old or new file; both are fully synced and complete. |
+| **10** | `internal/engine/compact.go:Compact` after `Rename` before directory `fsync` | New file authoritative; directory metadata dirty in VFS cache | On ext4/XFS, new file opens; if metadata reverted on power loss, old file opens. Both are consistent. |
+| **11** | `internal/engine/recovery.go:repairTornTail` during `f.Truncate` | Database file truncated halfway through torn tail | Replay is idempotent; next `open()` re-scans from byte 32 to last valid frame and completes truncation. |
+| **12** | `internal/engine/engine.go:Put` on `--max-bytes` quota guard | Write aborted before I/O; `valid_eof` unchanged | No bytes written; `ErrDiskFull` returned; file remains readable, uncorrupted, and recoverable. |
 
 ---
 

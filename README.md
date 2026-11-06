@@ -14,7 +14,7 @@ On a clean machine with Go ($\ge 1.22$) and Python ($\ge 3.10$) installed, run:
 ```bash
 make build
 ```
-*(Or manually: `cd src && go build -o ../kvdb . && cd .. && chmod +x kvdb torture/torture`)*
+*(Or manually: `go build -o kvdb ./cmd/kvdb && chmod +x kvdb torture`)*
 
 This compiles the standalone `./kvdb` static executable and prepares the `./torture` test suite with **zero third-party persistence libraries**.
 

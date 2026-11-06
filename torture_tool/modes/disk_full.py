@@ -34,6 +34,16 @@ class DiskFullRunner:
         start_time = time.monotonic()
         seed = self.config.seed + iteration
 
+        # Ensure fresh database for quota cycle
+        if db_file.exists():
+            try:
+                db_file.unlink()
+                lock_file = Path(str(db_file) + ".lock")
+                if lock_file.exists():
+                    lock_file.unlink()
+            except OSError:
+                pass
+
         # 1. Start serve mode with quota restriction
         cmd = [str(self.config.kvdb_bin), "serve", str(db_file), "--max-bytes", str(max_bytes)]
         ctrl = ChildProcessController(

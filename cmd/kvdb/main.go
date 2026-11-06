@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"strconv"
@@ -192,7 +193,11 @@ func main() {
 			os.Exit(1)
 		}
 		for _, p := range pairs {
-			fmt.Printf("%s=%s\n", p.Key, string(p.Value))
+			if len(p.Value) == 0 {
+				fmt.Printf("%s\n", hex.EncodeToString([]byte(p.Key)))
+			} else {
+				fmt.Printf("%s %s\n", hex.EncodeToString([]byte(p.Key)), hex.EncodeToString(p.Value))
+			}
 		}
 		os.Exit(0)
 
@@ -210,16 +215,52 @@ func main() {
 		fmt.Println("OK")
 		os.Exit(0)
 
+	case "compact":
+		if len(os.Args) != 3 {
+			fmt.Fprintf(os.Stderr, "Usage: kvdb compact <path>\n")
+			os.Exit(1)
+		}
+		path := os.Args[2]
+		eng, err := engine.Open(path, engine.Options{})
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "open error: %v\n", err)
+			os.Exit(1)
+		}
+		defer eng.Close()
+		if err := eng.Compact(); err != nil {
+			fmt.Fprintf(os.Stderr, "compact error: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("OK")
+		os.Exit(0)
+
 	case "serve":
-		// M1 CLI router stub: verifies command routing; full implementation scheduled in M4
-		fmt.Fprintf(os.Stdout, "Command '%s' acknowledged (M1 CLI router)\n", cmd)
+		if len(os.Args) < 3 {
+			fmt.Fprintf(os.Stderr, "Usage: kvdb serve <path> [--max-bytes N]\n")
+			os.Exit(1)
+		}
+		path := os.Args[2]
+		var maxBytes uint64
+		for i := 3; i < len(os.Args); i++ {
+			if os.Args[i] == "--max-bytes" && i+1 < len(os.Args) {
+				mb, err := strconv.ParseUint(os.Args[i+1], 10, 64)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "invalid --max-bytes value: %v\n", err)
+					os.Exit(1)
+				}
+				maxBytes = mb
+				i++
+			}
+		}
+		runServe(path, maxBytes)
+		os.Exit(0)
 
 	case "--help", "-h", "help":
 		printUsage()
 		os.Exit(0)
 
 	case "banner":
-		fmt.Println(banner)
+		fmt.Print(banner)
 		os.Exit(0)
 
 	default:

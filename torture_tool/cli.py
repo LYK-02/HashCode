@@ -39,6 +39,7 @@ class RunConfig:
     kvdb_bin: Path = Path("./kvdb")
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "kvdb_bin", self.kvdb_bin.resolve())
         if self.iterations < 1:
             raise ValueError(f"Iterations must be >= 1, got {self.iterations}")
         if self.workers < 2:

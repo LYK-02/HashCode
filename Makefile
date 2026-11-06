@@ -12,9 +12,9 @@ test:
 	GOPROXY=off $(GO) test -v -count=1 ./...
 
 clean:
-	rm -f $(BINARY) torture
+	rm -f $(BINARY)
 	rm -f *.db *.lock *.wal *.tmp *.compact.tmp
-	rm -rf testdata/tmp
+	rm -rf testdata/tmp artifacts
 
 demo-ready: build test
 	@echo "Demo ready: build and test passed offline."

@@ -101,8 +101,14 @@ class ChildProcessController:
             self.stderr_drainer.start()
 
         # Check for immediate crash on startup
-        time.sleep(0.05)
-        exit_code = self.process.poll()
+        start_wait = time.monotonic()
+        exit_code = None
+        while time.monotonic() - start_wait < 0.25:
+            exit_code = self.process.poll()
+            if exit_code is not None:
+                break
+            time.sleep(0.02)
+
         if exit_code is not None:
             recent_err = self.stderr_drainer.get_recent_text() if self.stderr_drainer else ""
             if self.stderr_drainer:

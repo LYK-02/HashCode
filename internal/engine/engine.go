@@ -67,6 +67,9 @@ func Open(path string, opts Options) (*Engine, error) {
 		return nil, err
 	}
 
+	// Clean up any un-renamed compaction temp file from previous crash
+	_ = os.Remove(cleanPath + ".compact.tmp")
+
 	// Defensive cleanup on initialization error
 	cleanup := true
 	defer func() {
@@ -237,19 +240,6 @@ func (e *Engine) Dump() ([]Pair, error) {
 		return pairs[i].Key < pairs[j].Key
 	})
 	return pairs, nil
-}
-
-// Compact triggers a crash-safe online compaction rewriting live records to a new generation (Phase E7).
-func (e *Engine) Compact() error {
-	e.mu.Lock()
-	defer e.mu.Unlock()
-	if e.closed {
-		return ErrClosed
-	}
-	if e.poisoned {
-		return ErrEnginePoisoned
-	}
-	return nil
 }
 
 // Check verifies the structural integrity of the database header and all frames.

@@ -92,14 +92,24 @@ func ParseDumpOutput(stdout string) map[string]string {
 		if line == "" {
 			continue
 		}
-		// CLI dump can be separated by tab, '=' or space
+		var k, v string
 		if parts := strings.SplitN(line, "\t", 2); len(parts) == 2 {
-			res[parts[0]] = parts[1]
+			k, v = parts[0], parts[1]
 		} else if parts := strings.SplitN(line, "=", 2); len(parts) == 2 {
-			res[parts[0]] = parts[1]
+			k, v = parts[0], parts[1]
 		} else if parts := strings.SplitN(line, " ", 2); len(parts) == 2 {
-			res[parts[0]] = parts[1]
+			k, v = parts[0], parts[1]
+		} else {
+			k = line
+			v = ""
 		}
+		if kDec, err := hex.DecodeString(k); err == nil {
+			if vDec, err := hex.DecodeString(v); err == nil {
+				res[string(kDec)] = string(vDec)
+				continue
+			}
+		}
+		res[k] = v
 	}
 	return res
 }

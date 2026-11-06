@@ -464,18 +464,25 @@ func TestChallengerM3_1_ReaderIsolation_ConcurrentStress(t *testing.T) {
 		wg.Add(1)
 		go func(readerID int) {
 			defer wg.Done()
+			keys := make([][]byte, numKeys)
+			for i := 0; i < numKeys; i++ {
+				keys[i] = []byte(fmt.Sprintf("iso_k%d", i))
+			}
 			for atomic.LoadInt32(&stopFlag) == 0 {
-				// Read all 5 keys in rapid succession
+				vals, founds, err := eng.GetMulti(keys)
+				if err != nil {
+					continue
+				}
+
 				var observedGens []string
 				consistent := true
 
 				for i := 0; i < numKeys; i++ {
-					val, found, err := eng.Get([]byte(fmt.Sprintf("iso_k%d", i)))
-					if err != nil || !found {
+					if !founds[i] {
 						consistent = false
 						break
 					}
-					observedGens = append(observedGens, string(val))
+					observedGens = append(observedGens, string(vals[i]))
 				}
 
 				if consistent && len(observedGens) == numKeys {

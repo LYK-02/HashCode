@@ -210,24 +210,6 @@ func (h *Harness) Serve(dbPath string) (*ServeSession, error) {
 
 	reader := bufio.NewReader(stdoutPipe)
 
-	// Peek to check if M1 router stub was emitted on startup
-	ch := make(chan string, 1)
-	go func() {
-		line, _ := reader.ReadString('\n')
-		ch <- line
-	}()
-
-	select {
-	case line := <-ch:
-		if strings.Contains(line, "acknowledged (M1 CLI router)") {
-			_ = cmd.Process.Kill()
-			return nil, ErrServeStub
-		}
-		// If line is not stub, but an actual protocol banner or output, keep going
-	case <-time.After(50 * time.Millisecond):
-		// No immediate startup banner, active serve loop running
-	}
-
 	return &ServeSession{
 		cmd:    cmd,
 		stdin:  stdin,
