@@ -15,9 +15,13 @@ All operations, code design, file structures, and verification suites must stric
 - 👉 [09_git_synchronization.md](file://.agents/rules/09_git_synchronization.md) — Mandatory pre-execution sync (`git pull`) before starting any action or code changes.
 - 👉 [10_code_quality_and_practices.md](file://.agents/rules/10_code_quality_and_practices.md) — Zero-panic safety, explicit error modeling, allocation bounds, RAII resource cleanup, and modular systems design.
 
+### Specialized Workspace Skills in `.agents/skills/`
+- 🎯 [hackathon-demo-vault](file://.agents/skills/hackathon-demo-vault/SKILL.md) — Manages the 15-minute live demo runbooks and flashcards ([`DEMO.md`](file://DEMO.md), [`CRASH_QUESTIONS.md`](file://CRASH_QUESTIONS.md), [`DESIGN_EXTENSION.md`](file://DESIGN_EXTENSION.md)).
+
 ### Persistent Project State
 - 📜 [PROMPTS.md](file://PROMPTS.md) (also available at [`.agents/PROMPTS.md`](file://.agents/PROMPTS.md)) — Complete unedited AI prompt log.
 - 🧠 [MEMORY.md](file://MEMORY.md) (also available at [`.agents/MEMORY.md`](file://.agents/MEMORY.md)) — Live execution journal and contextual memory.
+- 📋 [DEMO.md](file://DEMO.md) — Minute-by-minute live judging runbook.
 
 ### Key Directives
 - **Always Pull First:** Perform a `git pull` before executing any task to ensure alignment with upstream team commits.

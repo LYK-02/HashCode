@@ -191,3 +191,14 @@ in agent add a good coding practice and code quality in .agents
 
 ---
 
+### Prompt (2026-11-06 15:10:18)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+add new skill that store imp thing for demo  in md file
+```
+
+---
+

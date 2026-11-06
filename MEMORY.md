@@ -220,3 +220,24 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
      - Code modularity and testability.
   2. Updated root `AGENTS.md` with the new rule module and key directives.
 - **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 15:10:18] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `add new skill that store imp thing for demo  in md file`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+---
+
+### [2026-11-06 15:10:18] Demo Vault Skill & Markdown Runbook Scaffolding
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Created a specialized Antigravity skill (`hackathon-demo-vault`) in `.agents/skills/hackathon-demo-vault/SKILL.md` and initialized the authoritative live demo runbook `DEMO.md`.
+- **Why:** The 15-minute live oral demo with Wi-Fi off accounts for 60% of the total score (30 pts kill runs, 20 pts crash-here questions, 10 pts design extension). This skill equips the agent to automatically capture, organize, and maintain critical demo knowledge, execution runbooks, crash-here answer banks, and TTL design trade-offs in dedicated markdown files.
+- **Fix / Actions Taken:**
+  1. Built `.agents/skills/hackathon-demo-vault/SKILL.md` defining procedures for generating and maintaining `DEMO.md`, `CRASH_QUESTIONS.md`, and `DESIGN_EXTENSION.md`.
+  2. Created `DEMO.md` in the workspace root containing the complete minute-by-minute protocol, exact CLI commands for the judge, and quick triage instructions.
+  3. Updated `AGENTS.md` to reference the new skill.
+- **Status:** COMPLETED & VERIFIED.
