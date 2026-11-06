@@ -15,7 +15,7 @@
 | [PLAN_T1_CLI_AND_WORKLOAD_GENERATOR.md](./PLAN_T1_CLI_AND_WORKLOAD_GENERATOR.md) | **T1** | CLI & Deterministic Workload | Mandatory `--seed`, SHA-256 PRNG stream isolation, reproducible workloads (COMPLETED) |
 | [PLAN_T2_INDEPENDENT_ORACLE.md](./PLAN_T2_INDEPENDENT_ORACLE.md) | **T2** | Independent Oracle | Append-only JSONL journal, in-flight ambiguity resolution, all-or-none batch atomicity (COMPLETED) |
 | [PLAN_T3_SUBPROCESS_MANAGER.md](./PLAN_T3_SUBPROCESS_MANAGER.md) | **T3** | Subprocess & Pipe Control | Non-blocking stderr drainer, deadlock prevention, ungraceful `SIGKILL` (COMPLETED) |
-| [PLAN_T4_DISPATCHER_AND_WORKERS.md](./PLAN_T4_DISPATCHER_AND_WORKERS.md) | **T4** | Dispatcher & Concurrent Workers | Stdin mutex, single stdout reader thread demuxing via `Future` map, $\ge 2$ writers |
+| [PLAN_T4_DISPATCHER_AND_WORKERS.md](./PLAN_T4_DISPATCHER_AND_WORKERS.md) | **T4** | Dispatcher & Concurrent Workers | Stdin mutex, single stdout reader thread demuxing via `Future` map, $\ge 2$ writers (COMPLETED) |
 | [PLAN_T5_RANDOM_CRASH_LOOP.md](./PLAN_T5_RANDOM_CRASH_LOOP.md) | **T5** | Random Crash Loop | Seeded millisecond crash delays, active in-flight kills, 100-cycle iteration loop |
 | [PLAN_T6_VERIFICATION_AND_REPORTING.md](./PLAN_T6_VERIFICATION_AND_REPORTING.md) | **T6** | Verification & Failure Bundles | Binary-safe dump parser, bitwise diff engine, halt on 1st fail, `reproduce.sh` |
 | [PLAN_T7_LARGE_VALUES_AND_BATCHES.md](./PLAN_T7_LARGE_VALUES_AND_BATCHES.md) | **T7** | Large Values & Batches | Exact 1 MiB payloads with nulls, 10,000-op atomic batch stress across pipe boundaries |

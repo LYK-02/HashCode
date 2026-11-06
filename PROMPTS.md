@@ -353,3 +353,14 @@ Implement Phase T3 using `docs/torture_tool/plans/PLAN_T3_SUBPROCESS_MANAGER.md`
 
 ---
 
+### Prompt (2026-11-06 18:04:18)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Implement Phase T4 as outlined in `docs/torture_tool/plans/PLAN_T4_DISPATCHER_AND_WORKERS.md`. Build the thread-safe response dispatcher and concurrent worker system, ensuring correct request routing, synchronization, and race-free operation handling. Add tests for parallel requests, response ordering, and concurrency edge cases. Run the full relevant test suite, fix issues, and update the checklist. Don't move to T5.
+```
+
+---
+

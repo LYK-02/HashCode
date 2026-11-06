@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T4**  
 > Component: Multiplexed Pipe I/O, Response Dispatcher, Concurrent Worker Threads  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/05_CONCURRENT_WORKERS.md`, `docs/torture_tool/02_TORTURE_ARCHITECTURE.md`
 
 ---
@@ -97,8 +97,8 @@ Implement the concurrent request-response client architecture. A single `./kvdb 
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Unit test with mock process verifies 4 concurrent workers issuing 1,000 requests without dropped or mismatched ACKs.
-- [ ] Dispatcher cleanly routes ACKs out of order (e.g. Worker 2 response arrives before Worker 1).
-- [ ] Upon abrupt process termination, all active worker threads unblock within 100ms.
-- [ ] Stdin writes remain strictly atomic (no line interleaving).
+- [x] Unit test with mock process verifies 4 concurrent workers issuing 1,000 requests without dropped or mismatched ACKs.
+- [x] Dispatcher cleanly routes ACKs out of order (e.g. Worker 2 response arrives before Worker 1).
+- [x] Upon abrupt process termination, all active worker threads unblock within 100ms.
+- [x] Stdin writes remain strictly atomic (no line interleaving).
 

@@ -410,3 +410,11 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-06 18:04:18] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T4 as outlined in `docs/torture_tool/plans/PLAN_T4_DISPATCHER_AND_WORKERS.md`. Build the thread-safe response dispatcher and concurrent worker system, ensuring correct request routing, synchronization, and race-free operation handling. Add tests for parallel requests, response ordering, and concurrency edge cases. Run the full relevant test suite, fix issues, and update the checklist. Don't move to T5.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
