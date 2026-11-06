@@ -13,6 +13,7 @@ All operations, code design, file structures, and verification suites must stric
 - 👉 [07_memory_protocol.md](file://.agents/rules/07_memory_protocol.md) — Real-time memory updating protocol (`MEMORY.md`) tracking Date, Time, User, Implementer, What, Why, Fix, and State.
 - 👉 [08_user_experience_and_tooling.md](file://.agents/rules/08_user_experience_and_tooling.md) — Live torture terminal progress bar, instant failure diagnostics, demo runbook (`DEMO.md`), single-command verification (`make demo-ready`).
 - 👉 [09_git_synchronization.md](file://.agents/rules/09_git_synchronization.md) — Mandatory pre-execution sync (`git pull`) before starting any action or code changes.
+- 👉 [10_code_quality_and_practices.md](file://.agents/rules/10_code_quality_and_practices.md) — Zero-panic safety, explicit error modeling, allocation bounds, RAII resource cleanup, and modular systems design.
 
 ### Persistent Project State
 - 📜 [PROMPTS.md](file://PROMPTS.md) (also available at [`.agents/PROMPTS.md`](file://.agents/PROMPTS.md)) — Complete unedited AI prompt log.
@@ -24,3 +25,4 @@ All operations, code design, file structures, and verification suites must stric
 - **The Core Invariant:** Acknowledged writes are 100% durable across `kill -9` at any instruction. Batches are strictly atomic. Recovery must be $\le 2.0$ seconds for 1,000,000 keys.
 - **Deliverables Enforcement:** Maintain `README.md`, `ARCHITECTURE.md`, `BREAKING.md`, `PROMPTS.md`, `MEMORY.md`, `./kvdb`, and `./torture`.
 - **Automatic Logging & Memory:** Every prompt is logged in `PROMPTS.md`, and `MEMORY.md` is updated before executing tasks with User and Implementer attribution.
+- **Code Quality Excellence:** Zero raw `.unwrap()` in critical paths, explicit error classification, bounded buffer allocations, and clean modular boundaries.

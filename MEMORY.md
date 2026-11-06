@@ -196,3 +196,27 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
   2. Authored `.agents/rules/09_git_synchronization.md` establishing the pre-execution pull invariant.
   3. Updated `AGENTS.md` key directives with **Always Pull First**.
 - **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 14:50:54] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `in agent add a good coding practice and code quality in .agents`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+---
+
+### [2026-11-06 14:50:54] Good Coding Practices & Code Quality Standards
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Codified comprehensive Good Coding Practices and Code Quality standards into `.agents/rules/10_code_quality_and_practices.md` and updated root `AGENTS.md`.
+- **Why:** High-durability systems code requires strict engineering discipline: zero uncontrolled panics, explicit error types, memory-bounded buffers, deterministic resource reclamation (RAII), robust binary serialization, and clean architectural separation between log storage, indexing, compaction, and CLI handling.
+- **Fix / Actions Taken:**
+  1. Authored `.agents/rules/10_code_quality_and_practices.md` establishing standards for:
+     - Error handling (Result types, domain errors, no silent panics).
+     - Memory & performance safety (pre-allocated buffers, bounds checks, avoiding heap fragmentation).
+     - File I/O discipline (checking all syscall returns, explicit sync flushes).
+     - Code modularity and testability.
+  2. Updated root `AGENTS.md` with the new rule module and key directives.
+- **Status:** COMPLETED & VERIFIED.

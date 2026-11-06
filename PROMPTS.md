@@ -180,3 +180,14 @@ before excuting anything pull from git before doing add this in .agents
 
 ---
 
+### Prompt (2026-11-06 14:50:54)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+in agent add a good coding practice and code quality in .agents
+```
+
+---
+
