@@ -362,3 +362,27 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
 >>>>>>> Stashed changes
+
+### [2026-11-06 17:04:18] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Thoroughly analyze the entire `docs/torture_tool/` folder and all its Markdown files. Understand every requirement, specification, edge case, and dependency in depth. Based on this context, create a comprehensive, production-grade, phase-by-phase implementation plan for building a powerful and reliable Python torture-testing tool. Break every phase into clear subtasks, implementation steps, dependencies, and completion criteria. Create well-structured `PLAN.md` files for each phase. Ensure nothing is overlooked, avoid assumptions, and strictly follow the official problem statement and existing project decisions. Plan first, do not start implementation.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:10:37] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Proceed with creating these files in docs/torture_tool/plans.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:28:44] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T0 strictly following `docs/torture_tool/plans/PLAN_T0_CONTRACT_AND_PROTOCOL.md`. Complete all subtasks, write production-quality code, add fixtures and tests, verify protocol compatibility with the Go engine, fix all failures, and update the plan checklist. Do not skip requirements or start T1.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
