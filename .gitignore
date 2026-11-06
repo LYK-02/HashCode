@@ -1,0 +1,32 @@
+# Executables
+/kvdb
+/torture
+
+# Database files & locks
+*.db
+*.db.lock
+*.lock
+*.wal
+*.tmp
+*.compact.tmp
+
+# Test data & artifacts
+testdata/tmp/
+*.test
+*.prof
+*.out
+
+# Python cache & tooling
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# OS / Editor artifacts
+.DS_Store
+.idea/
+.vscode/
+
+# Agent metadata
+.agents/teamwork/
+
