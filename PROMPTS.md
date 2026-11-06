@@ -650,3 +650,51 @@ update memory what we diid till now
 
 ---
 
+### Prompt (2026-11-06 22:36:52)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+how to open cli
+```
+
+---
+
+### Prompt (2026-11-06 22:39:20)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+bash: /kvdb: No such file or directory
+```
+
+---
+
+### Prompt (2026-11-06 22:42:22)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+can i add HashCode image like agy cli ?
+```
+
+---
+
+### Prompt (2026-11-06 22:44:50)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+_  ____      ______  ____  
+ | |/ /\ \    / /  _ \|  _ \ 
+ | ' /  \ \  / /| | | | |_) |
+ |  <    \ \/ / | |_| |  _ < 
+ |_|\_\   \__/  |____/|____/  Kill It and Prove It — Srinathon 3.0
+```
+
+---
+

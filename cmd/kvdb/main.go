@@ -12,7 +12,15 @@ import (
 	"kvdb/internal/format"
 )
 
+const banner = `   _  ____      ______  ____  
+ | |/ /\ \    / /  _ \|  _ \ 
+ | ' /  \ \  / /| | | | |_) |
+ |  <    \ \/ / | |_| |  _ < 
+ |_|\_\   \__/  |____/|____/  Kill It and Prove It — Srinathon 3.0
+`
+
 func printUsage() {
+	fmt.Fprintf(os.Stderr, "%s\n", banner)
 	fmt.Fprintf(os.Stderr, "Usage: kvdb <command> [arguments...]\n")
 	fmt.Fprintf(os.Stderr, "Available commands:\n")
 	fmt.Fprintf(os.Stderr, "  open <path> [--max-bytes N]  Open/initialize database file\n")
@@ -253,6 +261,10 @@ func main() {
 
 	case "--help", "-h", "help":
 		printUsage()
+		os.Exit(0)
+
+	case "banner":
+		fmt.Println(banner)
 		os.Exit(0)
 
 	default:
