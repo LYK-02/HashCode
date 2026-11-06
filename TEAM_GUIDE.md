@@ -202,3 +202,4 @@ Answer with these 4 points:
 - **Sub-0.5s Recovery:** $1,000,000$ keys recover in **$\approx 369\text{ ms}$** ($>5\times$ faster than the 2.0s limit).
 - **All 32 Scenarios Verified:** Mapped and proven across unit tests and chaos torture runs.
 - **100% Offline:** Fully buildable and executable with Wi-Fi disabled.
+

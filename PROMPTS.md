@@ -1632,3 +1632,14 @@ make a md for team all thing in simple language about architecture how it workin
 
 ---
 
+### Prompt (2026-11-07 02:47:20)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+should i change internal name to src?
+```
+
+---
+

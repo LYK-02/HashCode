@@ -1779,3 +1779,15 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
   4. **Team Oral Defense Preparation**:
      - Integrated quick-reference flashcards for the Crash-Here code line questions and the TTL Key Expiry design extension.
 - **Status:** COMPLETED.
+
+### [2026-11-07 02:47:20] Repository Directory Structure Architecture Analysis (`internal/` vs. `src/`)
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Evaluated whether to rename `internal/` to `src/` against Go compiler encapsulation semantics, standard Go project layouts, and the 19-page hackathon specification.
+- **Why:** Clarify structural conventions and advise user on best practices for submission.
+- **Fix / Actions Taken:**
+  1. **Go Language Encapsulation Standard**: In Go, `internal/` is a language-level keyword enforced by the compiler to prevent external leakage of internal storage engine packages. The standard layout across major Go systems projects (Kubernetes, CockroachDB, Prometheus) is `cmd/` for binaries and `internal/` for engine modules.
+  2. **Specification Context**: Page 14 of the specification shows a generic layout for C/C++/Rust teams (`src/`). For Go submissions, `cmd/kvdb` and `internal/` represent canonical, idiomatic Go architecture.
+  3. **Verification & Stability**: Renaming `internal/` to `src/` would require rewriting import statements across 30+ files and rewriting line references across `ARCHITECTURE.md` (32 rows) and `BREAKING.md` (12 rows), introducing high risk of broken imports right before submission.
+  4. **Recommendation**: Keep `internal/` as canonical.
+- **Status:** COMPLETED.
