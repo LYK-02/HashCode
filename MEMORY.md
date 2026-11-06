@@ -110,3 +110,89 @@
   3. Enhanced `.agents/scripts/prompt_logger.py` to log user attribution in `PROMPTS.md`.
   4. Updated `.agents/rules/07_memory_protocol.md` to mandate user and worker attribution on every entry.
 - **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 14:34:51] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Side Question: can we improve user experience?
+
+Yes. We can significantly improve the user experience across three critical dimensions:
+
+---
+
+### 1. The Judge’s 15-Minute Demo Experience (Scoring & Clarity)
+During the live demo, the judge drives your laptop with Wi-Fi off. Friction here loses points.
+* **Single-Command Build & Verification (`make demo-ready` or `./demo.sh`):**
+  * One script that cleans, builds from scratch, runs a 50-iteration sanity torture test, and verifies all 8 `./kvdb` commands in 20 seconds.
+* **Interactive Demo Runbook (`DEMO.md`):**
+  * A minute-by-minute cheat sheet mapped to the 0–15 min rubric so you can execute judge requests instantly without hesitation.
+* **Crash-Here & Extension Flashcards:**
+  * Quick-reference summaries for the 3 crash-here questions and the TTL expiry design extension (worth 30 points combined).
+
+---
+
+### 2. The CLI & Engine Experience (`./torture` & `./kvdb`)
+The judge watches `./torture` run for 3–5 minutes. A wall of unreadable terminal text looks fragile; a clean dashboard looks rock solid.
+* **Live Terminal Progress Bar for `./torture`:**
+  * Show a clean, colorized 1-line or pinned status block:
+    ```text
+    [Seed: 12345] Iteration: 214/500 [42%] | Kills: 214 | ACKed: 12,840 | Oracle: 100% OK | Mode: default
+    ```
+* **Instant Failure Diagnostics:**
+  * If an invariant ever breaks, print a clean diff: exact `op-id`, expected value from oracle vs. actual value found in dump, and the exact byte offset in the log.
+* **Human-Readable `./kvdb check` Output:**
+  * Instead of a silent exit or raw error, output:
+    ```text
+    Integrity Check: OK (1,000,000 keys verified, 0 torn records, recovery time: 1.14s)
+    ```
+
+---
+
+### 3. Your Pair-Programming Experience in Antigravity
+* **Interactive 32-Scenario Progress Dashboard (Generative UI):**
+  * Render an interactive matrix in chat with checkboxes for all 32 scenarios (Groups A through F) that updates as we prove and verify each one.
+* **Automated Context Priming:**
+  * Maintain a pinned `CURRENT_FOCUS.md` or status widget in `MEMORY.md` so whenever you send a prompt like `Continue`, the agent immediately knows the exact file, struct, and function being worked on.
+* **Git Commit Helper:**
+  * A helper command (`make commit msg="..."`) that automatically verifies `PROMPTS.md` and `MEMORY.md` are synchronized before creating a clean, judge-pleasing git commit.
+
+---
+
+Which area would you like to prioritize first: **the live torture tool UI**, the **interactive 32-scenario dashboard**, or the **15-minute demo runbook**?  add this in .agents to fix it`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+---
+
+### [2026-11-06 14:34:13] User Experience, Demo Excellence & Tooling Integration
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Codified User Experience (UX), Live Demo Polish, and Developer Tooling standards into `.agents/rules/08_user_experience_and_tooling.md`, created `.agents/` symlinks for `MEMORY.md` and `PROMPTS.md`, and updated root `AGENTS.md`.
+- **Why:** The hackathon demo is strictly 15 minutes offline. Superior UX (live colorized progress bar, instant failure diffs, human-readable check output, demo runbook) ensures highest possible scores during judge execution and oral defense.
+- **Fix / Actions Taken:**
+  1. Authored `.agents/rules/08_user_experience_and_tooling.md` containing specifications for the 15-minute demo runbook, live terminal progress bar, instant failure diagnostics, human-readable CLI output, and context priming.
+  2. Created relative symlinks `.agents/MEMORY.md` $\to$ `../MEMORY.md` and `.agents/PROMPTS.md` $\to$ `../PROMPTS.md`.
+  3. Updated `AGENTS.md` to link and enforce rule module 08.
+- **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 14:43:23] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `before excuting anything pull from git before doing add this in .agents`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+---
+
+### [2026-11-06 14:42:37] Git Synchronization Protocol Integration
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Codified mandatory pre-execution repository synchronization into `.agents/rules/09_git_synchronization.md`, updated root `AGENTS.md`, and executed an active `git pull` from `origin/main`.
+- **Why:** Team members working concurrently during the hackathon may push changes. Pulling before executing any task ensures the agent always operates on the latest upstream commit, preventing merge conflicts and code clobbering.
+- **Fix / Actions Taken:**
+  1. Ran `git pull` from remote (`origin/main`) to verify synchronization (state: `Already up to date`).
+  2. Authored `.agents/rules/09_git_synchronization.md` establishing the pre-execution pull invariant.
+  3. Updated `AGENTS.md` key directives with **Always Pull First**.
+- **Status:** COMPLETED & VERIFIED.

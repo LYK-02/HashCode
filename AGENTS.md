@@ -10,14 +10,17 @@ All operations, code design, file structures, and verification suites must stric
 - 👉 [04_deliverables_and_cli.md](file://.agents/rules/04_deliverables_and_cli.md) — CLI `./kvdb`, torture tool `./torture`, `BREAKING.md`, `ARCHITECTURE.md`.
 - 👉 [05_prompt_logging.md](file://.agents/rules/05_prompt_logging.md) — Chronological unedited prompt logging policy (`PROMPTS.md`).
 - 👉 [06_scoring_and_demo.md](file://.agents/rules/06_scoring_and_demo.md) — 100-point rubric, penalties, disqualification rules, and 15-minute live demo protocol.
-- 👉 [07_memory_protocol.md](file://.agents/rules/07_memory_protocol.md) — Real-time memory updating protocol (`MEMORY.md`) tracking Date, Time, What, Why, Fix, and State.
+- 👉 [07_memory_protocol.md](file://.agents/rules/07_memory_protocol.md) — Real-time memory updating protocol (`MEMORY.md`) tracking Date, Time, User, Implementer, What, Why, Fix, and State.
+- 👉 [08_user_experience_and_tooling.md](file://.agents/rules/08_user_experience_and_tooling.md) — Live torture terminal progress bar, instant failure diagnostics, demo runbook (`DEMO.md`), single-command verification (`make demo-ready`).
+- 👉 [09_git_synchronization.md](file://.agents/rules/09_git_synchronization.md) — Mandatory pre-execution sync (`git pull`) before starting any action or code changes.
 
 ### Persistent Project State
-- 📜 [PROMPTS.md](file://PROMPTS.md) — Complete unedited AI prompt log.
-- 🧠 [MEMORY.md](file://MEMORY.md) — Live execution journal and contextual memory.
+- 📜 [PROMPTS.md](file://PROMPTS.md) (also available at [`.agents/PROMPTS.md`](file://.agents/PROMPTS.md)) — Complete unedited AI prompt log.
+- 🧠 [MEMORY.md](file://MEMORY.md) (also available at [`.agents/MEMORY.md`](file://.agents/MEMORY.md)) — Live execution journal and contextual memory.
 
 ### Key Directives
+- **Always Pull First:** Perform a `git pull` before executing any task to ensure alignment with upstream team commits.
 - **Zero Banned Libraries:** No SQLite, RocksDB, LevelDB, BoltDB, or external persistence engines. Standard library only.
 - **The Core Invariant:** Acknowledged writes are 100% durable across `kill -9` at any instruction. Batches are strictly atomic. Recovery must be $\le 2.0$ seconds for 1,000,000 keys.
 - **Deliverables Enforcement:** Maintain `README.md`, `ARCHITECTURE.md`, `BREAKING.md`, `PROMPTS.md`, `MEMORY.md`, `./kvdb`, and `./torture`.
-- **Automatic Logging & Memory:** Every prompt is logged in `PROMPTS.md`, and `MEMORY.md` is updated before executing tasks.
+- **Automatic Logging & Memory:** Every prompt is logged in `PROMPTS.md`, and `MEMORY.md` is updated before executing tasks with User and Implementer attribution.
