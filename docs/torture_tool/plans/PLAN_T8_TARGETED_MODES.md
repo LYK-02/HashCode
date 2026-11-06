@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T8**  
 > Component: Maintenance State Stress, Compaction Race Injections, Quota Boundary Testing  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/12_RECOVERY_CRASH_TESTING.md`, `docs/torture_tool/13_COMPACTION_CRASH_TESTING.md`, `docs/torture_tool/14_DISK_FULL_TESTING.md`
 
 ---
@@ -102,7 +102,7 @@ Implement three specialized adversarial test modes targeting maintenance routine
 
 ## 6. Verification and Completion Criteria
 
-- [ ] 100 iterations of `--mode recovery-crash` pass with zero check or dump failures.
-- [ ] 100 iterations of `--mode compaction` pass; verify database shrinks and live data is intact.
-- [ ] 100 iterations of `--mode disk-full` pass; verify clean `ERR` responses and no corrupted records.
+- [x] 100 iterations of `--mode recovery-crash` pass with zero check or dump failures.
+- [x] 100 iterations of `--mode compaction` pass; verify database shrinks and live data is intact.
+- [x] 100 iterations of `--mode disk-full` pass; verify clean `ERR` responses and no corrupted records.
 

@@ -397,3 +397,14 @@ Implement Phase T7 following `docs/torture_tool/plans/PLAN_T7_LARGE_VALUES_AND_B
 
 ---
 
+### Prompt (2026-11-06 18:30:22)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Implement Phase T8 according to `docs/torture_tool/plans/PLAN_T8_TARGETED_MODES.md`. Add recovery-crash, compaction-crash, and disk-full testing modes, including maintenance-time crash injection, quota enforcement, and post-recovery consistency checks. Test all scenarios and edge cases, fix failures, and update the phase checklist. Do not proceed to T9.
+```
+
+---
+

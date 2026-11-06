@@ -442,3 +442,17 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-06 18:30:22] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Implemented Phase T8: Targeted Maintenance Modes (Recovery Crash, Compaction Crash, and Disk-Full Quota) in `torture_tool/modes/`. Added `RecoveryCrashRunner`, `CompactionCrashRunner`, and `DiskFullRunner`. Verified all scenarios with comprehensive integration tests in `test_modes.py`.
+- **Why:** Hackathon Group B, C, and E adversarial scenarios mandate proving durability across interrupted recoveries, interrupted compactions, and quota exhaustion without corrupting state.
+- **Fix / Actions Taken:**
+  1. Built `torture_tool/modes/recovery_crash.py` to execute nested `SIGKILL` attacks against `./kvdb open` during log replay and verify clean recovery upon restart.
+  2. Built `torture_tool/modes/compaction_crash.py` to fire `SIGKILL` during `./kvdb compact` temp-file generation and atomic rename boundaries.
+  3. Built `torture_tool/modes/disk_full.py` to test `--max-bytes` quota enforcement, verifying clean `ERR QUOTA_EXCEEDED` rejection, lack of partial writes, and post-crash consistency.
+  4. Added `torture_tool/tests/test_modes.py` covering all 3 modes; verified and fixed process file descriptor leaks.
+  5. Ran full test suite across all 68 unit/integration tests with `python3 -W error::ResourceWarning -m unittest discover -s torture_tool/tests -v` (68/68 passed).
+  6. Updated `PLAN_T8_TARGETED_MODES.md` and `docs/torture_tool/plans/README.md` checklists to Completed.
+- **Status:** COMPLETED & VERIFIED.
