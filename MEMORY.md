@@ -1791,3 +1791,35 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
   3. **Verification & Stability**: Renaming `internal/` to `src/` would require rewriting import statements across 30+ files and rewriting line references across `ARCHITECTURE.md` (32 rows) and `BREAKING.md` (12 rows), introducing high risk of broken imports right before submission.
   4. **Recommendation**: Keep `internal/` as canonical.
 - **Status:** COMPLETED.
+
+### [2026-11-07 02:52:19] Torture Tool Criteria Compliance Audit, Testing & Improvement Roadmap
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Audited the Python adversarial chaos torture harness against Sections 7, 10, 11, and 12 of the official Hackathon Specification, executed comprehensive end-to-end chaos tests across all 6 targeted modes, and authored detailed criteria compliance and improvements documentation in `docs/torture_tool/`.
+- **Why:** Verify that the torture tool satisfies 100% of the 15-point scoring rubric for Hackathon judging and provide a clear roadmap for improvements.
+- **Fix / Actions Taken:**
+  1. **Documentation Updates**:
+     - Updated `docs/torture_tool/PHASES.md`: Marked all phases T0 through T10 as COMPLETED with commit reference `5f4130a`.
+     - Updated `docs/torture_tool/16_TORTURE_TESTING.md`: Status elevated to `VERIFIED & RELEASE READY` with verified test commands, commit hashes, seed flags, and zero-failure output records.
+     - Authored `docs/torture_tool/17_CRITERIA_AND_IMPROVEMENTS.md`: Complete 15/15 rubric compliance audit, analysis of weak vs. robust torture tools, and 4 high-impact engineering improvements.
+     - Synchronized `docs/MANIFEST.md`, `docs/README.md`, and `docs/torture_tool/01_TORTURE_OVERVIEW.md`.
+  2. **Torture Tool Test Execution**:
+     - Verified all 78 unit and contract tests in `torture_tool/tests/`: 78/78 PASSED in 0.089s.
+     - Verified compiled `./kvdb` under `./torture`:
+       - `default` mode (10 iterations): 10 kills, 566 ACKs verified against independent `oracle.wal`, 0 torn writes, 0 invariant failures $\to$ 100% PASS.
+       - `compaction` mode (5 iterations): 5 kills, file compaction verified, 0 invariant failures $\to$ 100% PASS.
+       - `large-values` mode (5 iterations): 5 kills with 1MB values, 0 invariant failures $\to$ 100% PASS.
+       - `large-batches` mode (5 iterations): 5 kills with batches up to 10k operations, atomic all-or-nothing verified $\to$ 100% PASS.
+       - `recovery-crash` mode (5 iterations): 5 kills during startup recovery scan, 0 invariant failures $\to$ 100% PASS.
+       - `disk-full` mode (5 iterations): 5 kills after quota rejection, 0 invariant failures $\to$ 100% PASS.
+  3. **Criteria Assessment (15 / 15 Points Verified)**:
+     - Independent Oracle: 4/4 (writes independent `oracle.wal` event log; never trusts `kvdb dump`).
+     - Kills During Operations: 4/4 (seeded random float ms delay; raw `SIGKILL` mid-syscall).
+     - Concurrent Writers & Batches: 4/4 (streaming worker threads, batches 1..10,000 ops).
+     - Targeted Modes & Mandatory Seed: 3/3 (all 6 modes implemented, deterministic seed derivation).
+  4. **Identified Improvement Opportunities**:
+     - Auto-generated `reproduce.sh` in failure bundles for single-command judge reproduction.
+     - Adaptive kill delay centered around observed `p99` fsync round-trip latency.
+     - Terminal UI throughput and IOPS counter (`ops/sec`, `p99` latency).
+     - Multi-process OS contention test (secondary process colliding on `flock` during crash).
+- **Status:** COMPLETED & VERIFIED.

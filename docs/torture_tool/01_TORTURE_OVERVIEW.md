@@ -43,6 +43,9 @@ Failure bundle: seed, iteration, mode, exact command, engine commit hash, harnes
 
 ## 8. Related documents
 
+- `16_TORTURE_TESTING.md`
+- `17_CRITERIA_AND_IMPROVEMENTS.md`
+- `PHASES.md`
 - `../common/02_OFFICIAL_REQUIREMENTS.md`
 - `../common/04_SHARED_DATA_FORMAT.md`
 - `../common/05_CLI_AND_PROTOCOL_SPEC.md`

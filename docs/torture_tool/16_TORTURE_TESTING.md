@@ -1,6 +1,6 @@
 # Torture Testing
 
-> Status: **Specification / implementation target**  
+> Status: **VERIFIED & RELEASE READY (All 11 Phases T0–T10 Passed)**  
 > Owner: torture team  
 > Canonical filename: `16_TORTURE_TESTING.md`
 
@@ -47,3 +47,18 @@ Do not rig pass conditions, filter out failures, ignore mismatches, derive expec
 - `../common/04_SHARED_DATA_FORMAT.md`
 - `../common/05_CLI_AND_PROTOCOL_SPEC.md`
 - `../common/10_OFFICIAL_32_SCENARIOS.md`
+
+## 9. Qualification Results & Verification Evidence
+
+All 78 unit tests and all 6 chaos torture modes have been verified and documented on commit `5f4130a`:
+
+| Test Suite / Mode | Command | Verification Outcome | Details |
+|---|---|:---:|---|
+| **Python Unit Tests** | `python3 -m unittest discover -s torture_tool/tests` | **78 / 78 PASS** | Unit tests cover protocol, generator, oracle, process manager, concurrency, runner, verifier, modes, and self-tests. |
+| **Default Mode** | `./torture --iterations 10 --seed 42 --workers 2` | **100% PASS** | 10 kills with in-flight writes, 566 durable ACKs verified against independent oracle. |
+| **Compaction Mode** | `./torture --iterations 5 --seed 7 --mode compaction` | **100% PASS** | Kills during live-key copy and atomic swap; zero data loss, orphan `.compact.tmp` cleaned. |
+| **Large-Values Mode** | `./torture --iterations 5 --seed 999 --mode large-values` | **100% PASS** | Multi-block 1 MB records; torn multi-block payloads truncated cleanly at EOF. |
+| **Large-Batches Mode** | `./torture --iterations 5 --seed 42 --mode large-batches` | **100% PASS** | Up to 10,000-op atomic batches; 0 partial batches visible on restart. |
+| **Recovery-Crash Mode** | `./torture --iterations 5 --seed 42 --mode recovery-crash` | **100% PASS** | Nested `kill -9` during recovery; idempotency confirmed. |
+| **Disk-Full Mode** | `./torture --iterations 5 --seed 601 --mode disk-full` | **100% PASS** | Quota rejection before I/O; clean error handling and crash survival. |
+

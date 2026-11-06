@@ -283,14 +283,14 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 
 | Phase | Status | Commit | Test evidence | Known issue |
 |---|---|---|---|---|
-| T0 Contract | COMPLETED | — | 21 passing unit tests in `torture_tool/tests/test_protocol.py` | None |
-| T1 Generator | COMPLETED | — | 15 passing unit tests in `torture_tool/tests/test_generator.py` | None |
-| T2 Oracle | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_oracle.py` | None |
-| T3 Process manager | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_process.py` | None |
-| T4 Workers | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_concurrency.py` | None |
-| T5 Random kill | COMPLETED | — | 3 passing unit tests in `torture_tool/tests/test_runner.py` | None |
-| T6 Verification | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_verifier.py` | None |
-| T7 Large workloads | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_large_workloads.py` | None |
-| T8 Targeted modes | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_modes.py` | None |
-| T9 Self-tests | COMPLETED | — | 7 passing unit tests in `torture_tool/tests/test_self_testing.py` | None |
-| T10 Release | COMPLETED | — | 1,000 qualification iterations across 6 suites (500 default + 5x100 targeted), 78 unit tests passing | None |
+| T0 Contract | COMPLETED | `5f4130a` | 21 passing unit tests in `torture_tool/tests/test_protocol.py` | None |
+| T1 Generator | COMPLETED | `5f4130a` | 15 passing unit tests in `torture_tool/tests/test_generator.py` | None |
+| T2 Oracle | COMPLETED | `5f4130a` | 6 passing unit tests in `torture_tool/tests/test_oracle.py` | None |
+| T3 Process manager | COMPLETED | `5f4130a` | 4 passing unit tests in `torture_tool/tests/test_process.py` | None |
+| T4 Workers | COMPLETED | `5f4130a` | 4 passing unit tests in `torture_tool/tests/test_concurrency.py` | None |
+| T5 Random kill | COMPLETED | `5f4130a` | 3 passing unit tests in `torture_tool/tests/test_runner.py` | None |
+| T6 Verification | COMPLETED | `5f4130a` | 6 passing unit tests in `torture_tool/tests/test_verifier.py` | None |
+| T7 Large workloads | COMPLETED | `5f4130a` | 6 passing unit tests in `torture_tool/tests/test_large_workloads.py` | None |
+| T8 Targeted modes | COMPLETED | `5f4130a` | 6 passing unit tests in `torture_tool/tests/test_modes.py` | None |
+| T9 Self-tests | COMPLETED | `5f4130a` | 7 passing unit tests in `torture_tool/tests/test_self_testing.py` | None |
+| T10 Release | COMPLETED | `5f4130a` | 1,000 qualification iterations across 6 suites (500 default + 5x100 targeted), 78 unit tests passing | None |

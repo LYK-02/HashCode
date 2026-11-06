@@ -1,6 +1,6 @@
 # Crash-Safe Key-Value Engine — Documentation Index
 
-This folder contains 45 detailed Markdown specifications for the two-track implementation.
+This folder contains 46 detailed Markdown specifications for the two-track implementation.
 
 ## Structure
 

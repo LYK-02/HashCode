@@ -1,6 +1,6 @@
 # Documentation Manifest
 
-Total requested specifications: **45 Markdown files**
+Total requested specifications: **46 Markdown files**
 
 ## common/
 
@@ -58,3 +58,4 @@ Total requested specifications: **45 Markdown files**
 - [14_DISK_FULL_TESTING.md](torture_tool/14_DISK_FULL_TESTING.md)
 - [15_FAILURE_REPORTING_AND_LOGGING.md](torture_tool/15_FAILURE_REPORTING_AND_LOGGING.md)
 - [16_TORTURE_TESTING.md](torture_tool/16_TORTURE_TESTING.md)
+- [17_CRITERIA_AND_IMPROVEMENTS.md](torture_tool/17_CRITERIA_AND_IMPROVEMENTS.md)
