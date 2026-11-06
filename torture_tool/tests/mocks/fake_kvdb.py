@@ -68,11 +68,36 @@ def main():
         if os.path.exists(state_file):
             with open(state_file, "r") as f:
                 for line in f:
-                    p = line.strip().split()
-                    if len(p) == 2:
-                        state[p[0]] = p[1]
-                    elif len(p) == 1:
-                        state.pop(p[0], None)
+                    line = line.strip()
+                    if not line:
+                        continue
+                    if line.startswith("TX_BATCH "):
+                        if not line.endswith(" END_BATCH"):
+                            continue
+                        parts = line[:-10].split(" ", 3)
+                        if len(parts) >= 4:
+                            expected_cnt = int(parts[2])
+                            items = parts[3].split(";")
+                            if len(items) != expected_cnt:
+                                continue
+                            for item in items:
+                                p = item.split()
+                                if len(p) == 2:
+                                    if p[1] == "DEL_TOMBSTONE":
+                                        state.pop(p[0], None)
+                                    else:
+                                        state[p[0]] = p[1]
+                                elif len(p) == 1:
+                                    state[p[0]] = ""
+                    else:
+                        p = line.split(None, 1)
+                        if len(p) == 2:
+                            if p[1] == "DEL_TOMBSTONE":
+                                state.pop(p[0], None)
+                            else:
+                                state[p[0]] = p[1]
+                        elif len(p) == 1:
+                            state[p[0]] = ""
         for k in sorted(state.keys()):
             sys.stdout.write(f"{k} {state[k]}\n")
         sys.exit(0)
@@ -112,27 +137,35 @@ def main():
             if tag == "PING":
                 resp = f"PONG {op_id}\n"
             elif tag == "PUT":
-                k, v = parts[2], parts[3]
+                k = parts[2]
+                v = parts[3] if len(parts) > 3 else ""
                 state_f.write(f"{k} {v}\n")
                 state_f.flush()
+                os.fsync(state_f.fileno())
                 resp = f"ACK {op_id}\n"
             elif tag == "DEL":
                 k = parts[2]
-                state_f.write(f"{k}\n")
+                state_f.write(f"{k} DEL_TOMBSTONE\n")
                 state_f.flush()
+                os.fsync(state_f.fileno())
                 resp = f"ACK {op_id}\n"
             elif tag == "BATCH":
                 count = int(parts[2])
                 items_str = parts[3] if len(parts) > 3 else ""
+                batch_items = []
                 if items_str:
                     for itm in items_str.split(","):
                         if ":" in itm:
                             ik, iv = itm.split(":", 1)
                             if iv:
-                                state_f.write(f"{ik} {iv}\n")
+                                batch_items.append(f"{ik} {iv}")
                             else:
-                                state_f.write(f"{ik}\n")
+                                batch_items.append(f"{ik} DEL_TOMBSTONE")
+                # Format as atomic batch frame with END_BATCH marker
+                frame = f"TX_BATCH {op_id} {count} {';'.join(batch_items)} END_BATCH\n"
+                state_f.write(frame)
                 state_f.flush()
+                os.fsync(state_f.fileno())
                 resp = f"ACK {op_id}\n"
             else:
                 resp = f"ERR {op_id} UNKNOWN_COMMAND\n"

@@ -21,7 +21,7 @@
 | [PLAN_T7_LARGE_VALUES_AND_BATCHES.md](./PLAN_T7_LARGE_VALUES_AND_BATCHES.md) | **T7** | Large Values & Batches | Exact 1 MiB payloads with nulls, 10,000-op atomic batch stress across pipe boundaries (COMPLETED) |
 | [PLAN_T8_TARGETED_MODES.md](./PLAN_T8_TARGETED_MODES.md) | **T8** | Targeted Maintenance Modes | Recovery crash (`open` replay kill), compaction crash (temp file/swap kill), disk-full quota (COMPLETED) |
 | [PLAN_T9_HARNESS_SELF_TESTING.md](./PLAN_T9_HARNESS_SELF_TESTING.md) | **T9** | Harness Self-Testing | Mock child process, delayed/scrambled ACKs, stderr flooding, negative oracle validation (COMPLETED) |
-| [PLAN_T10_RELEASE_QUALIFICATION.md](./PLAN_T10_RELEASE_QUALIFICATION.md) | **T10** | Release Qualification | 500 default iterations, unseen seed support, root `./torture` CLI, live demo dashboard |
+| [PLAN_T10_RELEASE_QUALIFICATION.md](./PLAN_T10_RELEASE_QUALIFICATION.md) | **T10** | Release Qualification | 500 default iterations, unseen seed support, root `./torture` CLI, live demo dashboard (COMPLETED) |
 
 ---
 

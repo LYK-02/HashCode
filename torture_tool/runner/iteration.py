@@ -97,6 +97,11 @@ class IterationRunner:
                     mock_state.unlink()
                 except OSError:
                     pass
+            if self.journal_path.exists():
+                try:
+                    self.journal_path.unlink()
+                except OSError:
+                    pass
 
         journal = OracleJournal(self.journal_path)
         journal.log_iteration_start(iteration)

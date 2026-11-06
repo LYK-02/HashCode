@@ -419,3 +419,25 @@ Work on Phase T9 using `docs/torture_tool/plans/PLAN_T9_HARNESS_SELF_TESTING.md`
 
 ---
 
+### Prompt (2026-11-06 18:56:24)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Complete Phase T10 following `docs/torture_tool/plans/PLAN_T10_RELEASE_QUALIFICATION.md`. Finalize the root `./torture` CLI, verify all required modes, run the 500-iteration default and 100-iteration targeted tests with unseen seeds, and prepare the live demo runbook and progress output. Fix all issues, validate release readiness, and update the checklist with actual results.
+```
+
+---
+
+### Prompt (2026-11-06 19:51:53)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Clean up `.gitignore`, exclude generated artifacts and temporary files, then stage all legitimate project source, tests, and documentation. Review `git status` and staged changes carefully, ensure no important files are missed or unwanted files included, then commit and push to `origin/main`. Do not force-push or delete project data. Show me the final commit and push results.
+```
+
+---
+

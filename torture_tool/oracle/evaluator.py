@@ -248,36 +248,36 @@ class OracleEvaluator:
             if not batch_items:
                 continue
 
-            # Determine how many items of this batch appear to be applied
-            applied_count = 0
-            absent_count = 0
-
+            # Collapse intra-batch overwrites: only the LAST mutation for each key matters
+            final_batch_ops: Dict[bytes, Optional[bytes]] = {}
             for itm in batch_items:
                 bk = hex_to_bytes(itm["k"])
                 bv = hex_to_bytes(itm["v"]) if itm["v"] is not None else None
+                final_batch_ops[bk] = bv
 
+            # Determine whether this batch's final mutations were applied or absent
+            applied_keys = 0
+            absent_keys = 0
+
+            for bk, bv in final_batch_ops.items():
                 if bv is not None:
-                    # PUT item
+                    # Final op was PUT
                     if bk in actual_state and actual_state[bk] == bv:
-                        applied_count += 1
+                        applied_keys += 1
                     else:
-                        absent_count += 1
+                        absent_keys += 1
                 else:
-                    # DEL item
+                    # Final op was DEL
                     if bk not in actual_state:
-                        applied_count += 1
+                        applied_keys += 1
                     else:
-                        absent_count += 1
+                        absent_keys += 1
 
-            total_items = len(batch_items)
-            # If some items were applied and some were not, check if base_state explains it.
-            # If not explained by prior state, it's a partial batch!
-            if 0 < applied_count < total_items:
-                # Check if the "applied" items were already in base_state
+            total_unique_keys = len(final_batch_ops)
+            if 0 < applied_keys < total_unique_keys:
+                # Check if the "applied" keys were already in base_state prior to this batch
                 truly_applied = 0
-                for itm in batch_items:
-                    bk = hex_to_bytes(itm["k"])
-                    bv = hex_to_bytes(itm["v"]) if itm["v"] is not None else None
+                for bk, bv in final_batch_ops.items():
                     if bv is not None:
                         if actual_state.get(bk) == bv and base_state.get(bk) != bv:
                             truly_applied += 1
@@ -285,7 +285,7 @@ class OracleEvaluator:
                         if bk not in actual_state and base_state.get(bk) is not None:
                             truly_applied += 1
 
-                if 0 < truly_applied < total_items and truly_applied > 0:
+                if 0 < truly_applied < total_unique_keys and truly_applied > 0:
                     violations.append(
                         InvariantViolation(
                             violation_type=ViolationType.BATCH_PARTIAL_APPLICATION,
@@ -295,7 +295,7 @@ class OracleEvaluator:
                             op_id=inf.op_id,
                             description=(
                                 f"In-flight batch {inf.op_id} partially applied: "
-                                f"{truly_applied}/{total_items} operations took effect"
+                                f"{truly_applied}/{total_unique_keys} operations took effect"
                             ),
                         )
                     )

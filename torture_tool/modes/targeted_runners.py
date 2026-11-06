@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from torture_tool.cli import RunConfig
 from torture_tool.generator.workload import WorkloadConfig
-from torture_tool.runner.suite import SuiteSummary, TestSuiteRunner
+
+if TYPE_CHECKING:
+    from torture_tool.runner.suite import SuiteSummary, TestSuiteRunner
 
 
 class LargeValuesModeRunner:
@@ -26,6 +28,8 @@ class LargeValuesModeRunner:
         )
 
     def run(self) -> SuiteSummary:
+        from torture_tool.runner.suite import TestSuiteRunner
+
         suite = TestSuiteRunner(self.config)
         return suite.run()
 
@@ -46,6 +50,8 @@ class LargeBatchesModeRunner:
         )
 
     def run(self) -> SuiteSummary:
+        from torture_tool.runner.suite import TestSuiteRunner
+
         suite = TestSuiteRunner(self.config)
         return suite.run()
 

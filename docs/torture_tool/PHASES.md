@@ -291,6 +291,6 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 | T5 Random kill | COMPLETED | — | 3 passing unit tests in `torture_tool/tests/test_runner.py` | None |
 | T6 Verification | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_verifier.py` | None |
 | T7 Large workloads | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_large_workloads.py` | None |
-| T8 Targeted modes | NOT STARTED | — | — | — |
-| T9 Self-tests | NOT STARTED | — | — | — |
-| T10 Release | NOT STARTED | — | — | — |
+| T8 Targeted modes | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_modes.py` | None |
+| T9 Self-tests | COMPLETED | — | 7 passing unit tests in `torture_tool/tests/test_self_testing.py` | None |
+| T10 Release | COMPLETED | — | 1,000 qualification iterations across 6 suites (500 default + 5x100 targeted), 78 unit tests passing | None |

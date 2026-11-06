@@ -471,3 +471,32 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
   6. Ran all 78 tests across the complete test suite with `python3 -W error::ResourceWarning -m unittest discover -s torture_tool/tests -v` (78/78 passed).
   7. Updated `PLAN_T9_HARNESS_SELF_TESTING.md` and `docs/torture_tool/plans/README.md` checklists to Completed & Verified. Left T10 untouched.
 - **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 18:56:24] Phase T10 Release Qualification & Root CLI Deliverable
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Completed Phase T10: Release Qualification and Live Demo Protocol. Built root `./torture` CLI script (`chmod +x torture`), implemented `torture_tool/reporting/terminal_ui.py` with dynamic single-line ANSI progress rendering and non-TTY fallback, resolved intra-batch key collision evaluation in `torture_tool/oracle/evaluator.py`, prevented stale journal leakage across iterations, and executed all 6 required qualification suites (1,000 total iterations) with zero invariant violations.
+- **Why:** Required primary deliverable executable `./torture` at repository root for hackathon evaluation; mandates 100% offline standard-library execution and proof across default 500-iteration and 5x100-iteration targeted crash modes under arbitrary judge seeds.
+- **Fix / Actions Taken:**
+  1. Created executable root script `./torture` forwarding arguments to `torture_tool/main.py`.
+  2. Implemented dynamic live progress bar in `torture_tool/reporting/terminal_ui.py` with auto-detection of interactive TTY vs non-interactive pipeline logging.
+  3. Fixed intra-batch multi-mutation evaluation in `torture_tool/oracle/evaluator.py` so duplicate key mutations within a single atomic batch collapse to the final state.
+  4. Updated `IterationRunner` to cleanly unlink existing oracle journals between iterations when `reuse_database=False`.
+  5. Verified all 78 unit/adversarial tests: `python3 -W error::ResourceWarning -m unittest discover -s torture_tool/tests -v` (78/78 OK).
+  6. Successfully executed full 6-suite qualification matrix:
+     - Default 500-iteration (`--seed 12345`): 500/500 PASS, 500 kills with in-flight ops, 38,087 ops, 0 violations (84.81s).
+     - Large-Values 100-iteration (`--mode large-values --seed 999`): 100/100 PASS, 527 ops, 0 violations (27.22s).
+     - Large-Batches 100-iteration (`--mode large-batches --seed 888`): 100/100 PASS, 394 ops, 0 violations (120.23s).
+     - Compaction 100-iteration (`--mode compaction --seed 777`): 100/100 PASS, 100 kills, 0 violations (3.68s).
+     - Recovery-Crash 100-iteration (`--mode recovery-crash --seed 666`): 100/100 PASS, 100 kills, 0 violations (5.83s).
+     - Disk-Full 100-iteration (`--mode disk-full --seed 555`): 100/100 PASS, 1,900 ops, 0 violations (16.26s).
+  7. Updated `PLAN_T10_RELEASE_QUALIFICATION.md`, `docs/torture_tool/plans/README.md`, and `docs/torture_tool/PHASES.md` with complete qualification metrics.
+- **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 19:51:53] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Clean up `.gitignore`, exclude generated artifacts and temporary files, then stage all legitimate project source, tests, and documentation. Review `git status` and staged changes carefully, ensure no important files are missed or unwanted files included, then commit and push to `origin/main`. Do not force-push or delete project data. Show me the final commit and push results.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
