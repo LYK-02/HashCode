@@ -9,11 +9,12 @@ import stat
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
-from torture_tool.cli import RunConfig
-from torture_tool.runner.iteration import IterationResult
-from torture_tool.verifier.comparator import DiffReport
+if TYPE_CHECKING:
+    from torture_tool.cli import RunConfig
+    from torture_tool.runner.iteration import IterationResult
+    from torture_tool.verifier.comparator import DiffReport
 
 
 def get_git_commit(cwd: Optional[Path] = None) -> str:
@@ -105,10 +106,9 @@ class FailurePackager:
         # 6. Generate executable reproduce.sh script
         reproduce_script = (
             "#!/usr/bin/env bash\n"
-            "# Auto-generated crash reproduction script\n"
+            "# Auto-generated crash reproduction script for judge evaluation\n"
             "set -euo pipefail\n\n"
-            f"# Command to reproduce iteration {iteration_result.iteration}:\n"
-            f"./torture --seed {iteration_result.seed} --iterations 1 --mode {iteration_result.mode} --workers {config.workers} --db reproduce.db\n"
+            f"./torture --seed {iteration_result.seed} --iterations 1 --mode {iteration_result.mode} --workers {config.workers} --db /tmp/reproduce.db\n"
         )
         reproduce_path = target_dir / "reproduce.sh"
         reproduce_path.write_text(reproduce_script, encoding="utf-8")

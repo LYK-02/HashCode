@@ -1654,3 +1654,91 @@ update all doc and test torture tool @[/home/laik/workspace/srinathonn/docs/tort
 
 ---
 
+### Prompt (2026-11-07 03:00:35)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Improvement 1: Instant Single-Command Failure Reproduction Script
+Current Behavior: When a failure occurs, the tool writes failure logs to artifacts/failure_iter_XXXX/.
+Enhancement: Generate an executable reproduction shell script artifacts/failure_iter_XXXX/reproduce.sh:
+#!/usr/bin/env bash
+./torture --seed <exact_seed> --iterations 1 --mode <exact_mode> --db /tmp/reproduce.db
+Value to Judge: Gives the judge a 1-click reproduction script to inspect the failure boundary immediately.
+Improvement 2: Adaptive Millisecond Kill Delays (p99 Fsync Calibration)
+Current Behavior: Sleep delays are drawn uniformly from 
+0.1
+ ms
+0.1 ms to 
+200
+ ms
+200 ms.
+Enhancement: In the first 5 warmup operations, measure the average round-trip latency of fsync (
+T
+fsync
+≈
+1
+–
+3
+ ms
+T 
+fsync
+​
+ ≈1–3 ms). Center the random delay distribution around 
+[
+0.5
+×
+T
+fsync
+,
+  
+1.5
+×
+T
+fsync
+]
+[0.5×T 
+fsync
+​
+ ,1.5×T 
+fsync
+​
+ ]:
+Delay
+∼
+U
+(
+0.5
+⋅
+T
+fsync
+,
+  
+1.5
+⋅
+T
+fsync
+)
+Delay∼U(0.5⋅T 
+fsync
+​
+ ,1.5⋅T 
+fsync
+​
+ )
+
+Value to Judge: Maximizes the probability that kill -9 strikes at the exact microsecond pwrite() finishes but before File.Sync() returns.
+Improvement 3: Live Throughput & IOPS Meter in the Terminal UI
+Current Behavior: The terminal progress bar displays:
+[▓▓▓▓▓▓▓▓░░░░] 60% | Iter: 6/10 | Mode: default | Kills: 6 | ACKs: 571 | Inv: OK
+Enhancement: Add live throughput metrics:
+[▓▓▓▓▓▓▓▓░░░░] 60% | Iter: 6/10 | 1,420 ops/s | p99: 1.8ms | Kills: 6 | ACKs: 571 | Inv: OK
+Value to Judge: Visually proves high-throughput concurrent stress testing during live evaluation.
+Improvement 4: Multi-Process OS Concurrency (Simulating Competing CLI Clients)
+Current Behavior: Uses multiple threads within a single Python process driving ./kvdb serve.
+Enhancement: Spawn a secondary independent process running ./kvdb put or ./kvdb batch directly from the shell while ./kvdb serve is running, exercising file-level flock(LOCK_EX) collisions under chaos termination. and @[/home/laik/workspace/srinathonn/GUIDE.md] test it and give me result
+```
+
+---
+

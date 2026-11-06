@@ -68,3 +68,4 @@ To make the torture harness even more formidable during live demos or extended 2
 ### Improvement 4: Multi-Process OS Concurrency (Simulating Competing CLI Clients)
 * **Current Behavior:** Uses multiple threads within a single Python process driving `./kvdb serve`.
 * **Enhancement:** Spawn a secondary independent process running `./kvdb put` or `./kvdb batch` directly from the shell while `./kvdb serve` is running, exercising file-level `flock(LOCK_EX)` collisions under chaos termination.
+

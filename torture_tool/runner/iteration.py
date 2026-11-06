@@ -6,7 +6,7 @@ import os
 import shutil
 import subprocess
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -39,6 +39,7 @@ class IterationResult:
     eval_result: Optional[EvaluationResult] = None
     error_message: Optional[str] = None
     duration_ms: float = 0.0
+    latencies_ms: List[float] = field(default_factory=list)
 
 
 def parse_raw_dump(dump_text: str) -> Dict[bytes, bytes]:
@@ -69,11 +70,15 @@ class IterationRunner:
         seed_manager: SeedManager,
         journal_path: Path,
         workload_config: Optional[WorkloadConfig] = None,
+        fsync_latency_ms: Optional[float] = None,
+        enable_competing_cli: bool = True,
     ) -> None:
         self.config = config
         self.seed_manager = seed_manager
         self.journal_path = journal_path
         self.workload_config = workload_config or WorkloadConfig.for_mode(config.mode)
+        self.fsync_latency_ms = fsync_latency_ms
+        self.enable_competing_cli = enable_competing_cli
 
     def run_iteration(
         self,
@@ -153,9 +158,25 @@ class IterationRunner:
         )
         pool.start()
 
-        # 4. Schedule kill
+        # 4. Competing CLI client exercising OS flock collisions
+        competing_client = None
+        if self.enable_competing_cli:
+            from torture_tool.concurrency.competing_client import CompetingCLIClient
+
+            competing_client = CompetingCLIClient(
+                kvdb_bin=self.config.kvdb_bin,
+                db_path=db_file,
+                journal=journal,
+                iteration=iteration,
+            )
+            competing_client.start()
+
+        # 5. Schedule kill with calibrated fsync delay
         scheduler_prng = self.seed_manager.get_scheduler_prng(iteration)
-        scheduler = CrashScheduler(prng=scheduler_prng)
+        scheduler = CrashScheduler(
+            prng=scheduler_prng,
+            fsync_latency_ms=self.fsync_latency_ms,
+        )
 
         def count_inflight() -> int:
             return len(dispatcher.get_pending_op_ids())
@@ -165,7 +186,11 @@ class IterationRunner:
             get_inflight_count_func=count_inflight,
         )
 
-        # 5. Stop workers and dispatcher
+        if competing_client:
+            competing_client.stop()
+            competing_client.join(timeout=1.0)
+
+        # 6. Stop workers and dispatcher
         worker_stats = pool.stop_and_join(timeout=2.0)
         dispatcher.stop()
         journal.close()
@@ -173,6 +198,12 @@ class IterationRunner:
         total_ops = sum(s.operations_started for s in worker_stats)
         total_acks = sum(s.acks_received for s in worker_stats)
         total_unresolved = sum(s.inflight_at_stop for s in worker_stats)
+        if competing_client:
+            total_ops += competing_client.attempts
+            total_acks += competing_client.successes
+        all_lats: List[float] = []
+        for s in worker_stats:
+            all_lats.extend(s.latencies_ms)
 
         # 6. Post-recovery verification: Run kvdb check
         check_passed = False
@@ -225,4 +256,5 @@ class IterationRunner:
             check_passed=check_passed,
             eval_result=eval_result,
             duration_ms=duration,
+            latencies_ms=all_lats,
         )

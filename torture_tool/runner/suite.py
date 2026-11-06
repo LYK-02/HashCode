@@ -67,6 +67,16 @@ class TestSuiteRunner:
 
         terminal_ui = TerminalUI(total_iterations=self.config.iterations, mode=self.config.mode)
 
+        # Calibrate adaptive fsync latency across warmup operations
+        calib_db = run_dir / "calib_warmup.db"
+        from torture_tool.scheduler.crash_scheduler import calibrate_fsync_latency
+
+        calibrated_fsync_ms = calibrate_fsync_latency(
+            kvdb_bin=self.config.kvdb_bin,
+            warmup_db=calib_db,
+            warmup_ops=5,
+        )
+
         for iter_num in range(1, self.config.iterations + 1):
             iter_log_dir = run_dir / f"iter_{iter_num:04d}"
             iter_journal_path = run_dir / f"oracle_iter_{iter_num:04d}.jsonl"
@@ -91,6 +101,7 @@ class TestSuiteRunner:
                     config=self.config,
                     seed_manager=self.seed_manager,
                     journal_path=iter_journal_path,
+                    fsync_latency_ms=calibrated_fsync_ms,
                 )
 
                 res = iter_runner.run_iteration(
@@ -105,13 +116,37 @@ class TestSuiteRunner:
             if res.in_flight_at_kill > 0:
                 self.summary.kills_with_inflight += 1
 
+            # Live throughput (ops/sec) and p99 latency calculation
+            elapsed_suite = max(0.001, time.monotonic() - start_time)
+            ops_sec = int(self.summary.total_acks / elapsed_suite)
+
+            all_iter_lats = getattr(res, "latencies_ms", [])
+            if all_iter_lats:
+                sorted_lats = sorted(all_iter_lats)
+                p99_idx = min(len(sorted_lats) - 1, int(0.99 * len(sorted_lats)))
+                p99_ms = sorted_lats[p99_idx]
+            else:
+                p99_ms = max(0.1, res.duration_ms / max(1, res.operations_started))
+
             if res.passed:
                 self.summary.passed_iterations += 1
-                terminal_ui.update(res, self.summary.total_acks, self.summary.kills_with_inflight)
+                terminal_ui.update(
+                    res,
+                    total_acks=self.summary.total_acks,
+                    in_flight_kills=self.summary.kills_with_inflight,
+                    ops_sec=ops_sec,
+                    p99_ms=p99_ms,
+                )
             else:
                 self.summary.failed_iterations += 1
                 self.summary.first_failure = res
-                terminal_ui.update(res, self.summary.total_acks, self.summary.kills_with_inflight)
+                terminal_ui.update(
+                    res,
+                    total_acks=self.summary.total_acks,
+                    in_flight_kills=self.summary.kills_with_inflight,
+                    ops_sec=ops_sec,
+                    p99_ms=p99_ms,
+                )
 
                 # Preserve failure artifacts immediately!
                 FailurePackager.preserve_failure(

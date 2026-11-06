@@ -5,9 +5,8 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, List
 
-from torture_tool.runner.iteration import IterationResult
-
 if TYPE_CHECKING:
+    from torture_tool.runner.iteration import IterationResult
     from torture_tool.runner.suite import SuiteSummary
 
 

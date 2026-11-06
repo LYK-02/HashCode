@@ -82,5 +82,6 @@ class WorkerPool:
             total.errors_received += w.stats.errors_received
             total.inflight_at_stop += w.stats.inflight_at_stop
             total.exceptions_encountered += w.stats.exceptions_encountered
+            total.latencies_ms.extend(w.stats.latencies_ms)
         return total
 

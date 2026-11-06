@@ -5,7 +5,7 @@ from __future__ import annotations
 import concurrent.futures
 import threading
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 from torture_tool.concurrency.dispatcher import (
@@ -32,6 +32,7 @@ class WorkerStats:
     errors_received: int = 0
     inflight_at_stop: int = 0
     exceptions_encountered: int = 0
+    latencies_ms: List[float] = field(default_factory=list)
 
 
 class WorkerThread(threading.Thread):
@@ -72,6 +73,7 @@ class WorkerThread(threading.Thread):
                 self.last_in_flight_op = req
 
                 # 1. Register future before transmitting
+                t_op_start = time.perf_counter()
                 fut = self.dispatcher.register(op_id)
 
                 # 2. Log START event to independent oracle journal
@@ -94,6 +96,8 @@ class WorkerThread(threading.Thread):
 
                     if isinstance(resp, AckResponse):
                         self.stats.acks_received += 1
+                        lat_ms = (time.perf_counter() - t_op_start) * 1000.0
+                        self.stats.latencies_ms.append(lat_ms)
                         self.journal.log_ack(self.iteration, op_id, seq_num=resp.seq_num)
                     elif isinstance(resp, ErrResponse):
                         self.stats.errors_received += 1

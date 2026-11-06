@@ -102,6 +102,13 @@ def main():
             sys.stdout.write(f"{k} {state[k]}\n")
         sys.exit(0)
 
+    elif cmd in ("put", "batch"):
+        lock_file = db_path + ".lock"
+        if os.path.exists(lock_file):
+            sys.stderr.write("open error: LOCKED: database lock held by another process\n")
+            sys.exit(1)
+        sys.exit(0)
+
     elif cmd == "serve":
         # Check silent hang mode
         if os.environ.get("FAKE_KVDB_SILENT_HANG") == "1":

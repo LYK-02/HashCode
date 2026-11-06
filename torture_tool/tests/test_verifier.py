@@ -136,7 +136,10 @@ class TestFailurePackager(unittest.TestCase):
             self.assertEqual(manifest["seed"], 999)
             self.assertEqual(manifest["violations"][0]["type"], "ViolationType.VALUE_CORRUPTED")
 
-            # Verify reproduce script is executable
+            # Verify reproduce script is executable and contains proper command
+            reproduce_text = (bundle_dir / "reproduce.sh").read_text()
+            self.assertIn("./torture --seed 999 --iterations 1", reproduce_text)
+            self.assertIn("--db /tmp/reproduce.db", reproduce_text)
             mode = (bundle_dir / "reproduce.sh").stat().st_mode
             self.assertTrue(mode & 0o111)
 
