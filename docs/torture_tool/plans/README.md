@@ -11,7 +11,7 @@
 
 | Plan File | Phase | Core Focus | Key Deliverables & Criteria |
 |---|---|---|---|
-| [PLAN_T0_CONTRACT_AND_PROTOCOL.md](./PLAN_T0_CONTRACT_AND_PROTOCOL.md) | **T0** | Contract and Protocol | Binary-safe hex framing, `PUT`/`DEL`/`BATCH`/`PING`, golden test fixtures |
+| [PLAN_T0_CONTRACT_AND_PROTOCOL.md](./PLAN_T0_CONTRACT_AND_PROTOCOL.md) | **T0** | Contract and Protocol | Binary-safe hex framing, `PUT`/`DEL`/`BATCH`/`PING`, golden test fixtures (COMPLETED) |
 | [PLAN_T1_CLI_AND_WORKLOAD_GENERATOR.md](./PLAN_T1_CLI_AND_WORKLOAD_GENERATOR.md) | **T1** | CLI & Deterministic Workload | Mandatory `--seed`, SHA-256 PRNG stream isolation, reproducible workloads |
 | [PLAN_T2_INDEPENDENT_ORACLE.md](./PLAN_T2_INDEPENDENT_ORACLE.md) | **T2** | Independent Oracle | Append-only JSONL journal, in-flight ambiguity resolution, all-or-none batch atomicity |
 | [PLAN_T3_SUBPROCESS_MANAGER.md](./PLAN_T3_SUBPROCESS_MANAGER.md) | **T3** | Subprocess & Pipe Control | Non-blocking stderr drainer, deadlock prevention, ungraceful `SIGKILL` |

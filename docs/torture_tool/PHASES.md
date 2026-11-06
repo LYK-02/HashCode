@@ -283,7 +283,7 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 
 | Phase | Status | Commit | Test evidence | Known issue |
 |---|---|---|---|---|
-| T0 Contract | NOT STARTED | — | — | — |
+| T0 Contract | COMPLETED | — | 21 passing unit tests in `torture_tool/tests/test_protocol.py` | None |
 | T1 Generator | NOT STARTED | — | — | — |
 | T2 Oracle | NOT STARTED | — | — | — |
 | T3 Process manager | NOT STARTED | — | — | — |

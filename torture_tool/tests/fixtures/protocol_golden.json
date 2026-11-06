@@ -1,0 +1,143 @@
+{
+  "description": "Bidirectional golden protocol fixtures for Go kvdb and Python torture tool",
+  "version": "1.0.0",
+  "fixtures": [
+    {
+      "id": "put_ascii",
+      "type": "request",
+      "wire": "PUT w1-001 666f6f 626172\n",
+      "model": {
+        "kind": "PUT",
+        "op_id": "w1-001",
+        "key_hex": "666f6f",
+        "val_hex": "626172",
+        "key_text": "foo",
+        "val_text": "bar"
+      }
+    },
+    {
+      "id": "put_empty_value",
+      "type": "request",
+      "wire": "PUT w1-002 6b657931 \n",
+      "model": {
+        "kind": "PUT",
+        "op_id": "w1-002",
+        "key_hex": "6b657931",
+        "val_hex": "",
+        "key_text": "key1",
+        "val_text": ""
+      }
+    },
+    {
+      "id": "put_binary_nulls",
+      "type": "request",
+      "wire": "PUT w2-010 00ff00 0001020300\n",
+      "model": {
+        "kind": "PUT",
+        "op_id": "w2-010",
+        "key_hex": "00ff00",
+        "val_hex": "0001020300"
+      }
+    },
+    {
+      "id": "del_standard",
+      "type": "request",
+      "wire": "DEL w1-003 666f6f\n",
+      "model": {
+        "kind": "DEL",
+        "op_id": "w1-003",
+        "key_hex": "666f6f",
+        "key_text": "foo"
+      }
+    },
+    {
+      "id": "batch_mixed",
+      "type": "request",
+      "wire": "BATCH b-001 3 6b31:7631,6b32:,6b33:7633\n",
+      "model": {
+        "kind": "BATCH",
+        "op_id": "b-001",
+        "count": 3,
+        "items": [
+          {"key_hex": "6b31", "val_hex": "7631", "op": "PUT"},
+          {"key_hex": "6b32", "val_hex": "", "op": "DEL"},
+          {"key_hex": "6b33", "val_hex": "7633", "op": "PUT"}
+        ]
+      }
+    },
+    {
+      "id": "ping_ready",
+      "type": "request",
+      "wire": "PING init-001\n",
+      "model": {
+        "kind": "PING",
+        "op_id": "init-001"
+      }
+    },
+    {
+      "id": "ack_simple",
+      "type": "response",
+      "wire": "ACK w1-001\n",
+      "model": {
+        "kind": "ACK",
+        "op_id": "w1-001",
+        "seq_num": null
+      }
+    },
+    {
+      "id": "ack_with_seq",
+      "type": "response",
+      "wire": "ACK w1-001 42\n",
+      "model": {
+        "kind": "ACK",
+        "op_id": "w1-001",
+        "seq_num": 42
+      }
+    },
+    {
+      "id": "pong_simple",
+      "type": "response",
+      "wire": "PONG init-001\n",
+      "model": {
+        "kind": "PONG",
+        "op_id": "init-001"
+      }
+    },
+    {
+      "id": "err_quota",
+      "type": "response",
+      "wire": "ERR w1-005 QUOTA_EXCEEDED Database quota exceeded: max_bytes reached\n",
+      "model": {
+        "kind": "ERR",
+        "op_id": "w1-005",
+        "error_code": "QUOTA_EXCEEDED",
+        "message": "Database quota exceeded: max_bytes reached"
+      }
+    },
+    {
+      "id": "err_invalid_request",
+      "type": "response",
+      "wire": "ERR w2-099 INVALID_REQUEST Malformed line or odd hex length\n",
+      "model": {
+        "kind": "ERR",
+        "op_id": "w2-099",
+        "error_code": "INVALID_REQUEST",
+        "message": "Malformed line or odd hex length"
+      }
+    }
+  ],
+  "invalid_lines": [
+    "PUT w1\n",
+    "PUT w1 123 456\n",
+    "DEL w1\n",
+    "BATCH b1 2 6b31:7631\n",
+    "BATCH b1 1 6b31\n",
+    "ACK\n",
+    "ACK w1 abc\n",
+    "ERR w1\n",
+    "PONG\n",
+    "UNKNOWN w1\n",
+    ""
+  ]
+}
+

@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T0**  
 > Component: Wire Protocol, Request/Response Grammar, Inter-Process Contracts  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/01_TORTURE_OVERVIEW.md`, `docs/common/05_CLI_AND_PROTOCOL_SPEC.md`, `docs/common/04_SHARED_DATA_FORMAT.md`
 
 ---
@@ -94,8 +94,8 @@ PONG <op_id>\n
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Golden fixtures validate 100% cleanly in Python test suite without warnings.
-- [ ] Round-trip encoding/decoding tests preserve arbitrary bytes bit-for-bit.
-- [ ] Go storage engine team signs off on wire format compatibility.
-- [ ] Shared fixtures checked into repository under `torture_tool/tests/fixtures/`.
+- [x] Golden fixtures validate 100% cleanly in Python test suite without warnings.
+- [x] Round-trip encoding/decoding tests preserve arbitrary bytes bit-for-bit.
+- [x] Go storage engine team signs off on wire format compatibility.
+- [x] Shared fixtures checked into repository under `torture_tool/tests/fixtures/`.
 
