@@ -15,8 +15,9 @@ All operations, code design, file structures, and verification suites must stric
 - 👉 [09_git_synchronization.md](file://.agents/rules/09_git_synchronization.md) — Mandatory pre-execution sync (`git pull`) before starting any action or code changes.
 - 👉 [10_code_quality_and_practices.md](file://.agents/rules/10_code_quality_and_practices.md) — Zero-panic safety, explicit error modeling, allocation bounds, RAII resource cleanup, and modular systems design.
 
-### Specialized Workspace Skills in `.agents/skills/`
-- 🎯 [hackathon-demo-vault](file://.agents/skills/hackathon-demo-vault/SKILL.md) — Manages the 15-minute live demo runbooks and flashcards ([`DEMO.md`](file://DEMO.md), [`CRASH_QUESTIONS.md`](file://CRASH_QUESTIONS.md), [`DESIGN_EXTENSION.md`](file://DESIGN_EXTENSION.md)).
+### Specialized Workspace Skills & Subagents in `.agents/`
+- 🤖 [deliverables-sync-agent](file://.agents/agents/deliverables_sync_agent.md) — Autonomous subagent maintaining and synchronizing `README.md`, `ARCHITECTURE.md`, and `BREAKING.md`.
+- 🎯 [hackathon-demo-vault](file://.agents/skills/hackathon-demo-vault/SKILL.md) — Manages live demo runbooks and flashcards ([`DEMO.md`](file://DEMO.md), [`CRASH_QUESTIONS.md`](file://CRASH_QUESTIONS.md), [`DESIGN_EXTENSION.md`](file://DESIGN_EXTENSION.md)).
 
 ### Persistent Project State
 - 📜 [PROMPTS.md](file://PROMPTS.md) (also available at [`.agents/PROMPTS.md`](file://.agents/PROMPTS.md)) — Complete unedited AI prompt log.
