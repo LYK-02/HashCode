@@ -1890,3 +1890,28 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
      - `docs/torture_tool/PHASES.md` & `16_TORTURE_TESTING.md`: Preserved verified release-ready evidence.
      - `docs/MANIFEST.md` & `docs/README.md`: Updated to 46 Markdown specifications index.
 - **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-07 03:30:11] Architectural Definition & Technical Breakdown of UABE
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Provided comprehensive, plain-English systems explanation of UABE (Universal Atomic Batch Entry), its on-disk 32-byte envelope structure, dual Castagnoli CRC32C checksums, and how it solves batch atomicity and torn-write vulnerabilities without separate commit markers.
+- **Why:** Team member conceptual alignment for live judging presentation and oral defense.
+- **Status:** COMPLETED.
+
+### [2026-11-07 03:31:11] Adversarial Chaos Testing Guide: Attacking KVDB with Torture
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Provided comprehensive guide detailing how `./torture` actively attacks the `./kvdb` storage engine across 6 adversarial chaos vectors (concurrent traffic saturation, multi-block torn-write injection, atomic batch interruption, compaction swap ambush, nested recovery kills, and quota exhaustion).
+- **Why:** Enable the team to independently execute aggressive stress testing and demonstrate the robustness of the engine under live adversary conditions.
+- **Status:** COMPLETED.
+
+### [2026-11-07 03:33:50] Fix Accidental Pasted Content in `torture` Launcher Script
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Cleaned and restored `./torture` after the user inadvertently pasted explanation markdown containing unicode diagram characters into the executable file.
+- **Why:** Resolve `SyntaxError: invalid character '─' (U+2500)` and verify clean execution of the torture harness.
+- **Fix / Actions Taken:**
+  1. Overwrote `./torture` with the canonical 16-line Python launcher script invoking `torture_tool.main.main()`.
+  2. Re-applied `chmod +x torture`.
+  3. Verified execution with `./torture --iterations 10 --seed 12345 --workers 4`: 10/10 iterations passed cleanly in 3.36s with zero errors.
+- **Status:** COMPLETED & VERIFIED.
