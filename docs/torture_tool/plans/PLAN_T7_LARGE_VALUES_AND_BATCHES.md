@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T7**  
 > Component: 1 MiB Value Stress, 10,000-Op Batch Atomicity, Wire Buffer Boundaries  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/11_LARGE_VALUES_AND_BATCHES.md`, `docs/torture_tool/10_TORTURE_TEST_MODES.md`
 
 ---
@@ -87,8 +87,8 @@ Extend the torture harness with dedicated adversarial modes for extreme payload 
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Execute 100 iterations of `--mode large-values` with verified kills during in-flight writes.
-- [ ] Recovered 1 MiB values match bitwise SHA-256 hashes.
-- [ ] Execute 100 iterations of `--mode large-batches` with 10,000-op batches.
-- [ ] Zero partial batch applications observed across all iterations.
+- [x] Execute 100 iterations of `--mode large-values` with verified kills during in-flight writes.
+- [x] Recovered 1 MiB values match bitwise SHA-256 hashes.
+- [x] Execute 100 iterations of `--mode large-batches` with 10,000-op batches.
+- [x] Zero partial batch applications observed across all iterations.
 
