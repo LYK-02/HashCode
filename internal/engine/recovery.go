@@ -2,6 +2,7 @@ package engine
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"os"
@@ -36,12 +37,14 @@ func RecoverLog(dataFile *os.File, fileSize uint64) (*RecoveryResult, error) {
 	// Estimate initial capacity to minimize map rehashing during recovery.
 	var initialCap int
 	if fileSize > uint64(format.HeaderSize) {
-		estimatedFrames := int((fileSize - uint64(format.HeaderSize)) / 64)
-		if estimatedFrames > 1000000 {
-			estimatedFrames = 1000000
+		// Minimum record size is 8 bytes. For typical key-values (16-64 bytes),
+		// dividing by 16 gives an accurate capacity estimate with headroom to avoid map rehashing.
+		estimatedKeys := int((fileSize - uint64(format.HeaderSize)) / 16)
+		if estimatedKeys > 1250000 {
+			estimatedKeys = 1250000
 		}
-		if estimatedFrames > 0 {
-			initialCap = estimatedFrames
+		if estimatedKeys > 0 {
+			initialCap = estimatedKeys
 		}
 	}
 	keyDir := make(map[string]KeyDirEntry, initialCap)
@@ -53,7 +56,7 @@ func RecoverLog(dataFile *os.File, fileSize uint64) (*RecoveryResult, error) {
 
 	// Reusable buffers to minimize heap allocations during large replays
 	fhdrBuf := make([]byte, format.FrameHeaderSize)
-	trailerBuf := make([]byte, format.FrameTrailerSize)
+	var bodyBuf []byte
 
 	for offset < fileSize {
 		// Case T1: Incomplete trailing frame header at EOF (< 28 bytes remaining)
@@ -101,19 +104,21 @@ func RecoverLog(dataFile *os.File, fileSize uint64) (*RecoveryResult, error) {
 			break
 		}
 
-		// Read payload bytes
-		payloadBuf := make([]byte, fh.PayloadLen)
-		if err := readAtFull(dataFile, payloadBuf, int64(offset+format.FrameHeaderSize)); err != nil {
-			return nil, fmt.Errorf("recovery read payload failed at offset %d: %w", offset, err)
+		// Read payload + trailer in a single contiguous read system call
+		bodyLen := fh.PayloadLen + format.FrameTrailerSize
+		if uint64(cap(bodyBuf)) < bodyLen {
+			bodyBuf = make([]byte, bodyLen)
+		} else {
+			bodyBuf = bodyBuf[:bodyLen]
 		}
-
-		// Read 4-byte Castagnoli trailer CRC
-		if err := readAtFull(dataFile, trailerBuf, int64(offset+format.FrameHeaderSize+fh.PayloadLen)); err != nil {
-			return nil, fmt.Errorf("recovery read trailer failed at offset %d: %w", offset, err)
+		if err := readAtFull(dataFile, bodyBuf, int64(offset+format.FrameHeaderSize)); err != nil {
+			return nil, fmt.Errorf("recovery read frame body failed at offset %d: %w", offset, err)
 		}
+		payloadBuf := bodyBuf[:fh.PayloadLen]
+		trailerBuf := bodyBuf[fh.PayloadLen:]
 
-		// Decode payload records and verify trailer CRC32C
-		records, err := format.DecodePayloadRecords(payloadBuf, trailerBuf, fh.OpCount)
+		// Decode and apply payload records directly to KeyDir in-place
+		opsApplied, err := applyPayloadToKeyDir(payloadBuf, trailerBuf, fh.OpCount, offset, fh.SeqNo, keyDir)
 		if err != nil {
 			// Case T4: Corrupt payload or bad trailer CRC
 			if offset+totalFrameSize < fileSize {
@@ -127,21 +132,11 @@ func RecoverLog(dataFile *os.File, fileSize uint64) (*RecoveryResult, error) {
 			break
 		}
 
-		// Apply valid frame records to KeyDir atomically
-		for _, rec := range records {
-			if rec.Type == format.OpPut {
-				valOff := format.ValueFileOffset(offset, rec.PayloadOffset, rec.KeyLen)
-				keyDir[string(rec.Key)] = NewKeyDirEntry(valOff, rec.ValueLen, fh.SeqNo)
-			} else if rec.Type == format.OpDel {
-				delete(keyDir, string(rec.Key))
-			}
-		}
-
 		offset += totalFrameSize
 		if fh.SeqNo >= nextSeqNo {
 			nextSeqNo = fh.SeqNo + 1
 		}
-		recoveredOps += uint64(len(records))
+		recoveredOps += opsApplied
 	}
 
 	return &RecoveryResult{
@@ -219,5 +214,82 @@ func hasValidFrameAhead(f *os.File, start, fileSize uint64) (bool, error) {
 	}
 
 	return false, nil
+}
+
+// applyPayloadToKeyDir validates trailer CRC and payload structure in-place,
+// applying subrecords directly to KeyDir without allocating intermediate slice representations.
+func applyPayloadToKeyDir(payload []byte, trailer []byte, opCount uint32, frameOffset, seqNo uint64, keyDir map[string]KeyDirEntry) (uint64, error) {
+	if len(trailer) < format.FrameTrailerSize {
+		return 0, format.ErrTrailerTooShort
+	}
+	storedTrailerCRC := binary.LittleEndian.Uint32(trailer[0:4])
+	computedTrailerCRC := format.ChecksumCastagnoli(payload)
+	if storedTrailerCRC != computedTrailerCRC {
+		return 0, format.ErrCorruptPayload
+	}
+
+	if opCount < 1 {
+		return 0, format.ErrBatchEmpty
+	}
+	if opCount > format.MaxBatchOps {
+		return 0, format.ErrBatchTooLarge
+	}
+
+	minPayload := uint64(opCount) * uint64(format.MinRecordSize)
+	if uint64(len(payload)) < minPayload {
+		return 0, format.ErrPayloadUnderflow
+	}
+
+	cursor := 0
+	payloadLen := len(payload)
+
+	// Apply subrecords directly to KeyDir in a single pass
+	for i := uint32(0); i < opCount; i++ {
+		if cursor+format.RecordHeaderSize > payloadLen {
+			return 0, format.ErrPayloadUnderflow
+		}
+		opType := format.OpType(payload[cursor])
+		keyLen := int(binary.LittleEndian.Uint16(payload[cursor+1 : cursor+3]))
+		valLen := binary.LittleEndian.Uint32(payload[cursor+3 : cursor+7])
+
+		if opType != format.OpPut && opType != format.OpDel {
+			return 0, format.ErrUnknownOpType
+		}
+		if keyLen < format.MinKeyLen {
+			return 0, format.ErrKeyEmpty
+		}
+		if keyLen > format.MaxKeyLen {
+			return 0, format.ErrKeyTooLarge
+		}
+		if opType == format.OpDel {
+			if valLen != 0 {
+				return 0, format.ErrDelNonZeroValue
+			}
+		} else {
+			if valLen > format.MaxValLen {
+				return 0, format.ErrValueTooLarge
+			}
+		}
+
+		subrecordLen := format.RecordHeaderSize + keyLen + int(valLen)
+		if cursor+subrecordLen > payloadLen {
+			return 0, format.ErrPayloadUnderflow
+		}
+
+		key := string(payload[cursor+format.RecordHeaderSize : cursor+format.RecordHeaderSize+keyLen])
+		if opType == format.OpPut {
+			valOff := format.ValueFileOffset(frameOffset, uint32(cursor), uint16(keyLen))
+			keyDir[key] = NewKeyDirEntry(valOff, valLen, seqNo)
+		} else {
+			delete(keyDir, key)
+		}
+		cursor += subrecordLen
+	}
+
+	if cursor != payloadLen {
+		return 0, format.ErrTrailingPayloadBytes
+	}
+
+	return uint64(opCount), nil
 }
 

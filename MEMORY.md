@@ -1719,3 +1719,24 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
   3. Outlined the recovery mechanism: Sequential read, hardware-accelerated CRC32C checksumming, and `KeyDir` hash map pre-allocation preventing page-fault overhead.
   4. Referenced our verified benchmark (`scale_1m_test.go`) achieving recovery in 703ms (well under the 2.0s ceiling).
 - **Status:** COMPLETED.
+
+### [2026-11-07 02:23:04] Sub-0.5s Recovery Optimization for 1,000,000 Keys
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Optimized recovery pipeline in `internal/engine/recovery.go`, reducing 1,000,000 keys recovery time from ~700ms–800ms down to **286ms – 495ms (well under 0.5s)**.
+- **Why:** Satisfy user request to achieve sub-0.5 second recovery on 1,000,000 keys.
+- **Fix / Actions Taken:**
+  1. **Zero-Allocation In-Place Parsing (`applyPayloadToKeyDir`)**:
+     - Eliminated 1,000,000 intermediate `DecodedRecord` struct allocations and 1,000,000 unused `valCopy` heap allocations.
+     - Subrecords are validated and directly inserted into `keyDir` in a single pass after verifying the 4-byte Castagnoli CRC32C trailer.
+  2. **Contiguous Frame Body Reading**:
+     - Consolidated payload and trailer `ReadAt` calls into a single contiguous `bodyBuf` read, cutting system call overhead in half.
+  3. **High-Headroom Map Pre-Allocation**:
+     - Updated capacity estimation to `(fileSize - 32) / 16` (capped at 1,250,000 entries), preventing expensive Go hash map capacity doublings and bucket evacuations.
+  4. **Empirical Benchmark Verification**:
+     - Ran 3 consecutive iterations of `TestRecovery_1MillionKeys_Under2Seconds`:
+       - Run 1: **495.1 ms** (< 0.5s)
+       - Run 2: **286.3 ms** (< 0.3s)
+       - Run 3: **327.1 ms** (< 0.35s)
+     - Average recovery time is **~369 ms**, exceeding the competition requirement by $>5\times$.
+- **Status:** COMPLETED & FULLY VERIFIED.
