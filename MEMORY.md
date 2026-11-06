@@ -1707,3 +1707,15 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
        - `recovery-crash`: 5/5 iterations, nested crash during recovery $\to$ 100% PASS.
        - `disk-full`: 5/5 iterations, quota rejection and immediate kill $\to$ 100% PASS.
 - **Status:** COMPLETED & FULLY VERIFIED. Ready for final commit and push.
+
+### [2026-11-07 02:18:07] 1 Million Keys Specification & Engineering Architecture Explanation
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Explained the definition, hackathon competition role, physical disk representation, in-memory indexing, and sub-2.0s recovery requirement for the 1,000,000 keys benchmark.
+- **Why:** Clarify the exact purpose and mechanics of the 1,000,000 keys requirement from the "Kill It and Prove It" competition rubric and storage systems perspective.
+- **Fix / Actions Taken:**
+  1. Detailed the competition rule: Scenario F3 and the -5 point penalty if `open()` recovery takes > 2.0s with 1,000,000 keys.
+  2. Outlined the physical architecture: 1,000,000 distinct key-value records serialized into UABE frames in a single append-only log (~25MB–120MB on disk).
+  3. Outlined the recovery mechanism: Sequential read, hardware-accelerated CRC32C checksumming, and `KeyDir` hash map pre-allocation preventing page-fault overhead.
+  4. Referenced our verified benchmark (`scale_1m_test.go`) achieving recovery in 703ms (well under the 2.0s ceiling).
+- **Status:** COMPLETED.
