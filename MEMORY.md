@@ -1740,3 +1740,21 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
        - Run 3: **327.1 ms** (< 0.35s)
      - Average recovery time is **~369 ms**, exceeding the competition requirement by $>5\times$.
 - **Status:** COMPLETED & FULLY VERIFIED.
+
+### [2026-11-07 02:38:40] Live Judging Guide Creation & Hackathon Criteria Verification
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Authored `GUIDE.md` master demo presentation guide and confirmed 100% genuine correctness of the recovery benchmark against the 19-page hackathon specification.
+- **Why:** Provide the user with an exact minute-by-minute live presentation runbook for the 15-minute judging session covering the CLI, torture tool, manual kills, Crash-Here defenses, and the TTL Design Extension.
+- **Fix / Actions Taken:**
+  1. **Recovery Benchmark Authenticity**:
+     - Confirmed that recovery timing ($\approx 369\text{ms}$) runs on physical disk files (`bench_1m.db`) via real `WriteAt`, `File.Sync()`, and `Close()`, followed by genuine `Open()` streaming, dual Castagnoli CRC32C validation, and full `KeyDir` hash indexing.
+  2. **Comprehensive Presentation Manual (`GUIDE.md`)**:
+     - Created `GUIDE.md` structured around the official 15-minute judging protocol (Minutes 0–1 clean build, 1–4 standard torture, 4–6 targeted modes, 6–8 manual interactive kills, 8–12 Crash-Here questions, 12–15 TTL Design Extension).
+  3. **CLI & Torture Tool Reference**:
+     - Documented exact terminal invocations for all 8 mandatory subcommands (`open`, `put`, `get`, `del`, `batch`, `dump`, `check`, `serve`).
+     - Documented all 6 targeted torture modes (`default`, `compaction`, `large-values`, `large-batches`, `recovery-crash`, `disk-full`).
+  4. **Oral Defense Cheat Sheets**:
+     - Outlined the 3-sentence response formula for the Crash-Here code line questions.
+     - Outlined the 4-part architectural defense and subtle edge cases (NTP clock skew, intra-batch conflict) for the TTL Key Expiry extension.
+- **Status:** COMPLETED.
