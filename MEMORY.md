@@ -1851,3 +1851,23 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
      - *8 CLI Commands:* `open`, `put`, `get`, `del`, `batch`, `dump`, `check`, and manual interactive `kill -9` in `serve` mode verified with 0 defects.
      - *Test Suites:* Go test suite 100% PASS (`internal/engine`, `internal/format`, `tests/e2e`); Python torture suite 78/78 PASS.
 - **Status:** COMPLETED & FULLY VERIFIED.
+
+### [2026-11-07 03:19:48] CLI Command Reference for KVDB Engine & Torture Tool
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Provided comprehensive, structured, copy-pasteable command cheat sheet covering every mode of `./torture` and all 8 public `./kvdb` engine subcommands, plus benchmarks and failure reproduction.
+- **Why:** Provide the user and team with an immediate operational cheat sheet for live terminal usage and judging demonstration.
+- **Status:** COMPLETED.
+
+### [2026-11-07 03:21:55] Restructured Team Engineering Handbook (`TEAM_GUIDE.md`)
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Reorganized and expanded `TEAM_GUIDE.md` into 5 distinct, highly focused sections: Common Section (for all team members), Storage Engine Member Section (Go internal implementation), Torture Tool Member Section (Python chaos harness), The 10 Critical Edge Cases (oral defense cheat sheet), and Demo Day Summary Checklist.
+- **Why:** Provide each specialized engineering sub-team with exact role-based guidance, while equipping the entire team with unified architectural principles and rigorous answers to edge-case judging questions.
+- **Fix / Actions Taken:**
+  1. **Common Section:** High-level Bitcask architecture, the 3 Core Invariants, 15-minute live demo protocol, and disqualification traps.
+  2. **Storage Engine Member Section:** Go codebase layout (`internal/engine/`, `format/`, `cmd/kvdb/`), UABE dual CRC32C framing, write/read/delete/compaction paths, and the 4 optimizations enabling 329ms recovery for 1,000,000 keys.
+  3. **Torture Tool Member Section:** Python harness layout (`torture_tool/`), independent JSONL oracle (`oracle.wal`), multi-worker pipeline, adaptive crash scheduler with $T_{\text{fsync}}$ calibration, live throughput UI (`ops/s`, `p99`), competing CLI OS process, and automated `reproduce.sh` generation.
+  4. **The 10 Critical Edge Cases:** Complete oral defense guide covering torn header vs torn payload at EOF, post-sync un-ACKed durability, single-frame batch atomicity, compaction crash before/during/after rename, parent directory descriptor fsync, corrupt middle frame fail-stop vs torn tail repair, TTL expiry with clock skew / NTP jumps, nested recovery crashes, and Linux Fsyncgate dirty page amnesia.
+  5. **Demo Day Summary Checklist:** Wi-Fi offline status, build check, torture test, 1M benchmark, and tabbed deliverable inspection.
+- **Status:** COMPLETED & VERIFIED.

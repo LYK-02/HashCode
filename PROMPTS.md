@@ -1742,3 +1742,25 @@ Enhancement: Spawn a secondary independent process running ./kvdb put or ./kvdb 
 
 ---
 
+### Prompt (2026-11-07 03:19:48)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+give me cmd for how to use torture tool and engine
+```
+
+---
+
+### Prompt (2026-11-07 03:21:55)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+@[/home/laik/workspace/srinathonn/TEAM_GUIDE.md]  make common section and engine member and torture tool member and add edge case
+```
+
+---
+
