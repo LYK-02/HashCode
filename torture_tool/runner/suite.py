@@ -10,7 +10,10 @@ from typing import List, Optional
 
 from torture_tool.cli import RunConfig
 from torture_tool.generator.prng import SeedManager
+from torture_tool.reporting.console import ConsoleReporter
+from torture_tool.reporting.packager import FailurePackager
 from torture_tool.runner.iteration import IterationResult, IterationRunner
+from torture_tool.verifier.comparator import StateComparator
 
 
 @dataclass
@@ -64,15 +67,24 @@ class TestSuiteRunner:
 
             if res.passed:
                 self.summary.passed_iterations += 1
-                self._print_iteration_status(res)
+                ConsoleReporter.print_iteration(res, self.config.iterations)
             else:
                 self.summary.failed_iterations += 1
                 self.summary.first_failure = res
-                self._print_iteration_status(res)
+                ConsoleReporter.print_iteration(res, self.config.iterations)
+
+                # Preserve failure artifacts immediately!
+                FailurePackager.preserve_failure(
+                    iteration_result=res,
+                    config=self.config,
+                    db_path=self.config.db_path,
+                    journal_path=iter_journal_path,
+                )
                 # First failure rule: Halt immediately!
                 break
 
         self.summary.total_duration_sec = time.monotonic() - start_time
+        ConsoleReporter.print_summary(self.summary)
         return self.summary
 
     def _print_iteration_status(self, res: IterationResult) -> None:

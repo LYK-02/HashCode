@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T6**  
 > Component: Dump Parser, State Comparator, Diagnostic Bundle Packager, Non-Zero Exit Guard  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/15_FAILURE_REPORTING_AND_LOGGING.md`, `docs/torture_tool/09_ACK_VERIFICATION.md`
 
 ---
@@ -101,8 +101,8 @@ On the first failure, work stops immediately, and the following files are preser
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Deliberately inject a corrupted key into dump output; verify the comparator immediately catches it and fails.
-- [ ] Deliberately omit 1 key from an unacknowledged 10-key batch; verify comparator flags `BATCH_PARTIAL_APPLICATION`.
-- [ ] Failure generates all required artifacts in the artifact directory, including `reproduce.sh`.
-- [ ] Process exits with non-zero exit code (`1`) on failure, and `0` on clean completion.
+- [x] Deliberately inject a corrupted key into dump output; verify the comparator immediately catches it and fails.
+- [x] Deliberately omit 1 key from an unacknowledged 10-key batch; verify comparator flags `BATCH_PARTIAL_APPLICATION`.
+- [x] Failure generates all required artifacts in the artifact directory, including `reproduce.sh`.
+- [x] Process exits with non-zero exit code (`1`) on failure, and `0` on clean completion.
 

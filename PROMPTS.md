@@ -375,3 +375,14 @@ Implement Phase T5 using `docs/torture_tool/plans/PLAN_T5_RANDOM_CRASH_LOOP.md`.
 
 ---
 
+### Prompt (2026-11-06 18:15:40)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Proceed with Phase T6 using `docs/torture_tool/plans/PLAN_T6_VERIFICATION_AND_REPORTING.md`. Implement binary-safe dump parsing, strict state comparison, first-failure detection, and complete diagnostic artifact generation with reproduction scripts. Add tests for corrupted dumps and invariant violations, verify all failure paths, and update the checklist. Do not start T7.
+```
+
+---
+

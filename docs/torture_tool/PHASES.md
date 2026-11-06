@@ -289,7 +289,7 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 | T3 Process manager | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_process.py` | None |
 | T4 Workers | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_concurrency.py` | None |
 | T5 Random kill | COMPLETED | — | 3 passing unit tests in `torture_tool/tests/test_runner.py` | None |
-| T6 Verification | NOT STARTED | — | — | — |
+| T6 Verification | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_verifier.py` | None |
 | T7 Large workloads | NOT STARTED | — | — | — |
 | T8 Targeted modes | NOT STARTED | — | — | — |
 | T9 Self-tests | NOT STARTED | — | — | — |
