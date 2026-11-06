@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KVDB Architecture Diagram | Deliverable 5</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --accent-blue: #38bdf8;
+      --accent-green: #34d399;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .svg-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      background: #060913;
+    }
+    .svg-container img {
+      width: 100%;
+      min-width: 1200px;
+      height: auto;
+      display: block;
+    }
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: #1e293b;
+      color: #f1f5f9;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #334155;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #334155;
+      border-color: #475569;
+    }
+    .btn-primary {
+      background: #2563eb;
+      border-color: #3b82f6;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>KVDB System Architecture &amp; Robustness Model</h1>
+      <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">
+        Deliverable 5: Authoritative Diagrams for "Kill It and Prove It" Hackathon
+      </p>
+    </div>
+    <div>
+      <span class="badge">&#10004; 100% Offline Compatible</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <div class="card">
+      <div class="card-title">
+        <span>&#9881;</span>
+        <span>High-Resolution Architectural Blueprint (Component Map, Binary Format, Write Protocol &amp; Crash Recovery)</span>
+      </div>
+      <div class="svg-container">
+        <img src="architecture.svg" alt="KVDB Architecture Diagram" />
+      </div>
+      <div class="nav-links">
+        <a href="architecture.svg" target="_blank" class="btn btn-primary">Open Raw SVG</a>
+        <a href="architecture.mermaid" class="btn">View Mermaid Source</a>
+        <a href="../ARCHITECTURE.md" class="btn">Read Complete Proof (ARCHITECTURE.md)</a>
+        <a href="../DEMO.md" class="btn">Live Demo Runbook (DEMO.md)</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div>Go Engine (<code>src/</code>) &bull; Python Torture Tool (<code>torture/</code>) &bull; Zero External Persistence Libraries</div>
+    <div>Strict Durability Invariant: ACK only emitted after completed <code>fsync</code> barrier.</div>
+  </footer>
+</body>
+</html>

@@ -40,17 +40,28 @@ In a storage engine, unexpected crashes or unhandled exceptions corrupt state an
 ---
 
 ## 5. Architectural Modularity (Separation of Concerns)
-Code must be structured into independent, easily auditable modules:
+Code must be structured into independent, easily auditable packages in Go (`src/`) and Python (`torture/`):
 ```text
 src/
-├── error.rs       # Domain error hierarchy
-├── record.rs      # Binary record layout, opcodes, CRC32, serialization
-├── log.rs         # Low-level append-only log file I/O & fsync calls
-├── index.rs       # In-memory index mapping keys to file offsets
-├── recovery.rs    # Startup replay, torn write truncation, validation
-├── compaction.rs  # Crash-safe rewrite, temporary file swap & fsync
-├── engine.rs      # High-level KVDB engine API (put, get, del, batch)
-└── main.rs        # CLI wrapper implementation for ./kvdb
+├── main.go            # CLI wrapper implementation for ./kvdb (all 8 subcommands)
+├── engine/
+│   └── engine.go      # High-level KVDB engine API, RWMutex, serve dispatcher
+├── storage/
+│   ├── log.go         # Low-level append-only log file I/O, Pwrite, WriteAt, fsync
+│   └── frame.go       # UABE binary frame codec, dual CRC32C, Little-Endian
+├── index/
+│   └── keydir.go      # In-memory KeyDir hash index mapping keys to locators
+├── recovery/
+│   └── recover.go     # Startup replay, torn write truncation, CRC validation
+└── compaction/
+    └── compact.go     # Crash-safe rewrite, temporary file swap & directory fsync
+
+torture/
+├── torture.py         # Main CLI harness for ./torture
+├── oracle.py          # Independent oracle recording ACKed operations
+├── workload.py        # Concurrent worker threads generating random mutations
+├── injector.py        # Random millisecond SIGKILL process killer
+└── verifier.py        # Database dump vs. independent oracle verifier
 ```
 
 ---

@@ -7,7 +7,7 @@
 ---
 
 ## 1. Mission & Scope
-The **Deliverables Sync Agent** is an autonomous documentation auditor and updater. Its primary responsibility is to prevent **documentation drift** between the Rust/Go database engine (`src/`), the torture tool (`torture/`), and the hackathon's graded submission documents:
+The **Deliverables Sync Agent** is an autonomous documentation auditor and updater. Its primary responsibility is to prevent **documentation drift** between the Go database engine (`src/`), the Python torture tool (`torture/`), and the hackathon's graded submission documents:
 
 1. **[`README.md`](file://README.md) (Deliverable 1):**
    - Single clean build command (`make build` or `cargo build --release`).

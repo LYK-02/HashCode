@@ -9,13 +9,14 @@
 
 ## Current Architecture & Project Status
 - **Current Phase:** Phase 1 (Architecture, Format Design & Scaffolding)
-- **Target Language:** Rust (strongly recommended for $\le 2.0$s recovery with 1M keys & static binaries) / Go
-- **Authoritative Data File:** Exactly 1 file on disk (`open <path>`)
-- **Write Ordering:** `write record` $\to$ `fsync` $\to$ `commit marker` $\to$ `fsync` $\to$ `ACK`
+- **Target Language:** **Go** (Engine & CLI in `src/`) + **Python 3** (Independent Torture Tool in `torture/`)
+- **Persistence Model:** Exactly 1 file on disk with 32-byte header (`KVDB2026`) and UABE frames (`0x55414245`)
+- **Write Ordering:** `WriteAt (UABE Frame)` $\to$ `fsync(file)` $\to$ `KeyDir.Apply` $\to$ `ACK`
 - **Active Scaffolding:**
-  - Rules: `.agents/rules/` (`01_invariants.md` through `07_memory_protocol.md`)
-  - Deliverables directories: `src/`, `torture/`, `tests/`, `diagrams/`
-  - Prompt Log: `PROMPTS.md` (Deliverable 4)
+  - Deliverables: `README.md`, `ARCHITECTURE.md`, `BREAKING.md`, `PROMPTS.md`
+  - Rules: `.agents/rules/` (`01_invariants.md` through `10_code_quality_and_practices.md`)
+  - Subagents & Skills: `deliverables-sync-agent`, `hackathon-demo-vault`
+  - Demo Suite: `DEMO.md`, `CRASH_QUESTIONS.md`, `DESIGN_EXTENSION.md`
   - Memory Journal: `MEMORY.md`
   - Hooks: `.agents/hooks.json`
 
@@ -277,3 +278,39 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
   3. Created `.agents/scripts/deliverables_updater.py` as an extensible CLI script for document synchronization.
   4. Updated root `AGENTS.md`.
 - **Status:** COMPLETED & ACTIVE.
+
+### [2026-11-06 15:59:23] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `@[/home/laik/workspace/srinathonn/docs] read all and fill the missing gaps and make a BREAKING.md and ARCHITECTURE.md and readme>md and update there agentstell me  @[/home/laik/workspace/srinathonn/.agents]  update .agents if needed  we are using go + python`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+---
+
+### [2026-11-06 15:59:23] Ingestion of Docs & Deliverables Generation (README, ARCHITECTURE, BREAKING)
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Ingested all architectural and design specifications across `docs/` (`docs/engine/`, `docs/torture_tool/`, `docs/common/`), confirmed the stack selection as **Go (Engine/CLI) + Python 3 (Torture Tool)**, authored the complete graded deliverables `README.md`, `ARCHITECTURE.md`, and `BREAKING.md`, and updated `.agents/` rules and subagent definitions.
+- **Why:** The user directed the agent to read all files in `docs/`, fill the gaps, create `BREAKING.md`, `ARCHITECTURE.md`, and `README.md`, and update `.agents/` for the Go + Python stack. Aligning the documentation with the exact byte specifications (`KVDB2026` 32-byte header, UABE frames with dual CRC32C, KeyDir index, sidecar flock) ensures zero documentation drift and positions the project for top marks during judging.
+- **Fix / Actions Taken:**
+  1. Authored [`README.md`](file://README.md) (Deliverable 1): clean build command, CLI interface, on-disk byte diagrams, and recovery algorithm.
+  2. Authored [`ARCHITECTURE.md`](file://ARCHITECTURE.md) (Deliverable 5): component diagram, write ordering sequence, recovery flowchart, all 32 scenario proof table rows, and the three guarantees argued.
+  3. Authored [`BREAKING.md`](file://BREAKING.md) (Deliverable 3): 12-row crash points table, syscall ordering argument, 3 honest weaknesses, failed attempts, and 24-more-hours roadmap.
+  4. Updated [`.agents/rules/01_invariants.md`](file://.agents/rules/01_invariants.md) and [`.agents/rules/10_code_quality_and_practices.md`](file://.agents/rules/10_code_quality_and_practices.md) for Go and Python conventions.
+  5. Updated [`.agents/agents/deliverables_sync_agent.md`](file://.agents/agents/deliverables_sync_agent.md).
+- **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 16:11:24] Deliverable 5 Architecture Diagrams Generation
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Authored and generated the complete Deliverable 5 architecture diagram suite in `diagrams/`: standalone source Mermaid file (`diagrams/architecture.mermaid`), offline pre-rendered vector SVG blueprint (`diagrams/architecture.svg`), interactive offline HTML presentation dashboard (`diagrams/architecture.html`), deterministic Python generator (`diagrams/generate_svg.py`), and documentation index (`diagrams/README.md`). Linked all diagram assets across `ARCHITECTURE.md` and `README.md`.
+- **Why:** Deliverable 5 of the "Kill It and Prove It" Hackathon mandates architecture diagrams matching §9A (component map, write ordering sequence, byte layout, recovery flowchart). Supplying both source `.mermaid` and pre-rendered vector SVG/HTML assets guarantees 100% offline readability during the 15-minute live judging demo with Wi-Fi disabled.
+- **Fix / Actions Taken:**
+  1. Created `diagrams/architecture.mermaid` covering: (1) Component Map, Concurrency & Ownership Boundaries; (2) Numbered Write & Commit Sequence; (3) Compaction Lifecycle & Atomic Swap; (4) Crash Recovery Pipeline Flowchart; (5) On-Disk Binary Format Specification with exact byte offsets.
+  2. Built `diagrams/generate_svg.py` and compiled `diagrams/architecture.svg` (26KB clean, standalone SVG with dark theme and no external font/network dependencies).
+  3. Created `diagrams/architecture.html` as an interactive offline viewer for the live judging panel.
+  4. Authored `diagrams/README.md` documenting file inventory and live demo commands.
+  5. Updated `ARCHITECTURE.md` and `README.md` with explicit links to all new diagram assets.
+- **Status:** COMPLETED & VERIFIED.
