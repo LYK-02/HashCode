@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T9**  
 > Component: Harness Verification, Mock Child Simulation, Chaos Injections  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/16_TORTURE_TEST_TESTING.md`, `docs/torture_tool/01_TORTURE_OVERVIEW.md`
 
 ---
@@ -80,8 +80,8 @@ Direct unit tests feeding fabricated `START`/`ACK`/`FAIL` histories and corrupte
 
 ## 6. Verification and Completion Criteria
 
-- [ ] All self-tests in `torture_tool/tests/` pass 100% cleanly.
-- [ ] Stderr pipe flooding test completes without deadlock.
-- [ ] Out-of-order response routing verified across concurrent threads.
-- [ ] Every negative test correctly triggers a non-zero exit code and failure artifact bundle.
+- [x] All self-tests in `torture_tool/tests/` pass 100% cleanly.
+- [x] Stderr pipe flooding test completes without deadlock.
+- [x] Out-of-order response routing verified across concurrent threads.
+- [x] Every negative test correctly triggers a non-zero exit code and failure artifact bundle.
 

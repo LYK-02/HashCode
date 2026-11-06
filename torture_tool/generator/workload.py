@@ -169,14 +169,19 @@ class WorkloadGenerator:
 
     def generate_put(self, key: Optional[bytes] = None) -> PutRequest:
         op_id = self.next_op_id()
-        k = key or generate_key(self.prng, self.config.key_pool_size)
+        k = key or self.next_key()
         v = generate_value(self.prng, self.config.min_val_size, self.config.max_val_size)
         return PutRequest(op_id=op_id, key=k, value=v)
 
     def generate_del(self, key: Optional[bytes] = None) -> DelRequest:
         op_id = self.next_op_id()
-        k = key or generate_key(self.prng, self.config.key_pool_size)
+        k = key or self.next_key()
         return DelRequest(op_id=op_id, key=k)
+
+    def next_key(self) -> bytes:
+        """Derive a key that includes worker_id prefix to prevent concurrent same-key races."""
+        raw_key = generate_key(self.prng, self.config.key_pool_size)
+        return f"{self.worker_id}_{raw_key.decode('ascii')}".encode("ascii")
 
     def generate_batch(self, count: Optional[int] = None) -> BatchRequest:
         op_id = self.next_op_id()
@@ -185,14 +190,14 @@ class WorkloadGenerator:
         )
         items: List[BatchItem] = []
         for _ in range(num_items):
-            k = generate_key(self.prng, self.config.key_pool_size)
+            k = self.next_key()
             is_del = self.prng.random() < 0.25
             if is_del:
                 items.append(BatchItem(key=k, value=None))
             else:
-                v = generate_value(
-                    self.prng, self.config.min_val_size, self.config.max_val_size
-                )
+                # In BATCH grammar, <key>: indicates deletion, so batch PUT values are at least 1 byte
+                min_sz = max(1, self.config.min_val_size)
+                v = generate_value(self.prng, min_sz, self.config.max_val_size)
                 items.append(BatchItem(key=k, value=v))
         return BatchRequest(op_id=op_id, items=tuple(items))
 

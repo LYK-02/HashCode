@@ -300,6 +300,42 @@ class OracleEvaluator:
                         )
                     )
 
+        # Check: Every explicitly failed operation must NOT have taken effect
+        for fail_id in fail_set:
+            start_ev = start_map.get(fail_id)
+            if not start_ev or not start_ev.data:
+                continue
+            kind = start_ev.data.get("kind")
+            if kind == "PUT":
+                k = hex_to_bytes(start_ev.data["key_hex"])
+                v = hex_to_bytes(start_ev.data["val_hex"])
+                # If key was never previously in base_state or has different base_state value,
+                # but actual_state has v, it means the failed op was applied!
+                if actual_state.get(k) == v and base_state.get(k) != v:
+                    violations.append(
+                        InvariantViolation(
+                            violation_type=ViolationType.FAILED_OP_APPLIED,
+                            key=k,
+                            expected=base_state.get(k),
+                            actual=v,
+                            op_id=fail_id,
+                            description=f"Operation {fail_id} explicitly failed with ERR, but was persisted to database",
+                        )
+                    )
+            elif kind == "DEL":
+                k = hex_to_bytes(start_ev.data["key_hex"])
+                if k not in actual_state and base_state.get(k) is not None:
+                    violations.append(
+                        InvariantViolation(
+                            violation_type=ViolationType.FAILED_OP_APPLIED,
+                            key=k,
+                            expected=base_state.get(k),
+                            actual=None,
+                            op_id=fail_id,
+                            description=f"Delete operation {fail_id} explicitly failed with ERR, but key was deleted",
+                        )
+                    )
+
         passed = len(violations) == 0
         return EvaluationResult(
             passed=passed,
