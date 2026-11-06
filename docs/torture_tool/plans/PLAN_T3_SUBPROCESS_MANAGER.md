@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T3**  
 > Component: Child Process Spawner, POSIX Signal Control, Non-Blocking Pipe Management  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/06_SUBPROCESS_MANAGEMENT.md`, `docs/torture_tool/07_RANDOM_CRASH_INJECTION.md`
 
 ---
@@ -82,8 +82,8 @@ Implement the process control subsystem responsible for launching, piping, monit
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Test spawner launches process and establishes working stdin/stdout/stderr pipes.
-- [ ] Test stderr flooding ($>1$ MB of diagnostic output) does not block child execution.
-- [ ] Test `kill()` reliably terminates child with `SIGKILL` (exit code `-9` or `137`).
-- [ ] Test no orphan processes remain in `ps` after repeated cycles.
+- [x] Test spawner launches process and establishes working stdin/stdout/stderr pipes.
+- [x] Test stderr flooding ($>1$ MB of diagnostic output) does not block child execution.
+- [x] Test `kill()` reliably terminates child with `SIGKILL` (exit code `-9` or `137`).
+- [x] Test no orphan processes remain in `ps` after repeated cycles.
 

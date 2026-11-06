@@ -286,7 +286,7 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 | T0 Contract | COMPLETED | — | 21 passing unit tests in `torture_tool/tests/test_protocol.py` | None |
 | T1 Generator | COMPLETED | — | 15 passing unit tests in `torture_tool/tests/test_generator.py` | None |
 | T2 Oracle | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_oracle.py` | None |
-| T3 Process manager | NOT STARTED | — | — | — |
+| T3 Process manager | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_process.py` | None |
 | T4 Workers | NOT STARTED | — | — | — |
 | T5 Random kill | NOT STARTED | — | — | — |
 | T6 Verification | NOT STARTED | — | — | — |

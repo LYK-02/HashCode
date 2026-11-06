@@ -402,3 +402,11 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-06 17:58:30] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T3 using `docs/torture_tool/plans/PLAN_T3_SUBPROCESS_MANAGER.md` as the guide. Build the subprocess manager with reliable process spawning, non-blocking pipe handling, stderr draining, SIGKILL support, and clean restart/termination. Cover process failures and pipe deadlocks with tests, verify everything works, and update the phase checklist. Stop before T4.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE

@@ -342,3 +342,14 @@ Move on to Phase T2. Follow `docs/torture_tool/plans/PLAN_T2_INDEPENDENT_ORACLE.
 
 ---
 
+### Prompt (2026-11-06 17:58:30)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Implement Phase T3 using `docs/torture_tool/plans/PLAN_T3_SUBPROCESS_MANAGER.md` as the guide. Build the subprocess manager with reliable process spawning, non-blocking pipe handling, stderr draining, SIGKILL support, and clean restart/termination. Cover process failures and pipe deadlocks with tests, verify everything works, and update the phase checklist. Stop before T4.
+```
+
+---
+
