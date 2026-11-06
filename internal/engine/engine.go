@@ -142,90 +142,14 @@ func Open(path string, opts Options) (*Engine, error) {
 		compactionGen = hdr.CompactionGen
 		validEOF = uint64(format.HeaderSize)
 
-		// Frame recovery / replay from byte 32 to EOF
-		offset := uint64(format.HeaderSize)
-		fileSize := uint64(fi.Size())
-		for offset < fileSize {
-			if offset+format.FrameHeaderSize > fileSize {
-				// Incomplete trailing frame header at EOF: truncate torn tail
-				if err := dataFile.Truncate(int64(offset)); err != nil {
-					return nil, fmt.Errorf("failed to truncate torn frame header: %w", err)
-				}
-				if err := dataFile.Sync(); err != nil {
-					return nil, fmt.Errorf("failed to sync truncation: %w", err)
-				}
-				break
-			}
-			fhdrBuf := make([]byte, format.FrameHeaderSize)
-			if err := readAtFull(dataFile, fhdrBuf, int64(offset)); err != nil {
-				return nil, err
-			}
-			fh, err := format.DecodeFrameHeader(fhdrBuf)
-			if err != nil {
-				// Header is invalid. Check if there are valid frames ahead in the file (middle-of-file corruption).
-				if hasValidFrameAhead(dataFile, offset+1, fileSize) {
-					return nil, format.ErrCorruptFrameHeader
-				}
-				// Corrupt frame header at tail: truncate torn tail
-				if err := dataFile.Truncate(int64(offset)); err != nil {
-					return nil, fmt.Errorf("failed to truncate torn frame: %w", err)
-				}
-				if err := dataFile.Sync(); err != nil {
-					return nil, fmt.Errorf("failed to sync truncation: %w", err)
-				}
-				break
-			}
-			totalFrameSize := format.TotalFrameSize(fh.PayloadLen)
-			if offset+totalFrameSize > fileSize {
-				// Frame extends past EOF: check if middle or tail
-				if hasValidFrameAhead(dataFile, offset+1, fileSize) {
-					return nil, format.ErrTruncatedFrame
-				}
-				if err := dataFile.Truncate(int64(offset)); err != nil {
-					return nil, fmt.Errorf("failed to truncate torn frame payload: %w", err)
-				}
-				if err := dataFile.Sync(); err != nil {
-					return nil, fmt.Errorf("failed to sync truncation: %w", err)
-				}
-				break
-			}
-			payloadBuf := make([]byte, fh.PayloadLen)
-			if err := readAtFull(dataFile, payloadBuf, int64(offset+format.FrameHeaderSize)); err != nil {
-				return nil, err
-			}
-			trailerBuf := make([]byte, format.FrameTrailerSize)
-			if err := readAtFull(dataFile, trailerBuf, int64(offset+format.FrameHeaderSize+fh.PayloadLen)); err != nil {
-				return nil, err
-			}
-			records, err := format.DecodePayloadRecords(payloadBuf, trailerBuf, fh.OpCount)
-			if err != nil {
-				// Corrupt payload or bad CRC: if middle of file, fail closed!
-				if offset+totalFrameSize < fileSize || hasValidFrameAhead(dataFile, offset+1, fileSize) {
-					return nil, err
-				}
-				if err := dataFile.Truncate(int64(offset)); err != nil {
-					return nil, fmt.Errorf("failed to truncate corrupt payload: %w", err)
-				}
-				if err := dataFile.Sync(); err != nil {
-					return nil, fmt.Errorf("failed to sync truncation: %w", err)
-				}
-				break
-			}
-			// Apply valid frame records to KeyDir
-			for _, rec := range records {
-				if rec.Type == format.OpPut {
-					valOff := format.ValueFileOffset(offset, rec.PayloadOffset, rec.KeyLen)
-					keyDir[string(rec.Key)] = NewKeyDirEntry(valOff, rec.ValueLen, fh.SeqNo)
-				} else if rec.Type == format.OpDel {
-					delete(keyDir, string(rec.Key))
-				}
-			}
-			offset += totalFrameSize
-			if fh.SeqNo >= nextSeqNo {
-				nextSeqNo = fh.SeqNo + 1
-			}
+		// Perform log recovery & torn-tail repair via internal/engine/recovery.go
+		recResult, err := RecoverLog(dataFile, uint64(fi.Size()))
+		if err != nil {
+			return nil, err
 		}
-		validEOF = offset
+		keyDir = recResult.KeyDir
+		validEOF = recResult.ValidEOF
+		nextSeqNo = recResult.NextSeqNo
 	}
 
 	// Engine successfully initialized; transfer ownership of descriptors
@@ -286,74 +210,6 @@ func syncDir(dirPath string) error {
 	}
 	defer d.Close()
 	return d.Sync()
-}
-
-// Batch applies 1..10,000 operations atomically within a single UABE frame (Phase E4).
-func (e *Engine) Batch(ops []format.Operation) error {
-	if len(ops) < 1 {
-		return format.ErrBatchEmpty
-	}
-	if len(ops) > format.MaxBatchOps {
-		return format.ErrBatchTooLarge
-	}
-	for i := range ops {
-		if err := format.ValidateOperation(ops[i]); err != nil {
-			return err
-		}
-	}
-
-	e.mu.Lock()
-	defer e.mu.Unlock()
-
-	if e.closed {
-		return ErrClosed
-	}
-	if e.poisoned {
-		return ErrEnginePoisoned
-	}
-
-	frameBytes, err := e.appendFrameLocked(ops)
-	if err != nil {
-		return err
-	}
-
-	fh, err := format.DecodeFrameHeader(frameBytes)
-	if err != nil {
-		return err
-	}
-	payload := frameBytes[format.FrameHeaderSize : format.FrameHeaderSize+fh.PayloadLen]
-	records, err := format.DecodePayloadRecordsOnly(payload, fh.OpCount)
-	if err != nil {
-		return err
-	}
-
-	for _, r := range records {
-		if r.Type == format.OpPut {
-			valOffset := format.ValueFileOffset(e.validEOF, r.PayloadOffset, r.KeyLen)
-			e.keyDir[string(r.Key)] = NewKeyDirEntry(valOffset, r.ValueLen, e.nextSeqNo)
-		} else if r.Type == format.OpDel {
-			delete(e.keyDir, string(r.Key))
-		}
-	}
-
-	e.validEOF += uint64(len(frameBytes))
-	e.nextSeqNo++
-
-	return nil
-}
-
-// hasValidFrameAhead scans forward from start to fileSize to check if a valid frame header exists.
-func hasValidFrameAhead(f *os.File, start, fileSize uint64) bool {
-	buf := make([]byte, format.FrameHeaderSize)
-	for p := start; p+format.FrameHeaderSize <= fileSize; p++ {
-		if _, err := f.ReadAt(buf, int64(p)); err != nil {
-			break
-		}
-		if _, err := format.DecodeFrameHeader(buf); err == nil {
-			return true
-		}
-	}
-	return false
 }
 
 // Dump returns all live key-value pairs sorted lexicographically.

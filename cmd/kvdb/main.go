@@ -153,54 +153,9 @@ func main() {
 		path := os.Args[2]
 		file := os.Args[3]
 
-		content, err := os.ReadFile(file)
+		ops, err := parseBatchFile(file)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "failed to read batch file: %v\n", err)
-			os.Exit(1)
-		}
-
-		var ops []format.Operation
-		scanner := bufio.NewScanner(bytes.NewReader(content))
-		buf := make([]byte, 1024*1024)
-		scanner.Buffer(buf, 64*1024*1024)
-		for scanner.Scan() {
-			line := strings.TrimSpace(scanner.Text())
-			if line == "" || strings.HasPrefix(line, "#") {
-				continue
-			}
-			parts := strings.SplitN(line, " ", 3)
-			switch parts[0] {
-			case "put":
-				if len(parts) < 2 {
-					fmt.Fprintf(os.Stderr, "invalid put syntax in batch: %s\n", line)
-					os.Exit(1)
-				}
-				val := ""
-				if len(parts) == 3 {
-					val = parts[2]
-				}
-				ops = append(ops, format.Operation{
-					Type:  format.OpPut,
-					Key:   []byte(parts[1]),
-					Value: []byte(val),
-				})
-			case "del":
-				if len(parts) < 2 {
-					fmt.Fprintf(os.Stderr, "invalid del syntax in batch: %s\n", line)
-					os.Exit(1)
-				}
-				ops = append(ops, format.Operation{
-					Type:  format.OpDel,
-					Key:   []byte(parts[1]),
-					Value: nil,
-				})
-			default:
-				fmt.Fprintf(os.Stderr, "invalid operation in batch: %s\n", line)
-				os.Exit(1)
-			}
-		}
-		if err := scanner.Err(); err != nil {
-			fmt.Fprintf(os.Stderr, "scanner error: %v\n", err)
+			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
 		}
 
@@ -273,3 +228,179 @@ func main() {
 		os.Exit(1)
 	}
 }
+
+// parseBatchFile reads and tokenizes line-oriented batch commands from file.
+func parseBatchFile(file string) ([]format.Operation, error) {
+	content, err := os.ReadFile(file)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read batch file: %w", err)
+	}
+
+	var ops []format.Operation
+	scanner := bufio.NewScanner(bytes.NewReader(content))
+	buf := make([]byte, 1024*1024)
+	scanner.Buffer(buf, 64*1024*1024)
+
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		op, err := parseBatchLine(line)
+		if err != nil {
+			return nil, err
+		}
+		ops = append(ops, *op)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("scanner error: %w", err)
+	}
+
+	return ops, nil
+}
+
+// parseBatchLine parses a single line into a format.Operation.
+func parseBatchLine(line string) (*format.Operation, error) {
+	line = strings.TrimSpace(line)
+	idx := strings.IndexAny(line, " \t")
+	var cmd, rest string
+	if idx == -1 {
+		cmd = line
+		rest = ""
+	} else {
+		cmd = line[:idx]
+		rest = strings.TrimSpace(line[idx+1:])
+	}
+
+	switch cmd {
+	case "put":
+		if rest == "" {
+			return nil, fmt.Errorf("invalid put syntax in batch: %s", line)
+		}
+		key, rem, err := parseToken(rest)
+		if err != nil {
+			return nil, fmt.Errorf("invalid put key in batch: %w", err)
+		}
+		val, err := parseValueToken(rem)
+		if err != nil {
+			return nil, fmt.Errorf("invalid put value in batch: %w", err)
+		}
+		return &format.Operation{
+			Type:  format.OpPut,
+			Key:   key,
+			Value: val,
+		}, nil
+
+	case "del":
+		if rest == "" {
+			return nil, fmt.Errorf("invalid del syntax in batch: %s", line)
+		}
+		key, rem, err := parseToken(rest)
+		if err != nil {
+			return nil, fmt.Errorf("invalid del key in batch: %w", err)
+		}
+		if strings.TrimSpace(rem) != "" {
+			return nil, fmt.Errorf("invalid del syntax in batch: %s", line)
+		}
+		return &format.Operation{
+			Type:  format.OpDel,
+			Key:   key,
+			Value: nil,
+		}, nil
+
+	default:
+		return nil, fmt.Errorf("invalid operation in batch: %s", line)
+	}
+}
+
+// parseToken extracts the first token (quoted or unquoted) and returns the rest of the string.
+func parseToken(s string) ([]byte, string, error) {
+	s = strings.TrimLeft(s, " \t")
+	if s == "" {
+		return nil, "", fmt.Errorf("empty token")
+	}
+	if s[0] == '"' {
+		return unescapeQuoted(s)
+	}
+	idx := strings.IndexAny(s, " \t")
+	if idx == -1 {
+		return []byte(s), "", nil
+	}
+	return []byte(s[:idx]), s[idx+1:], nil
+}
+
+// parseValueToken extracts the value token, supporting empty values, quotes, or unquoted rest of line.
+func parseValueToken(rem string) ([]byte, error) {
+	rem = strings.TrimLeft(rem, " \t")
+	if rem == "" {
+		return []byte{}, nil
+	}
+	if rem[0] == '"' {
+		val, remaining, err := unescapeQuoted(rem)
+		if err != nil {
+			return nil, err
+		}
+		if strings.TrimSpace(remaining) != "" {
+			return nil, fmt.Errorf("trailing characters after quoted value")
+		}
+		return val, nil
+	}
+	return []byte(rem), nil
+}
+
+// unescapeQuoted parses a leading quoted string handling \", \\, \n, \r, \t, and \xHH escapes.
+func unescapeQuoted(s string) ([]byte, string, error) {
+	if len(s) < 2 || s[0] != '"' {
+		return nil, "", fmt.Errorf("expected opening quote")
+	}
+	var res bytes.Buffer
+	i := 1
+	for i < len(s) {
+		c := s[i]
+		if c == '"' {
+			return res.Bytes(), s[i+1:], nil
+		}
+		if c == '\\' {
+			if i+1 >= len(s) {
+				return nil, "", fmt.Errorf("unfinished escape sequence")
+			}
+			nxt := s[i+1]
+			switch nxt {
+			case '"', '\\':
+				res.WriteByte(nxt)
+				i += 2
+			case 'n':
+				res.WriteByte('\n')
+				i += 2
+			case 'r':
+				res.WriteByte('\r')
+				i += 2
+			case 't':
+				res.WriteByte('\t')
+				i += 2
+			case 'x':
+				if i+3 >= len(s) {
+					return nil, "", fmt.Errorf("incomplete hex escape")
+				}
+				hexStr := s[i+2 : i+4]
+				b, err := strconv.ParseUint(hexStr, 16, 8)
+				if err != nil {
+					return nil, "", fmt.Errorf("invalid hex escape: \\x%s", hexStr)
+				}
+				res.WriteByte(byte(b))
+				i += 4
+			default:
+				res.WriteByte(c)
+				res.WriteByte(nxt)
+				i += 2
+			}
+		} else {
+			res.WriteByte(c)
+			i++
+		}
+	}
+	return nil, "", fmt.Errorf("unclosed quote")
+}
+

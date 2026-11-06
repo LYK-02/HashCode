@@ -1,44 +1,36 @@
-Implement the Go storage engine and judge-facing CLI (`./kvdb`) as a showcase for the "Kill It and Prove It" Hackathon judging, following all specifications in `docs/` and invariants in `.agents/rules/`.
+Continue implementation and verification of the Go storage engine and judge-facing CLI (`./kvdb`) from where it left off (after Milestone M2, starting at Milestone M3) through all remaining milestones (M3, M4, M5, and M_FINAL) for evaluation and benchmarking, strictly following `docs/` and `.agents/rules/`.
 
-Working directory: /home/laik/workspace/srinathonn
+Working directory: c:\Users\LENOVO\HashCode-1
 Integrity mode: demo
 The team must NOT: copy code from existing open-source projects or database engines for core logic; use pre-built libraries, frameworks, or external persistence engines/WALs for core functionality (standard library only); run external scripts or delegate execution to other tools.
 
 ## Requirements
 
-### R1. Phase-by-Phase Engine Implementation
-Implement the Go storage engine phase by phase, one by one, adhering to the phase sequence in `docs/engine/PHASES.md` starting from E0 (Contract and package setup) through E10 (Release verification). Satisfy and verify each phase's exit gates before moving to the next phase.
+### R1. Milestone Implementation (M3 through M5 and Release Qualification)
+Continue the Go storage engine and CLI implementation according to `docs/` and `.agents/teamwork/PROJECT.md`:
+- Milestone M3: Atomic Batch Mutation & Crash Recovery (Phases E4 & E5: 1..10,000 ops atomicity in single UABE frame; sequential log replay from byte 32 to valid EOF; torn tail repair and truncation at EOF; fail-closed rejection of non-tail corruption with `CORRUPT_FRAME`).
+- Milestone M4: Judge CLI, Protocol & Error Hardening (Phases E6 & E7: 8 subcommands `open`, `put`, `get`, `del`, `batch`, `dump`, `check`, `serve` with streaming protocol; logical quota checks; short-write rollback; zero panics).
+- Milestone M5: Crash-Safe Compaction, Scale & Matrix Hardening (Phases E8, E9 & E10: crash-safe compaction via `<path>.compact.tmp` and directory sync; sub-2.0s recovery at 1,000,000 keys; 32 crash scenarios matrix compliance in Groups A through F).
+- Milestone M_FINAL: End-to-end acceptance testing and release qualification.
 
-### R2. Binary File Format and Storage Layout
-Strictly adhere to `docs/common/04_SHARED_DATA_FORMAT.md` and `docs/engine/03_BINARY_FILE_FORMAT.md`:
-- 32-byte DB Header (`KVDB2026`, version 1, Castagnoli CRC32C).
-- 28-byte UABE Frame Header (`0x55414245`, header CRC32C, payload_len, seq_no, op_count).
-- Operation subrecords (PUT/DEL) and 4-byte Castagnoli CRC32C trailer over the payload.
-- Single authoritative `data.db` file with a permanent `data.db.lock` sidecar locked via `flock`.
+### R2. Branch, Pull Request, and Local Merge Protocol
+For each task or milestone completed:
+- Create a dedicated local git feature branch.
+- Verify that all unit, integration, and milestone exit gate tests pass.
+- Merge the feature branch into `main` locally.
+- Do NOT push commits to the remote origin repository without explicit user permission. When all tasks are completed, prompt the user for permission before running `git push`.
 
-### R3. Durability, Concurrency, and Error Hardening
-Comply strictly with `.agents/rules/` and `docs/engine/05_WRITE_AND_COMMIT_PROTOCOL.md`:
-- Guarantee 100% durability across SIGKILL: acknowledge writes strictly after successful file `Sync` and KeyDir publication.
-- Guarantee atomic batches: all operations in a batch commit within a single frame or none at all.
-- Replay valid frames on recovery, idempotently repair torn tails at EOF, and reject corrupted non-tail frames.
-- Enforce clean error handling: handle short writes and disk full without false ACKs or state pollution; zero unwrap/panics.
-
-### R4. CLI and Server Mode Interface
-Deliver the judge-facing `./kvdb` executable implementing `open`, `put`, `get`, `del`, `batch`, `dump`, `check`, and `serve` commands conforming to `docs/common/05_CLI_AND_PROTOCOL_SPEC.md` with streaming support and clean stdout protocol responses.
+### R3. Project Memory and Prompt Log Maintenance
+After each successful task completion, update `MEMORY.md` and `PROMPTS.md` in the repository root adhering to the project logging rules (`.agents/rules/05_prompt_logging.md` and `.agents/rules/07_memory_protocol.md`).
 
 ## Acceptance Criteria
 
-### Codec & Lifecycle Gates
-- [ ] Binary encoding and decoding of DB header, UABE frames, and operations match golden fixtures byte-for-byte with Castagnoli CRC32C validation.
-- [ ] Exclusive process-level locking via `data.db.lock` prevents concurrent engine instances and releases cleanly on SIGKILL.
+### Milestone Delivery & Engine Invariants
+- [ ] Milestone M3 Gate: Atomic batch mutation guarantees all-or-nothing execution; startup recovery replays valid frames, repairs torn tail frames at EOF, and fails closed on non-tail corruption.
+- [ ] Milestone M4 Gate: All 8 CLI commands (`open`, `put`, `get`, `del`, `batch`, `dump`, `check`, `serve`) function per specification; quota errors trigger `DISK_FULL` without state corruption; zero unhandled panics.
+- [ ] Milestone M5 & Release Gate: Crash-safe compaction reclaims space without data loss; 1,000,000 keys recover in $\le 2.0$ seconds; passes the 32 crash scenarios matrix using standard library only.
 
-### Operation & Durability Gates
-- [ ] PUT, GET, and DEL operations persist across process restarts, and ACK is emitted only after `Sync` and in-memory index publication.
-- [ ] Multi-operation batches are atomic: killed batches leave zero partial operations applied to disk or index.
-- [ ] Recovery replays valid data, idempotently truncates torn tail frames at EOF, and detects corruption.
-- [ ] Crash-safe compaction reclaims disk space using atomic temp-file rename without data loss.
-
-### Performance & Quality Gates
-- [ ] Single database recovery of 1,000,000 keys completes in $\le 2.0$ seconds.
-- [ ] Clean build succeeds offline using only standard library packages (zero banned persistence/WAL dependencies).
-- [ ] All 8 CLI commands (`open`, `put`, `get`, `del`, `batch`, `dump`, `check`, `serve`) function correctly according to specification.
+### Workflow & Logging Gates
+- [ ] A dedicated local git feature branch is created and merged into `main` locally upon each task/milestone completion.
+- [ ] `MEMORY.md` and `PROMPTS.md` are updated after each completed task following repo rules.
+- [ ] No `git push` command is executed to the remote origin without explicit user permission.
