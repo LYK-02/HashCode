@@ -10,6 +10,7 @@ import (
 
 	"kvdb/internal/engine"
 	"kvdb/internal/format"
+	"kvdb/internal/protocol"
 )
 
 const banner = `   _  ____      ______  ____  
@@ -211,8 +212,40 @@ func main() {
 		os.Exit(0)
 
 	case "serve":
-		// M1 CLI router stub: verifies command routing; full implementation scheduled in M4
-		fmt.Fprintf(os.Stdout, "Command '%s' acknowledged (M1 CLI router)\n", cmd)
+		var path string
+		var maxBytes uint64
+		if len(os.Args) >= 3 && !strings.HasPrefix(os.Args[2], "-") {
+			path = os.Args[2]
+		}
+		for i := 2; i < len(os.Args); i++ {
+			if os.Args[i] == "--max-bytes" && i+1 < len(os.Args) {
+				mb, err := strconv.ParseUint(os.Args[i+1], 10, 64)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "invalid --max-bytes value: %v\n", err)
+					os.Exit(1)
+				}
+				maxBytes = mb
+				i++
+			}
+		}
+
+		var eng *engine.Engine
+		if path != "" {
+			var err error
+			eng, err = engine.Open(path, engine.Options{MaxBytes: maxBytes})
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "open error: %v\n", err)
+				os.Exit(1)
+			}
+			defer eng.Close()
+		}
+
+		srv := protocol.NewServer(eng, os.Stdin, os.Stdout, os.Stderr)
+		if err := srv.Run(); err != nil {
+			fmt.Fprintf(os.Stderr, "serve error: %v\n", err)
+			os.Exit(1)
+		}
+		os.Exit(0)
 
 	case "--help", "-h", "help":
 		printUsage()
