@@ -1,8 +1,10 @@
 # Serve Mode
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestone M4 / Phase E6)**  
 > Owner: engine team  
-> Canonical filename: `15_SERVE_MODE.md`
+> Canonical filename: `15_SERVE_MODE.md`  
+> Implementation: `internal/protocol/server.go`, `internal/protocol/codec.go`, `internal/protocol/types.go`  
+> Verification Suite: `internal/protocol/server_test.go` (100% PASS)
 
 ## 1. Purpose and scope
 

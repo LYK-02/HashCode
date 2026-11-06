@@ -335,16 +335,16 @@ Maintain this table in the project during the event.
 
 | Phase | Owner | Status | Evidence / commit | Blocker |
 |---|---|---|---|---|
-| 0 Source audit | Whole team | NOT STARTED | — | — |
-| 1 Contract freeze | Whole team | NOT STARTED | — | — |
-| 2 Build skeleton | Integration | NOT STARTED | — | — |
-| 3 MVP engine | Engine | NOT STARTED | — | — |
-| 4 Torture foundation | Torture | NOT STARTED | — | — |
-| 5 Chaos gate | Both | NOT STARTED | — | — |
-| 6 Hardening | Both | NOT STARTED | — | — |
-| 7 Compaction | Engine | NOT STARTED | — | — |
-| 8 Targeted modes | Torture | NOT STARTED | — | — |
-| 9 Performance | Engine | NOT STARTED | — | — |
-| 10 Proof docs | Whole team | NOT STARTED | — | — |
-| 11 Release candidate | Integration | NOT STARTED | — | — |
-| 12 Demo rehearsal | Whole team | NOT STARTED | — | — |
+| 0 Source audit | Whole team | COMPLETE | Clean tree & architecture invariants verified | None |
+| 1 Contract freeze | Whole team | COMPLETE | `docs/common/04_SHARED_DATA_FORMAT.md` frozen | None |
+| 2 Build skeleton | Integration | COMPLETE | Go modules, `kvdb`, `internal/*` created | None |
+| 3 MVP engine | Engine | COMPLETE | Milestones M1 & M2 (`internal/engine/*`) | None |
+| 4 Torture foundation | Torture | IN_PROGRESS | Torture harness foundation (`docs/torture_tool/*`) | None |
+| 5 Chaos gate | Both | COMPLETE | Milestone M3 (`09c6863`: Batch Atomicity & Crash Recovery) | None |
+| 6 Hardening | Both | COMPLETE | Milestone M4 (`feature/milestone-m4-cli-protocol`: Serve & Quota) | None |
+| 7 Compaction | Engine | PLANNED | Milestone M5 (Copy-on-write crash-safe compaction) | None |
+| 8 Targeted modes | Torture | PLANNED | Targeted crash simulation modes | None |
+| 9 Performance | Engine | PLANNED | 1M keys sub-2.0s recovery benchmarking | None |
+| 10 Proof docs | Whole team | IN_PROGRESS | `MEMORY.md`, `ARCHITECTURE.md`, `DEMO.md` sync | None |
+| 11 Release candidate | Integration | PLANNED | Final `./kvdb` release candidate build | None |
+| 12 Demo rehearsal | Whole team | PLANNED | 15-minute live judging dry-run | None |

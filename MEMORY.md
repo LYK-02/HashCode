@@ -1648,3 +1648,33 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-07 01:13:31] Prompt Context Event
+- **User (Prompted by):** LENOVO (AkashNSBhat)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `update engine doc till where we don and update memeory`
+- **Why:** Keep project memory, engine documentation, phase trackers, and verification evidence synchronized with actual codebase state.
+- **Fix / Actions Taken:**
+  1. **Milestone M3 Formal Completion & Local Merge**:
+     - Completed and verified Milestone M3 (Atomic Batch Mutation & Crash Recovery: Phases E4 & E5).
+     - Merged feature branch `feature/milestone-m3-batch-recovery` into `main` locally via commit `09c6863`.
+     - Preserved all upstream changes from collaborator (`laik`) and resolved all git conflict markers cleanly.
+  2. **Milestone M4 (Judge CLI, Streaming Protocol & Error Hardening: Phases E6 & E7)**:
+     - Authored streaming protocol server (`internal/protocol/server.go`, `codec.go`, `types.go`) supporting 8 subcommands (`OPEN`, `PUT`, `GET`, `DEL`, `BATCH`, `DUMP`, `CHECK`, `CLOSE`).
+     - Line-buffered stdout protocol formatting (`PONG`, `ACK`, `VALUE`, `NOTFOUND`, `ERROR`) with isolated stderr diagnostics.
+     - Implemented pre-write logical quota checking (`internal/engine/quota.go`) enforcing `ErrDiskFull` before disk writes or in-memory state mutations.
+     - Implemented top-level panic containment barrier (`internal/engine/panic.go`) poisoning engine on write panics and preventing process crashes.
+     - Integrated `serve` subcommand into `cmd/kvdb/main.go`.
+     - Added Windows flock compatibility layer (`internal/engine/lock_windows.go`) while maintaining 100% Linux cross-compilation with Go standard library only.
+     - 100% test pass on `internal/protocol/server_test.go` and clean cross-compilation on Linux production target.
+  3. **Documentation System Synchronization**:
+     - `docs/engine/PHASES.md`: Updated Section 13 phase table (E0 through E7 marked COMPLETE, E8–E10 scheduled).
+     - `docs/common/PHASES.md`: Updated Section 18 final phase status table to match active progress.
+     - `docs/engine/01_ENGINE_OVERVIEW.md`: Updated status to reflect Milestones M1–M3 complete and M4 in-progress.
+     - `docs/engine/07_BATCH_ATOMICITY.md`: Updated to IMPLEMENTED & VERIFIED with Phase E4 implementation details.
+     - `docs/engine/08_CRASH_RECOVERY.md`: Updated to IMPLEMENTED & VERIFIED with Phase E5 recovery details.
+     - `docs/engine/09_TORN_WRITE_HANDLING.md`: Updated to IMPLEMENTED & VERIFIED with Cases T1–T4.
+     - `docs/engine/12_DISK_FULL_AND_ERROR_HANDLING.md`: Updated to IMPLEMENTED & VERIFIED with `quota.go` and `panic.go`.
+     - `docs/engine/14_CLI_IMPLEMENTATION.md`: Updated to IMPLEMENTED & VERIFIED with CLI routing and 8 subcommands.
+     - `docs/engine/15_SERVE_MODE.md`: Updated to IMPLEMENTED & VERIFIED with streaming protocol specifications.
+- **Status:** COMPLETED (Milestone M3 Merged, Milestone M4 Implemented, Docs & Memory Fully Synchronized)

@@ -1,8 +1,10 @@
 # Batch Atomicity
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestone M3 / Phase E4)**  
 > Owner: engine team  
-> Canonical filename: `07_BATCH_ATOMICITY.md`
+> Canonical filename: `07_BATCH_ATOMICITY.md`  
+> Implementation: `internal/engine/batch.go`, `internal/format/codec.go`  
+> Verification Suite: `internal/engine/batch_test.go`, `internal/engine/challenger_m3_1_batch_test.go` (100% PASS)
 
 ## 1. Purpose and scope
 

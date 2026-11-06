@@ -1,8 +1,9 @@
 # Engine Overview
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestones M1–M3 Complete; M4 In Progress)**  
 > Owner: engine team  
-> Canonical filename: `01_ENGINE_OVERVIEW.md`
+> Canonical filename: `01_ENGINE_OVERVIEW.md`  
+> Latest Merged Commit: `09c6863` (Milestone M3: Batch Atomicity and Crash Recovery)
 
 ## 1. Purpose and scope
 

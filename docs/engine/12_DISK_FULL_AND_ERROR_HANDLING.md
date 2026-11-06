@@ -1,8 +1,10 @@
 # Disk Full and Error Handling
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestone M4 / Phase E7)**  
 > Owner: engine team  
-> Canonical filename: `12_DISK_FULL_AND_ERROR_HANDLING.md`
+> Canonical filename: `12_DISK_FULL_AND_ERROR_HANDLING.md`  
+> Implementation: `internal/engine/quota.go` (`CheckQuota`, `ExactPutFrameSize`, `ExactDelFrameSize`, `ExactBatchFrameSize`), `internal/engine/panic.go`  
+> Verification Suite: `internal/engine/write.go`, `internal/protocol/server_test.go` (100% PASS)
 
 ## 1. Purpose and scope
 

@@ -1,8 +1,10 @@
 # Crash Recovery
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestone M3 / Phase E5)**  
 > Owner: engine team  
-> Canonical filename: `08_CRASH_RECOVERY.md`
+> Canonical filename: `08_CRASH_RECOVERY.md`  
+> Implementation: `internal/engine/recovery.go`, `internal/engine/engine.go`  
+> Verification Suite: `internal/engine/recovery_test.go`, `internal/engine/challenger_m3_2_adversarial_test.go` (100% PASS)
 
 ## 1. Purpose and scope
 

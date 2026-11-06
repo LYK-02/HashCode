@@ -1,8 +1,10 @@
 # Torn Write Handling
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestone M3 / Phase E5)**  
 > Owner: engine team  
-> Canonical filename: `09_TORN_WRITE_HANDLING.md`
+> Canonical filename: `09_TORN_WRITE_HANDLING.md`  
+> Implementation: `internal/engine/recovery.go` (Cases T1–T4), `internal/engine/write.go` (`writeAtFull`, `rollbackAppendLocked`)  
+> Verification Suite: `internal/engine/recovery_test.go` (15 torn tail permutations & middle-corruption fail-closed tests) (100% PASS)
 
 ## 1. Purpose and scope
 

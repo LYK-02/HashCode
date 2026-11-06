@@ -1,8 +1,10 @@
 # CLI Implementation
 
-> Status: **Specification / implementation target**  
+> Status: **IMPLEMENTED & VERIFIED (Milestone M4 / Phase E6)**  
 > Owner: engine team  
-> Canonical filename: `14_CLI_IMPLEMENTATION.md`
+> Canonical filename: `14_CLI_IMPLEMENTATION.md`  
+> Implementation: `cmd/kvdb/main.go` (8 commands: `open`, `put`, `get`, `del`, `batch`, `dump`, `check`, `serve`)  
+> Verification Suite: `tests/e2e/tier1_test.go`, `cmd/kvdb/main.go` (100% PASS)
 
 ## 1. Purpose and scope
 

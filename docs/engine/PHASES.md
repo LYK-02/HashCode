@@ -294,14 +294,14 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
 
 | Phase | Status | Commit | Test evidence | Known issue |
 |---|---|---|---|---|
-| E0 Contract | NOT STARTED | — | — | — |
-| E1 Codec | NOT STARTED | — | — | — |
-| E2 Lifecycle | NOT STARTED | — | — | — |
-| E3 Single ops | NOT STARTED | — | — | — |
-| E4 Batch | NOT STARTED | — | — | — |
-| E5 Recovery | NOT STARTED | — | — | — |
-| E6 CLI/serve | NOT STARTED | — | — | — |
-| E7 Errors | NOT STARTED | — | — | — |
-| E8 Compaction | NOT STARTED | — | — | — |
-| E9 Performance | NOT STARTED | — | — | — |
-| E10 Release | NOT STARTED | — | — | — |
+| E0 Contract | COMPLETE | `d52fdf5` | Frozen data format & CLI specs match | None |
+| E1 Codec | COMPLETE | `d52fdf5` | `internal/format/*_test.go` (100% pass) | None |
+| E2 Lifecycle | COMPLETE | `d52fdf5` | `internal/engine/lock_adversarial_test.go` | None |
+| E3 Single ops | COMPLETE | `d52fdf5` | `internal/engine/engine_test.go` | None |
+| E4 Batch | COMPLETE | `09c6863` | `internal/engine/batch_test.go`, challenger tests | None |
+| E5 Recovery | COMPLETE | `09c6863` | `internal/engine/recovery_test.go` (T1-T4 verified) | None |
+| E6 CLI/serve | COMPLETE | `feature/milestone-m4-cli-protocol` | `cmd/kvdb/main.go`, `internal/protocol/server_test.go` | None |
+| E7 Errors | COMPLETE | `feature/milestone-m4-cli-protocol` | `internal/engine/quota.go`, `panic.go` zero-heap pre-checks | None |
+| E8 Compaction | PLANNED | — | Milestone M5 | None |
+| E9 Performance | PLANNED | — | Milestone M5 scale tests | None |
+| E10 Release | PLANNED | — | Milestone M_FINAL qualification | None |
