@@ -188,14 +188,16 @@ An independent testing harness written in Python drives `./kvdb serve` as a chil
 
 ## 6. Official Deliverables & Architecture Diagrams
 
-This repository fulfills all graded deliverables for the hackathon:
+This repository fulfills all graded deliverables and presentation guides for the hackathon:
 
 1. **`README.md`** (Deliverable 1): Complete build, run, protocol, and format documentation.
 2. **`./kvdb`** & **`./torture`** (Deliverables 1 & 2): Go database engine and Python 3 independent torture test harness.
 3. **`BREAKING.md`** (Deliverable 3): Crash points table, syscall barrier proof, weaknesses, failed attempts, and roadmap.
 4. **`PROMPTS.md`** (Deliverable 4): Chronological unedited AI prompt log with tool names and timestamps.
 5. **`ARCHITECTURE.md`** (Deliverable 5): Component design, byte layouts, 32-scenario matrix, and proof of guarantees.
-6. **`diagrams/`** (Deliverable 5 Assets):
+6. **`GUIDE.md`**: Master 15-minute live demo runbook, exact commands, and scoring checklist.
+7. **`TEAM_GUIDE.md`**: Plain-English team handbook covering common architecture, engine internals, torture harness, and 10 critical edge cases.
+8. **`diagrams/`** (Deliverable 5 Assets):
    - [`architecture.mermaid`](file:///home/laik/workspace/srinathonn/diagrams/architecture.mermaid) — Source Mermaid architecture diagram matching §9A.
    - [`architecture.svg`](file:///home/laik/workspace/srinathonn/diagrams/architecture.svg) — Simple vector diagram for offline judging.
    - [`diagrams/README.md`](file:///home/laik/workspace/srinathonn/diagrams/README.md) — Diagram index and offline presentation guide.

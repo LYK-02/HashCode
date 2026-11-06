@@ -303,5 +303,5 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
 | E6 CLI/serve | COMPLETED | HEAD | `cmd/kvdb/serve.go`, `tests/e2e/tier1_test.go`, `tier3_test.go` | None |
 | E7 Errors | COMPLETED | HEAD | `internal/engine/write.go`, `torture_tool/modes/disk_full.py` | None |
 | E8 Compaction | COMPLETED | HEAD | `internal/engine/compact_test.go`, `tests/e2e/tier4_test.go` | None |
-| E9 Performance | COMPLETED | HEAD | `tier4_test.go` (4.78ms/1k), `challenger_m3_2_adversarial_test.go` | None |
-| E10 Release | COMPLETED | HEAD | Full unit, e2e, and `./torture` suite (all modes 100% pass) | None |
+| E9 Performance | COMPLETED | `11d16a0` | `scale_1m_test.go` (329ms/1M keys), `challenger_m3_2_adversarial_test.go` | None |
+| E10 Release | COMPLETED | `a7b3f6c` | Full unit, e2e, and `./torture` suite (all 6 modes 100% pass) | None |

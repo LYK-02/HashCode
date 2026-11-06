@@ -24,7 +24,7 @@ The judge opens a fresh terminal inside the clean clone.
 ```bash
 # Build command (from README.md):
 make build
-# or: cargo build --release && cp target/release/kvdb target/release/torture .
+# or: go build -o kvdb ./cmd/kvdb && chmod +x kvdb torture
 ```
 - **Expected:** Compiles with zero errors and zero external downloads in $< 20$ seconds. Produces `./kvdb` and `./torture`.
 

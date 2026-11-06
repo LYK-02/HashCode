@@ -335,16 +335,16 @@ Maintain this table in the project during the event.
 
 | Phase | Owner | Status | Evidence / commit | Blocker |
 |---|---|---|---|---|
-| 0 Source audit | Whole team | NOT STARTED | — | — |
-| 1 Contract freeze | Whole team | NOT STARTED | — | — |
-| 2 Build skeleton | Integration | NOT STARTED | — | — |
-| 3 MVP engine | Engine | NOT STARTED | — | — |
-| 4 Torture foundation | Torture | NOT STARTED | — | — |
-| 5 Chaos gate | Both | NOT STARTED | — | — |
-| 6 Hardening | Both | NOT STARTED | — | — |
-| 7 Compaction | Engine | NOT STARTED | — | — |
-| 8 Targeted modes | Torture | NOT STARTED | — | — |
-| 9 Performance | Engine | NOT STARTED | — | — |
-| 10 Proof docs | Whole team | NOT STARTED | — | — |
-| 11 Release candidate | Integration | NOT STARTED | — | — |
-| 12 Demo rehearsal | Whole team | NOT STARTED | — | — |
+| 0 Source audit | Whole team | COMPLETED | `02_OFFICIAL_REQUIREMENTS.md` | None |
+| 1 Contract freeze | Whole team | COMPLETED | `04_SHARED_DATA_FORMAT.md`, `05_CLI_AND_PROTOCOL_SPEC.md` | None |
+| 2 Build skeleton | Integration | COMPLETED | `Makefile` (clean build in 1.42s) | None |
+| 3 MVP engine | Engine | COMPLETED | `cmd/kvdb`, `internal/engine/write.go` | None |
+| 4 Torture foundation | Torture | COMPLETED | `torture_tool/oracle/journal.py` (`oracle.wal`) | None |
+| 5 Chaos gate | Both | COMPLETED | `torture_tool/scheduler/crash_scheduler.py` | None |
+| 6 Hardening | Both | COMPLETED | `flock(LOCK_EX)` mutual exclusion, dual CRC32C | None |
+| 7 Compaction | Engine | COMPLETED | `internal/engine/compact.go` (11-step protocol) | None |
+| 8 Targeted modes | Torture | COMPLETED | All 6 modes verified (`17_CRITERIA_AND_IMPROVEMENTS.md`) | None |
+| 9 Performance | Engine | COMPLETED | `scale_1m_test.go` (329ms for 1,000,000 keys) | None |
+| 10 Proof docs | Whole team | COMPLETED | `ARCHITECTURE.md` (32 proofs), `BREAKING.md` | None |
+| 11 Release candidate | Integration | COMPLETED | `a7b3f6c` (100% Go PASS, 78/78 Python PASS) | None |
+| 12 Demo rehearsal | Whole team | COMPLETED | `GUIDE.md`, `TEAM_GUIDE.md`, `DEMO.md` verified | None |

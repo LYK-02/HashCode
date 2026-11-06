@@ -1871,3 +1871,22 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
   4. **The 10 Critical Edge Cases:** Complete oral defense guide covering torn header vs torn payload at EOF, post-sync un-ACKed durability, single-frame batch atomicity, compaction crash before/during/after rename, parent directory descriptor fsync, corrupt middle frame fail-stop vs torn tail repair, TTL expiry with clock skew / NTP jumps, nested recovery crashes, and Linux Fsyncgate dirty page amnesia.
   5. **Demo Day Summary Checklist:** Wi-Fi offline status, build check, torture test, 1M benchmark, and tabbed deliverable inspection.
 - **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-07 03:25:22] Comprehensive Project Documentation Synchronization & Push
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Audited, synchronized, and verified all root and subfolder project documentation across the entire repository, updating phase status tables, release gates, and checklists to 100% verified status, and pushed cleanly to remote.
+- **Why:** Final qualification requirement ensuring that all deliverables (`README.md`, `ARCHITECTURE.md`, `BREAKING.md`, `GUIDE.md`, `TEAM_GUIDE.md`, `DEMO.md`, `CRASH_QUESTIONS.md`, `DESIGN_EXTENSION.md`, `docs/common/`, `docs/engine/`, `docs/torture_tool/`) reflect identical, verified evidence.
+- **Fix / Actions Taken:**
+  1. **Root Deliverables Synchronization**:
+     - `README.md`: Added `GUIDE.md` and `TEAM_GUIDE.md` references to Section 6 Deliverables.
+     - `DEMO.md`: Replaced legacy cargo build command with Go + Python single build script.
+     - `CRASH_QUESTIONS.md`: Aligned Points 1–5 with exact Go codebase files (`internal/engine/write.go`, `compact.go`, `recovery.go`) and UABE dual CRC32C framing.
+     - `DESIGN_EXTENSION.md`: Verified all 5 TTL design sections and subtle edge cases.
+  2. **Subfolder Specifications & Manifest Synchronization**:
+     - `docs/common/PHASES.md`: Updated final status table (Phases 0 through 12 marked COMPLETED with exact commit hashes and test evidence).
+     - `docs/common/11_FINAL_VALIDATION_CHECKLIST.md`: Elevated to `VERIFIED & RELEASE READY (100% Pass)` with all checkboxes marked `[x]`.
+     - `docs/engine/PHASES.md`: Updated Phase E9 and E10 with measured scale 1M benchmark evidence (`scale_1m_test.go` at 329ms) and commit `a7b3f6c`.
+     - `docs/torture_tool/PHASES.md` & `16_TORTURE_TESTING.md`: Preserved verified release-ready evidence.
+     - `docs/MANIFEST.md` & `docs/README.md`: Updated to 46 Markdown specifications index.
+- **Status:** COMPLETED & VERIFIED.
