@@ -1,17 +1,21 @@
-# Executables
+# Executables (compiled Go binary)
 /kvdb
-/torture
 
 # Database files & locks
 *.db
-*.db.lock
+*.db.*
+data.db
+data.db.*
 *.lock
 *.wal
 *.tmp
 *.compact.tmp
+*.state
+*.log
 
-# Test data & artifacts
+# Test data & qualification artifacts
 testdata/tmp/
+artifacts/
 *.test
 *.prof
 *.out
@@ -21,12 +25,40 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+*.so
+
+# Python distribution & virtual environments
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+.venv/
+ENV/
+env/
 
 # OS / Editor artifacts
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
 .idea/
 .vscode/
 
 # Agent metadata
 .agents/teamwork/
-

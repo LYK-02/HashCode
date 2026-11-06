@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+"""Adversarial Crash and Recovery Torture Harness executable for kvdb."""
+
+import os
+import sys
+from pathlib import Path
+
+# Add project root to sys.path so torture_tool can be imported offline
+project_root = Path(__file__).resolve().parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+from torture_tool.main import main
+
+if __name__ == "__main__":
+    sys.exit(main())
+

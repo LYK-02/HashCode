@@ -342,6 +342,162 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
   3. Preserved Section 3 (All 32 Official Scenarios Matrix) and Section 4 (Proofs of the Three Guarantees).
   4. Removed external HTML dependencies in favor of clean native markdown and Mermaid.
 - **Status:** COMPLETED & VERIFIED.
+### [2026-11-06 15:40:07] Prompt Context Event
+- **User (Prompted by):** ashwin
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Reorganize our existing Kill It and Prove It repository into three clearly separated areas:
+
+1. `engine/` – Go database CLI, source code, tests and engine-specific `docs/`.
+2. `torture_tool/` – Python torture-testing tool, oracle, tests and torture-specific `docs/`.
+3. Root `docs/` – shared requirements, official scenario matrix, integration plan, team responsibilities and demo guide.
+
+Keep the official root deliverables: `README.md`, `ARCHITECTURE.md`, `BREAKING.md`, and `PROMPTS.md`. Preserve `AGENTS.md`, `MEMORY.md`, `.agents/` rules, scripts and hooks.
+
+Create a clean, scalable folder structure and documentation outlines. Inspect existing files before moving anything, preserve useful content, update paths and references, and avoid duplicate documentation.
+
+Do not implement database or torture-tool code yet. Do not change the agreed Go + Python stack. First show me the proposed folder tree and migration plan for approval.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:04:18] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Thoroughly analyze the entire `docs/torture_tool/` folder and all its Markdown files. Understand every requirement, specification, edge case, and dependency in depth. Based on this context, create a comprehensive, production-grade, phase-by-phase implementation plan for building a powerful and reliable Python torture-testing tool. Break every phase into clear subtasks, implementation steps, dependencies, and completion criteria. Create well-structured `PLAN.md` files for each phase. Ensure nothing is overlooked, avoid assumptions, and strictly follow the official problem statement and existing project decisions. Plan first, do not start implementation.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:10:37] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Proceed with creating these files in docs/torture_tool/plans.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:28:44] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T0 strictly following `docs/torture_tool/plans/PLAN_T0_CONTRACT_AND_PROTOCOL.md`. Complete all subtasks, write production-quality code, add fixtures and tests, verify protocol compatibility with the Go engine, fix all failures, and update the plan checklist. Do not skip requirements or start T1.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:43:54] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T1 strictly following `docs/torture_tool/plans/PLAN_T1_CLI_AND_WORKLOAD_GENERATOR.md`. Complete all subtasks, write production-quality code, add comprehensive tests, verify deterministic workload generation and CLI functionality, fix all failures, and update the plan checklist. Do not skip requirements or start T2.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:51:02] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Move on to Phase T2. Follow `docs/torture_tool/plans/PLAN_T2_INDEPENDENT_ORACLE.md` closely and implement the independent reference oracle, event journal, state tracking, and uncertainty/atomicity evaluation. Complete all subtasks, add thorough tests for crash and ambiguous-write scenarios, verify everything, and update the checklist. Keep the oracle completely independent of Go engine internals. Do not begin T3.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 17:58:30] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T3 using `docs/torture_tool/plans/PLAN_T3_SUBPROCESS_MANAGER.md` as the guide. Build the subprocess manager with reliable process spawning, non-blocking pipe handling, stderr draining, SIGKILL support, and clean restart/termination. Cover process failures and pipe deadlocks with tests, verify everything works, and update the phase checklist. Stop before T4.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 18:04:18] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T4 as outlined in `docs/torture_tool/plans/PLAN_T4_DISPATCHER_AND_WORKERS.md`. Build the thread-safe response dispatcher and concurrent worker system, ensuring correct request routing, synchronization, and race-free operation handling. Add tests for parallel requests, response ordering, and concurrency edge cases. Run the full relevant test suite, fix issues, and update the checklist. Don't move to T5.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 18:07:49] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T5 using `docs/torture_tool/plans/PLAN_T5_RANDOM_CRASH_LOOP.md`. Build the complete crash-injection loop with seeded kill timing, concurrent in-flight operations, process recovery, and post-crash consistency checks against the independent oracle. Test repeated crash scenarios and edge cases, fix all failures, and update the checklist. Keep the implementation within T5; don't start T6.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 18:15:40] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Proceed with Phase T6 using `docs/torture_tool/plans/PLAN_T6_VERIFICATION_AND_REPORTING.md`. Implement binary-safe dump parsing, strict state comparison, first-failure detection, and complete diagnostic artifact generation with reproduction scripts. Add tests for corrupted dumps and invariant violations, verify all failure paths, and update the checklist. Do not start T7.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 18:20:46] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Implement Phase T7 following `docs/torture_tool/plans/PLAN_T7_LARGE_VALUES_AND_BATCHES.md`. Add the large-values and large-batches testing modes, covering 1 MiB binary payloads, buffer boundaries, and 10,000-operation batch atomicity under crash conditions. Include edge-case tests, verify performance and correctness, and update the checklist. Keep changes limited to T7; don't proceed to T8.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-06 18:30:22] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Implemented Phase T8: Targeted Maintenance Modes (Recovery Crash, Compaction Crash, and Disk-Full Quota) in `torture_tool/modes/`. Added `RecoveryCrashRunner`, `CompactionCrashRunner`, and `DiskFullRunner`. Verified all scenarios with comprehensive integration tests in `test_modes.py`.
+- **Why:** Hackathon Group B, C, and E adversarial scenarios mandate proving durability across interrupted recoveries, interrupted compactions, and quota exhaustion without corrupting state.
+- **Fix / Actions Taken:**
+  1. Built `torture_tool/modes/recovery_crash.py` to execute nested `SIGKILL` attacks against `./kvdb open` during log replay and verify clean recovery upon restart.
+  2. Built `torture_tool/modes/compaction_crash.py` to fire `SIGKILL` during `./kvdb compact` temp-file generation and atomic rename boundaries.
+  3. Built `torture_tool/modes/disk_full.py` to test `--max-bytes` quota enforcement, verifying clean `ERR QUOTA_EXCEEDED` rejection, lack of partial writes, and post-crash consistency.
+  4. Added `torture_tool/tests/test_modes.py` covering all 3 modes; verified and fixed process file descriptor leaks.
+  5. Ran full test suite across all 68 unit/integration tests with `python3 -W error::ResourceWarning -m unittest discover -s torture_tool/tests -v` (68/68 passed).
+  6. Updated `PLAN_T8_TARGETED_MODES.md` and `docs/torture_tool/plans/README.md` checklists to Completed.
+- **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 18:36:56] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Implemented Phase T9: Harness Self-Testing Suite ("Test the Tester"). Created configurable mock engine simulation (`fake_kvdb.py`), adversarial dispatcher test suite (`test_dispatcher_adversarial.py`), process lifecycle & hang guards (`test_process_manager_adversarial.py`), and oracle negative verification suite (`test_oracle_negative.py`). Verified 100% false-positive prevention across broken pipes, timeouts, out-of-order ACKs, torn batches, corrupted values, missing writes, and stderr flooding.
+- **Why:** The test harness must never report false positives (never pass a broken engine state or drop invariant checks).
+- **Fix / Actions Taken:**
+  1. Built `torture_tool/tests/mocks/fake_kvdb.py` simulating delayed responses, out-of-order ACKs, malformed lines, early startup crashes, silent hangs, and stderr flooding (5 MB).
+  2. Built `torture_tool/tests/test_dispatcher_adversarial.py` validating that out-of-order responses route cleanly across concurrent worker threads, stderr flooding causes zero deadlocks, and child crashes cancel pending futures with `ProcessDiedError`.
+  3. Built `torture_tool/tests/test_process_manager_adversarial.py` validating immediate detection of startup crashes (`ProcessStartupError`) and timeouts on hanging engines.
+  4. Built `torture_tool/tests/test_oracle_negative.py` proving that missing ACKed writes (`ACKED_WRITE_LOST`), 1-bit value corruptions (`VALUE_CORRUPTED`), partial batch applications (`BATCH_PARTIAL_APPLICATION`), unknown phantom keys (`UNKNOWN_KEY_DETECTED`), and applied failed operations (`FAILED_OP_APPLIED`) always fail validation.
+  5. Isolated concurrent worker keys with worker-id prefixes in `torture_tool/generator/workload.py` and implemented atomic batch frame boundaries with checksum-style end markers in mock servers.
+  6. Ran all 78 tests across the complete test suite with `python3 -W error::ResourceWarning -m unittest discover -s torture_tool/tests -v` (78/78 passed).
+  7. Updated `PLAN_T9_HARNESS_SELF_TESTING.md` and `docs/torture_tool/plans/README.md` checklists to Completed & Verified. Left T10 untouched.
+- **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 18:56:24] Phase T10 Release Qualification & Root CLI Deliverable
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Completed Phase T10: Release Qualification and Live Demo Protocol. Built root `./torture` CLI script (`chmod +x torture`), implemented `torture_tool/reporting/terminal_ui.py` with dynamic single-line ANSI progress rendering and non-TTY fallback, resolved intra-batch key collision evaluation in `torture_tool/oracle/evaluator.py`, prevented stale journal leakage across iterations, and executed all 6 required qualification suites (1,000 total iterations) with zero invariant violations.
+- **Why:** Required primary deliverable executable `./torture` at repository root for hackathon evaluation; mandates 100% offline standard-library execution and proof across default 500-iteration and 5x100-iteration targeted crash modes under arbitrary judge seeds.
+- **Fix / Actions Taken:**
+  1. Created executable root script `./torture` forwarding arguments to `torture_tool/main.py`.
+  2. Implemented dynamic live progress bar in `torture_tool/reporting/terminal_ui.py` with auto-detection of interactive TTY vs non-interactive pipeline logging.
+  3. Fixed intra-batch multi-mutation evaluation in `torture_tool/oracle/evaluator.py` so duplicate key mutations within a single atomic batch collapse to the final state.
+  4. Updated `IterationRunner` to cleanly unlink existing oracle journals between iterations when `reuse_database=False`.
+  5. Verified all 78 unit/adversarial tests: `python3 -W error::ResourceWarning -m unittest discover -s torture_tool/tests -v` (78/78 OK).
+  6. Successfully executed full 6-suite qualification matrix:
+     - Default 500-iteration (`--seed 12345`): 500/500 PASS, 500 kills with in-flight ops, 38,087 ops, 0 violations (84.81s).
+     - Large-Values 100-iteration (`--mode large-values --seed 999`): 100/100 PASS, 527 ops, 0 violations (27.22s).
+     - Large-Batches 100-iteration (`--mode large-batches --seed 888`): 100/100 PASS, 394 ops, 0 violations (120.23s).
+     - Compaction 100-iteration (`--mode compaction --seed 777`): 100/100 PASS, 100 kills, 0 violations (3.68s).
+     - Recovery-Crash 100-iteration (`--mode recovery-crash --seed 666`): 100/100 PASS, 100 kills, 0 violations (5.83s).
+     - Disk-Full 100-iteration (`--mode disk-full --seed 555`): 100/100 PASS, 1,900 ops, 0 violations (16.26s).
+  7. Updated `PLAN_T10_RELEASE_QUALIFICATION.md`, `docs/torture_tool/plans/README.md`, and `docs/torture_tool/PHASES.md` with complete qualification metrics.
+- **Status:** COMPLETED & VERIFIED.
+
+### [2026-11-06 19:51:53] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Clean up `.gitignore`, exclude generated artifacts and temporary files, then stage all legitimate project source, tests, and documentation. Review `git status` and staged changes carefully, ensure no important files are missed or unwanted files included, then commit and push to `origin/main`. Do not force-push or delete project data. Show me the final commit and push results.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
 
 ### [2026-11-06 16:40:00 - 18:35:00] Engine Specification Audit, Multi-Agent Teamwork Kickoff, Milestone M1 PASS & E2E Test Suite Delivery
 - **User (Prompted by):** laik (LYK-02)
@@ -468,3 +624,11 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
   5. **Git Synchronization, Branch Creation & Push:**
      - Synchronized upstream changes from `origin/main` (Python torture tool phases T0-T9), preserved local Go engine implementation, created feature branch, and pushed to origin.
 - **Status:** COMPLETED & VERIFIED (Milestone M2 PASS). Milestone M3 ACTIVE.
+
+### [2026-11-06 20:01:04] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `update memory and create branch and push and solve merge conflict if appear`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE

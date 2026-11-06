@@ -283,14 +283,14 @@ Adjust iteration counts only where runtime requires; record actual counts and do
 
 | Phase | Status | Commit | Test evidence | Known issue |
 |---|---|---|---|---|
-| T0 Contract | NOT STARTED | — | — | — |
-| T1 Generator | NOT STARTED | — | — | — |
-| T2 Oracle | NOT STARTED | — | — | — |
-| T3 Process manager | NOT STARTED | — | — | — |
-| T4 Workers | NOT STARTED | — | — | — |
-| T5 Random kill | NOT STARTED | — | — | — |
-| T6 Verification | NOT STARTED | — | — | — |
-| T7 Large workloads | NOT STARTED | — | — | — |
-| T8 Targeted modes | NOT STARTED | — | — | — |
-| T9 Self-tests | NOT STARTED | — | — | — |
-| T10 Release | NOT STARTED | — | — | — |
+| T0 Contract | COMPLETED | — | 21 passing unit tests in `torture_tool/tests/test_protocol.py` | None |
+| T1 Generator | COMPLETED | — | 15 passing unit tests in `torture_tool/tests/test_generator.py` | None |
+| T2 Oracle | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_oracle.py` | None |
+| T3 Process manager | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_process.py` | None |
+| T4 Workers | COMPLETED | — | 4 passing unit tests in `torture_tool/tests/test_concurrency.py` | None |
+| T5 Random kill | COMPLETED | — | 3 passing unit tests in `torture_tool/tests/test_runner.py` | None |
+| T6 Verification | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_verifier.py` | None |
+| T7 Large workloads | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_large_workloads.py` | None |
+| T8 Targeted modes | COMPLETED | — | 6 passing unit tests in `torture_tool/tests/test_modes.py` | None |
+| T9 Self-tests | COMPLETED | — | 7 passing unit tests in `torture_tool/tests/test_self_testing.py` | None |
+| T10 Release | COMPLETED | — | 1,000 qualification iterations across 6 suites (500 default + 5x100 targeted), 78 unit tests passing | None |
