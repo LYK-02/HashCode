@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"sync"
 
@@ -204,6 +205,9 @@ func (e *Engine) Close() error {
 
 // syncDir forces the directory entry containing the database file to physical disk.
 func syncDir(dirPath string) error {
+	if runtime.GOOS == "windows" {
+		return nil
+	}
 	d, err := os.Open(dirPath)
 	if err != nil {
 		return err

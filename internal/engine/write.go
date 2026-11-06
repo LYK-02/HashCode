@@ -1,23 +1,23 @@
 package engine
 
 import (
-	"math"
+	"errors"
+	"fmt"
 	"os"
+	"syscall"
 
 	"kvdb/internal/format"
 )
 
-// Put inserts or updates a key-value pair following the strict 10-step write protocol.
-func (e *Engine) Put(key, val []byte) error {
-	// Step 1: Input validation
-	if len(key) < format.MinKeyLen {
-		return format.ErrKeyEmpty
-	}
-	if len(key) > format.MaxKeyLen {
-		return format.ErrKeyTooLarge
-	}
-	if len(val) > format.MaxValLen {
-		return format.ErrValueTooLarge
+// Put inserts or updates a key-value pair following the strict 10-step write protocol,
+// zero-panic recovery, and pre-write quota enforcement.
+func (e *Engine) Put(key, val []byte) (retErr error) {
+	defer e.recoverPanicLocked("Put", &retErr)
+
+	// Step 1: Pre-flight bounds and zero-allocation frame size calculation
+	frameSize, err := ExactPutFrameSize(len(key), len(val))
+	if err != nil {
+		return err
 	}
 
 	// Step 2: Acquire exclusive write lock
@@ -31,7 +31,12 @@ func (e *Engine) Put(key, val []byte) error {
 		return ErrEnginePoisoned
 	}
 
-	// Step 3-6: Encode, quota check, position-independent write, and physical fsync barrier
+	// Step 3: Pre-write quota check (rejection before memory allocation or disk writes)
+	if err := CheckQuota(e.validEOF, frameSize, e.maxBytes); err != nil {
+		return err
+	}
+
+	// Step 4-6: Frame encode, position-independent write, and physical fsync barrier
 	ops := []format.Operation{{
 		Type:  format.OpPut,
 		Key:   key,
@@ -55,13 +60,13 @@ func (e *Engine) Put(key, val []byte) error {
 }
 
 // Delete appends a tombstone record removing the key. Deleting missing keys is valid and durable.
-func (e *Engine) Delete(key []byte) error {
-	// Step 1: Input validation
-	if len(key) < format.MinKeyLen {
-		return format.ErrKeyEmpty
-	}
-	if len(key) > format.MaxKeyLen {
-		return format.ErrKeyTooLarge
+func (e *Engine) Delete(key []byte) (retErr error) {
+	defer e.recoverPanicLocked("Delete", &retErr)
+
+	// Step 1: Pre-flight bounds and zero-allocation frame size calculation
+	frameSize, err := ExactDelFrameSize(len(key))
+	if err != nil {
+		return err
 	}
 
 	// Step 2: Acquire exclusive write lock
@@ -75,7 +80,12 @@ func (e *Engine) Delete(key []byte) error {
 		return ErrEnginePoisoned
 	}
 
-	// Step 3-6: Encode, quota check, position-independent write, and physical fsync barrier
+	// Step 3: Pre-write quota check
+	if err := CheckQuota(e.validEOF, frameSize, e.maxBytes); err != nil {
+		return err
+	}
+
+	// Step 4-6: Frame encode, position-independent write, and physical fsync barrier
 	ops := []format.Operation{{
 		Type:  format.OpDel,
 		Key:   key,
@@ -97,7 +107,7 @@ func (e *Engine) Delete(key []byte) error {
 	return nil
 }
 
-// appendFrameLocked handles serialization, quota check, writeAtFull, fsync barrier, and rollback.
+// appendFrameLocked handles serialization, writeAtFull, fsync barrier, and rollback.
 // Must be called with e.mu held exclusively.
 func (e *Engine) appendFrameLocked(ops []format.Operation) ([]byte, error) {
 	frameBytes, err := format.EncodeFrame(e.nextSeqNo, ops)
@@ -105,37 +115,33 @@ func (e *Engine) appendFrameLocked(ops []format.Operation) ([]byte, error) {
 		return nil, err
 	}
 
-	frameSize := uint64(len(frameBytes))
-
-	// Quota validation with overflow safety
-	if frameSize > math.MaxUint64-e.validEOF {
-		return nil, ErrDiskFull
-	}
-	if e.maxBytes > 0 && e.validEOF+frameSize > e.maxBytes {
-		return nil, ErrDiskFull
-	}
-
 	// Position-independent write loop
 	if err := writeAtFull(e.db, frameBytes, int64(e.validEOF)); err != nil {
 		e.rollbackAppendLocked(err)
-		return nil, err
+		if errors.Is(err, syscall.ENOSPC) {
+			return nil, ErrDiskFull
+		}
+		return nil, fmt.Errorf("IO_WRITE: %w", err)
 	}
 
 	// Physical fsync barrier
 	if err := e.db.Sync(); err != nil {
 		e.rollbackAppendLocked(err)
-		return nil, err
+		return nil, fmt.Errorf("IO_SYNC: %w", err)
 	}
 
 	return frameBytes, nil
 }
 
 // rollbackAppendLocked attempts to truncate back to validEOF and sync after a failed write or sync.
+// Poisons engine on truncate or sync failure.
 func (e *Engine) rollbackAppendLocked(cause error) {
 	truncErr := e.db.Truncate(int64(e.validEOF))
 	syncErr := e.db.Sync()
 	if truncErr != nil || syncErr != nil {
 		e.poisoned = true
+		fmt.Fprintf(os.Stderr, "ENGINE_POISONED: rollback failed: validEOF=%d truncErr=%v syncErr=%v (cause: %v)\n",
+			e.validEOF, truncErr, syncErr, cause)
 	}
 }
 
@@ -151,4 +157,3 @@ func writeAtFull(f *os.File, buf []byte, off int64) error {
 	}
 	return nil
 }
-

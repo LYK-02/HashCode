@@ -76,7 +76,8 @@
 | M1 | Core Foundation & Codecs | Phase E0 (Contract & Packages) + E1 (DB & UABE Codecs) | none | DONE | `go.mod`, `Makefile`, `internal/format/*`, codec tests |
 | M2 | Lifecycle, Locking & Single Ops | Phase E2 (Lifecycle & Locks) + E3 (Append & Single Ops) | M1 | DONE | `internal/engine/{engine,lock,write,read,keydir}.go` |
 | M3 | Batch Atomicity & Crash Recovery | Phase E4 (Atomic Batch) + E5 (Recovery & Tail Repair) | M2 | DONE | `internal/engine/{batch,recovery}.go`, recovery tests |
-| M4 | CLI, Protocol & Error Hardening | Phase E6 (Serve & CLI) + E7 (Disk Full & Hardening) | M3 | PLANNED | `cmd/kvdb/*`, `internal/engine/quota.go`, `internal/protocol/*` |
+| M4 | CLI, Protocol & Error Hardening | Phase E6 (Serve & CLI) + E7 (Disk Full & Hardening) | M3 | IN_PROGRESS | `cmd/kvdb/*`, `internal/engine/quota.go`, `internal/protocol/*` |
+
 | M5 | Compaction, Scale & Matrix Hardening | Phase E8 (Compaction) + E9 (1M Scale) + E10 (Release) | M4 | PLANNED | `internal/engine/compaction.go`, benchmark tests, matrix validation |
 | M_FINAL | E2E Acceptance & Adversarial Hardening | Phase 1 (100% E2E Tiers 1-4) + Phase 2 (Tier 5 Adversarial) | M5 & E2E Track | PLANNED | Verified `./kvdb` release binary, test reports, `make demo-ready` |
 

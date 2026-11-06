@@ -62,3 +62,16 @@ Gate Result: **FAIL** (reviewer_m3_r2_2 REQUEST_CHANGES)
 | auditor_m3_1 | teamwork_auditor | CLEAN | `auditor_m3_1/handoff.md` | Zero banned libraries (100% stdlib), anti-facade verified, write ordering verified |
 
 Gate Result: **PASS**
+
+
+---
+
+## Milestone M4: Judge CLI, Protocol & Error Hardening — Iteration 1
+- Gate Result: **IN_PROGRESS**
+
+| Agent | Role | Verdict | Source | Notes |
+|-------|------|---------|--------|-------|
+| explorer_m4_1 | teamwork_explorer | COMPLETE | `explorer_m4_1/handoff.md` | Streaming protocol blueprints for types.go, codec.go, server.go, and main.go |
+| explorer_m4_2 | teamwork_explorer | COMPLETE | `explorer_m4_2/handoff.md` | Quota pre-check, short-write rollback, and zero-panic wrappers |
+| worker_m4_1 | teamwork_worker | PENDING | `worker_m4_1/handoff.md` | Implementation dispatched |
+
