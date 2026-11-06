@@ -222,6 +222,7 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
   2. Updated root `AGENTS.md` with the new rule module and key directives.
 - **Status:** COMPLETED & VERIFIED.
 
+<<<<<<< Updated upstream
 ### [2026-11-06 15:10:18] Prompt Context Event
 - **User (Prompted by):** laik (LYK-02)
 - **Implementer (Executed by):** Antigravity (Gemini)
@@ -342,3 +343,22 @@ Which area would you like to prioritize first: **the live torture tool UI**, the
   3. Preserved Section 3 (All 32 Official Scenarios Matrix) and Section 4 (Proofs of the Three Guarantees).
   4. Removed external HTML dependencies in favor of clean native markdown and Mermaid.
 - **Status:** COMPLETED & VERIFIED.
+=======
+### [2026-11-06 15:40:07] Prompt Context Event
+- **User (Prompted by):** ashwin
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Reorganize our existing Kill It and Prove It repository into three clearly separated areas:
+
+1. `engine/` – Go database CLI, source code, tests and engine-specific `docs/`.
+2. `torture_tool/` – Python torture-testing tool, oracle, tests and torture-specific `docs/`.
+3. Root `docs/` – shared requirements, official scenario matrix, integration plan, team responsibilities and demo guide.
+
+Keep the official root deliverables: `README.md`, `ARCHITECTURE.md`, `BREAKING.md`, and `PROMPTS.md`. Preserve `AGENTS.md`, `MEMORY.md`, `.agents/` rules, scripts and hooks.
+
+Create a clean, scalable folder structure and documentation outlines. Inspect existing files before moving anything, preserve useful content, update paths and references, and avoid duplicate documentation.
+
+Do not implement database or torture-tool code yet. Do not change the agreed Go + Python stack. First show me the proposed folder tree and migration plan for approval.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+>>>>>>> Stashed changes
