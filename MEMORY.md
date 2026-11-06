@@ -394,3 +394,11 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-06 17:51:02] Prompt Context Event
+- **User (Prompted by):** ashwin (Ashwin Nethan)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `Move on to Phase T2. Follow `docs/torture_tool/plans/PLAN_T2_INDEPENDENT_ORACLE.md` closely and implement the independent reference oracle, event journal, state tracking, and uncertainty/atomicity evaluation. Complete all subtasks, add thorough tests for crash and ambiguous-write scenarios, verify everything, and update the checklist. Keep the oracle completely independent of Go engine internals. Do not begin T3.`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE

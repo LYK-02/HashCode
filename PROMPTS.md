@@ -320,3 +320,14 @@ Implement Phase T1 strictly following `docs/torture_tool/plans/PLAN_T1_CLI_AND_W
 
 ---
 
+### Prompt (2026-11-06 17:51:02)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Move on to Phase T2. Follow `docs/torture_tool/plans/PLAN_T2_INDEPENDENT_ORACLE.md` closely and implement the independent reference oracle, event journal, state tracking, and uncertainty/atomicity evaluation. Complete all subtasks, add thorough tests for crash and ambiguous-write scenarios, verify everything, and update the checklist. Keep the oracle completely independent of Go engine internals. Do not begin T3.
+```
+
+---
+

@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T2**  
 > Component: Ground-Truth Model, Event Journal, Uncertainty & Atomicity Evaluator  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/03_INDEPENDENT_ORACLE.md`, `docs/torture_tool/09_ACK_VERIFICATION.md`, `docs/common/02_OFFICIAL_REQUIREMENTS.md`
 
 ---
@@ -100,9 +100,9 @@ When verifying post-recovery state:
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Unit tests pass covering all permutations of acknowledged, failed, and ambiguous in-flight mutations.
-- [ ] Evaluator correctly accepts both all-applied and none-applied states for in-flight batches.
-- [ ] Evaluator strictly rejects partial batches (e.g. 9 out of 10 applied).
-- [ ] Evaluator strictly rejects torn values (e.g. value truncated or having bit flips).
-- [ ] Zero dependencies on any engine code or data file format.
+- [x] Unit tests pass covering all permutations of acknowledged, failed, and ambiguous in-flight mutations.
+- [x] Evaluator correctly accepts both all-applied and none-applied states for in-flight batches.
+- [x] Evaluator strictly rejects partial batches (e.g. 9 out of 10 applied).
+- [x] Evaluator strictly rejects torn values (e.g. value truncated or having bit flips).
+- [x] Zero dependencies on any engine code or data file format.
 
