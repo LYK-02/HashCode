@@ -8,8 +8,8 @@
 ---
 
 ## Current Architecture & Project Status
-- **Current Phase:** Phase 1 (Architecture, Format Design & Scaffolding)
-- **Target Language:** **Go** (Engine & CLI in `src/`) + **Python 3** (Independent Torture Tool in `torture/`)
+- **Current Phase:** Milestone M3 Completed & Verified (Batch Atomicity & Crash Recovery: Phases E4 & E5) -> Milestone M4 Active (Judge CLI, Protocol & Error Hardening: Phases E6 & E7)
+- **Target Language:** **Go** (Engine & CLI in `src/`, `cmd/`, `internal/`) + **Python 3** (Independent Torture Tool in `torture/`, `torture_tool/`)
 - **Persistence Model:** Exactly 1 file on disk with 32-byte header (`KVDB2026`) and UABE frames (`0x55414245`)
 - **Write Ordering:** `WriteAt (UABE Frame)` $\to$ `fsync(file)` $\to$ `KeyDir.Apply` $\to$ `ACK`
 - **Active Scaffolding:**
@@ -720,3 +720,47 @@ Do not implement database or torture-tool code yet. Do not change the agreed Go 
 - **Why:** Direct user instruction driving project evolution.
 - **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
 - **Status:** ACTIVE
+
+### [2026-11-06 20:15:59] Prompt Context Event
+- **User (Prompted by):** LENOVO (AkashNSBhat)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `@[c:\Users\LENOVO\HashCode-1\.agents\teamwork] @[c:\Users\LENOVO\HashCode-1\docs] Okay..so now refer these files and continue from where we left of and i need you to create a pr and merge after each successfull task completion and also update the memory and prompt folder and ask my permission after all completed before pushing /teamwork`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** Executed multi-agent milestone workflows starting at Milestone M3 with local branch creation, PR simulation, local merge, memory and prompt synchronization, and deferred remote push.
+- **Status:** COMPLETED (Milestone M3 Completed & Verified)
+
+---
+
+### [2026-11-06 22:36:00] Milestone M3 Completion: Batch Atomicity & Crash Recovery
+- **User (Prompted by):** LENOVO (AkashNSBhat)
+- **Implementer (Executed by):** Teamwork Project Orchestrator Swarm
+- **What:** Milestone M3 (Atomic Batch Mutation & Crash Recovery: Phases E4 & E5) completed, verified across dual reviewers, dual challengers, and forensic auditor with unanimous PASS.
+- **Why:** Guarantee 1..10,000 ops atomicity in single UABE frame, O(N) running offset calculation without heap churn, sequential replay from byte 32, torn tail repair at EOF, and fail-closed non-tail corruption rejection.
+- **Fix / Actions Taken:**
+  1. **Phase E4 (Atomic Batch Mutation Pipeline in `internal/engine/batch.go`)**:
+     - Pre-flight bounds checking ($1 \le \text{len}(ops) \le 10,000$, key len $\le 1024$, val len $\le 1,048,576$, zero-length value validation on DEL).
+     - Serializes all operations into a single contiguous UABE frame (`format.EncodeFramePayload(ops)`).
+     - Pre-write quota validation against `maxBytes` (`ErrDiskFull`).
+     - Numbered 10-step write protocol: `writeAtFull` $\to$ physical `e.db.Sync()` fsync barrier strictly before updating in-memory `KeyDir`.
+     - $O(N)$ running offset calculation (`format.ValueFileOffset`) populating `KeyDir` without secondary allocation passes.
+     - Advances `validEOF` and `nextSeqNo` atomically; reader isolation via `e.mu.Lock()` prevents partial reads.
+  2. **Phase E5 (Log Recovery & Torn Tail Repair in `internal/engine/recovery.go`)**:
+     - Sequential frame replay starting at byte 32 through EOF.
+     - Comprehensive torn tail classification:
+       - **Case T1 (Short Header < 28B at EOF)**: `repairTornTail` truncates to offset, syncs, and cleanly halts.
+       - **Case T2 (Invalid Header Magic / Header CRC)**: Sliding window forward scan (`hasValidFrameAhead`) checks for valid frames ahead. If none $\to$ truncates torn tail at EOF. If valid frame exists ahead $\to$ fails closed with `format.ErrCorruptFrame`.
+       - **Case T3 (Boundary Overrun past File Size)**: Truncates torn tail at EOF and syncs.
+       - **Case T4 (Payload/Trailer CRC Mismatch)**: If non-tail (`offset + totalFrameSize < fileSize`) $\to$ fails closed (`format.ErrCorruptFrame`). If exact physical tail $\to$ truncates to offset and syncs.
+     - `repairTornTail` issues `f.Truncate(int64(truncateTo))` followed by `f.Sync()`. Diagnostics routed exclusively to `os.Stderr`.
+  3. **Engine Lifecycle & CLI Integration**:
+     - `internal/engine/engine.go`: Refactored `Open()` to delegate startup log replay to `RecoverLog(dataFile, uint64(fi.Size()))`.
+     - `cmd/kvdb/main.go`: Implemented robust multi-operation batch command parser with space/quote tokenization and streaming line-oriented protocol support.
+  4. **Multi-Agent Verification Gate & Consensus**:
+     - Reviewer 1 (`reviewer_m3_r3_1`): APPROVED (batch atomicity, 1..10,000 ops single frame, reader isolation, CLI parser).
+     - Reviewer 2 (`reviewer_m3_r3_2`): APPROVED (Case T3/T4 recovery logic, 15 unit/adversarial tests, payload length assertions).
+     - Challenger 1 (`challenger_m3_1_rep`): APPROVED (Group B crash scenarios B1-B6, 7 adversarial format suites passed 100%).
+     - Challenger 2 (`challenger_m3_2`): APPROVED (15 torn tail permutations, 6 non-tail middle corruptions, 10-cycle idempotence, 5.18ms/10k recovery speed).
+     - Forensic Auditor (`auditor_m3_1`): CLEAN (zero banned libraries, 100% standard library, zero mocks/facades, strict write ordering).
+     - Gate result recorded in `.agents/teamwork/GATE_STATUS.md`.
+- **Status:** COMPLETED & VERIFIED (Milestone M3 PASS). Milestone M4 PLANNED.
+

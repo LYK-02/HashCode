@@ -19,6 +19,8 @@ artifacts/
 *.test
 *.prof
 *.out
+*.bin
+.gocache/
 
 # Python cache & tooling
 __pycache__/

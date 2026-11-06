@@ -1,30 +1,33 @@
-## 2026-11-06T14:30:22Z
-You are explorer_m3_2 (role: M3 Recovery & Tail Repair Explorer).
-Your working directory: /home/laik/workspace/srinathonn/.agents/teamwork/explorer_m3_2/
-Your parent: 9fade4e7-7ff3-4d78-9ecd-6f9b6c00f5be
+# Task Assignment: Milestone M3 Phase E5 (Crash Recovery & Tail Repair Explorer)
 
-First, read the authoritative user request at:
-/home/laik/workspace/srinathonn/.agents/teamwork/ORIGINAL_REQUEST.md
-Also read:
-- /home/laik/workspace/srinathonn/.agents/teamwork/PROJECT.md
-- /home/laik/workspace/srinathonn/docs/engine/08_CRASH_RECOVERY.md
-- /home/laik/workspace/srinathonn/docs/engine/09_TORN_WRITE_HANDLING.md
-- /home/laik/workspace/srinathonn/internal/engine/engine.go (inspect recoverFrames, hasValidFrameAhead, CheckFile)
-- /home/laik/workspace/srinathonn/internal/format/uabe.go
+## Identity
+- Archetype: teamwork_explorer
+- Role: Crash Recovery & Tail Repair Explorer
+- Working directory: c:\Users\LENOVO\HashCode-1\.agents\teamwork\explorer_m3_2\
 
-Task:
-Investigate and produce an architectural specification and implementation strategy for Phase E5 (Crash Recovery & Torn Tail Repair):
-1. Recovery Protocol & Log Replay:
-   - Sequential scan from byte 32 to physical EOF.
-   - For each frame: decode 28-byte header, check header CRC32C, read payload, check payload CRC32C trailer, decode all operations in batch, update `KeyDir` with physical locators, advance `validEOF` and `nextSeqNo`.
-2. Torn Tail vs Middle Corruption (Strict Invariant):
-   - Incomplete frame at EOF (torn write): truncate physical file back to last known `validEOF` using `os.File.Truncate` and `os.File.Sync()`, log the repair, and proceed cleanly.
-   - Non-tail corruption (middle of file): if a frame has invalid CRC or truncated bytes BUT there are valid bytes/frames ahead (or it is not at EOF), the engine MUST FAIL CLOSED (`CORRUPT_FRAME` / `ErrCorruptFrameHeader`), never auto-truncate healthy data!
-3. High Performance Recovery Scanner:
-   - How can the recovery scanner be buffered and optimized to ensure 1,000,000 keys recover in <= 2.0 seconds?
-   - Evaluate memory consumption during scan (KeyDir allocation, zero unnecessary allocations).
-4. `./kvdb check <path>` Subcommand:
-   - How does `check` inspect the database without modifying or repairing it, reporting `OK` or `CORRUPT_FRAME: ...` with exit codes?
-5. Write handoff report to `/home/laik/workspace/srinathonn/.agents/teamwork/explorer_m3_2/handoff.md`.
-Update `progress.md` with status and timestamp.
-Send completion message to orchestrator (`9fade4e7-7ff3-4d78-9ecd-6f9b6c00f5be`) with report path.
+## Scope & Objective
+Explore and provide an architectural blueprint for Milestone M3 Phase E5 (Startup Log Replay, Torn Tail Repair at EOF, and Fail-Closed Corruption Rejection).
+
+## Required Reading
+- `c:\Users\LENOVO\HashCode-1\.agents\teamwork\ORIGINAL_REQUEST.md` (Read verbatim before starting)
+- `c:\Users\LENOVO\HashCode-1\.agents\teamwork\PROJECT.md`
+- `c:\Users\LENOVO\HashCode-1\docs\engine\08_CRASH_RECOVERY.md`
+- `c:\Users\LENOVO\HashCode-1\docs\engine\09_TORN_WRITE_HANDLING.md`
+- `c:\Users\LENOVO\HashCode-1\internal/engine/engine.go` (current recovery logic lines 145-227)
+- `c:\Users\LENOVO\HashCode-1\internal/format/uabe.go` and `internal/format/record.go`
+
+## Specific Analysis Goals
+1. Inspect how recovery is currently handled in `internal/engine/engine.go` (lines 145-227) and design the extraction into dedicated `internal/engine/recovery.go` per `PROJECT.md` layout.
+2. Analyze sequential frame replay from byte 32 to validEOF.
+3. Detail how torn tail frames at EOF are detected, truncated, and synced (`file.Truncate(validEOF)` and `file.Sync()`).
+4. Detail how non-tail corruption (middle-of-file corruption) is detected and rejected fail-closed with `ErrCorruptFrame` / `CORRUPT_FRAME` without destroying subsequent data.
+5. Provide a complete code blueprint for `internal/engine/recovery.go` and corresponding unit tests in `internal/engine/recovery_test.go`.
+
+## Deliverable
+Write your comprehensive architectural report to `c:\Users\LENOVO\HashCode-1\.agents\teamwork\explorer_m3_2\handoff.md`.
+Report format: Observation, Logic Chain, Caveats, Conclusion & Code Blueprint, Verification Method.
+Notify parent via send_message when complete.
+
+
+## 2026-11-06T15:03:53Z
+You are assigned to Milestone M3 Phase E5 exploration. Read your dispatch instructions at c:\Users\LENOVO\HashCode-1\.agents\teamwork\explorer_m3_2\DISPATCH.md and ORIGINAL_REQUEST.md at c:\Users\LENOVO\HashCode-1\.agents\teamwork\ORIGINAL_REQUEST.md before starting. Produce your handoff report at c:\Users\LENOVO\HashCode-1\.agents\teamwork\explorer_m3_2\handoff.md and notify me via send_message.
