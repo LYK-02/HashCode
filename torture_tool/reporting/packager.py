@@ -9,11 +9,13 @@ import stat
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from torture_tool.cli import RunConfig
-from torture_tool.runner.iteration import IterationResult
 from torture_tool.verifier.comparator import DiffReport
+
+if TYPE_CHECKING:
+    from torture_tool.runner.iteration import IterationResult
 
 
 def get_git_commit(cwd: Optional[Path] = None) -> str:

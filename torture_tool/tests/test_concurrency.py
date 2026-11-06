@@ -163,6 +163,62 @@ class TestConcurrentWorkersIntegration(unittest.TestCase):
             self.assertGreater(total_acks, 0)
             self.assertEqual(total_ops, total_acks + total_inflight)
 
+    def test_worker_pool_shared_key_space_configuration(self):
+        """WorkerPool properly delegates shared_key_pool parameter to worker generators."""
+        seed_mgr = SeedManager(root_seed=999)
+        config_shared = WorkloadConfig(shared_key_pool=True)
+        config_partitioned = WorkloadConfig(shared_key_pool=False)
+
+        # 1. Default shared pool configuration
+        pool1 = WorkerPool(
+            num_workers=2,
+            seed_manager=seed_mgr,
+            dispatcher=None,  # type: ignore
+            writer=None,  # type: ignore
+            journal=None,  # type: ignore
+            workload_config=config_shared,
+        )
+        self.assertTrue(pool1.shared_key_pool)
+
+        # 2. Partitioned pool configuration
+        pool2 = WorkerPool(
+            num_workers=2,
+            seed_manager=seed_mgr,
+            dispatcher=None,  # type: ignore
+            writer=None,  # type: ignore
+            journal=None,  # type: ignore
+            workload_config=config_partitioned,
+            shared_key_pool=False,
+        )
+        self.assertFalse(pool2.shared_key_pool)
+
+    def test_stdin_writer_chunked_transmission_metrics(self):
+        """StdinWriter correctly tracks metrics and writes large payloads in chunks."""
+        r_fd, w_fd = os.pipe()
+        r_file = open(r_fd, "rb", buffering=65536)
+        w_file = open(w_fd, "wb", buffering=65536)
+
+        chunk_sz = 32 * 1024
+        writer = StdinWriter(w_file, chunk_size=chunk_sz)
+
+        # Write a 16 KiB value (32 KiB hex fits within pipe buffer without blocking)
+        large_val = b"x" * (16 * 1024)
+        req = PutRequest(op_id="chunk-test-1", key=b"key1", value=large_val)
+        wire_str = writer.write_request(req)
+
+        self.assertEqual(writer.requests_sent, 1)
+        self.assertEqual(writer.bytes_written, len(wire_str.encode("utf-8")))
+        self.assertEqual(writer.lock_acquisitions, 1)
+        self.assertGreaterEqual(writer.total_lock_wait_time, 0.0)
+        self.assertGreaterEqual(writer.average_lock_wait_time, 0.0)
+
+        # Read back from pipe
+        line = r_file.readline().decode("utf-8")
+        self.assertTrue(line.startswith("PUT chunk-test-1 "))
+
+        writer.close()
+        r_file.close()
+
 
 if __name__ == "__main__":
     unittest.main()

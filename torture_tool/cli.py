@@ -118,6 +118,22 @@ def parse_args(args: Optional[List[str]] = None) -> RunConfig:
         parser.error(f"--workers must be at least 2, got {parsed.workers}")
     if parsed.iterations < 1:
         parser.error(f"--iterations must be at least 1, got {parsed.iterations}")
+    if parsed.timeout <= 0:
+        parser.error(f"--timeout must be greater than 0, got {parsed.timeout}")
+
+    explicit_bin = False
+    if args is not None:
+        explicit_bin = any(arg == "--kvdb-bin" or arg.startswith("--kvdb-bin=") for arg in args)
+    else:
+        explicit_bin = any(arg == "--kvdb-bin" or arg.startswith("--kvdb-bin=") for arg in sys.argv[1:])
+
+    if explicit_bin:
+        if not parsed.kvdb_bin.exists():
+            parser.error(f"--kvdb-bin path does not exist: {parsed.kvdb_bin}")
+    elif not parsed.kvdb_bin.exists():
+        repo_root_bin = Path(__file__).resolve().parent.parent / "kvdb"
+        if not repo_root_bin.exists():
+            parser.error(f"kvdb binary not found at '{parsed.kvdb_bin}'. Please compile kvdb first.")
 
     return RunConfig(
         seed=parsed.seed,
@@ -127,6 +143,6 @@ def parse_args(args: Optional[List[str]] = None) -> RunConfig:
         timeout=parsed.timeout,
         db_path=parsed.db,
         artifact_dir=parsed.artifact_dir,
-        kvdb_bin=parsed.kvdb_bin,
+        kvdb_bin=parsed.kvdb_bin.resolve() if parsed.kvdb_bin.exists() else parsed.kvdb_bin,
     )
 

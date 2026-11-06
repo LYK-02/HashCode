@@ -64,3 +64,17 @@ Write a comprehensive review report to:
 `/home/laik/workspace/srinathonn/.agents/teamwork/reviewer_m2_2/handoff.md`
 Clearly stating your explicit verdict: `APPROVE` or `REQUEST_CHANGES`, supported by concrete code evidence and test execution outputs.
 Notify orchestrator when done via send_message.
+
+
+## 2026-11-06T19:25:48Z
+You are Reviewer 2 for Milestone 2: Independent Reference Oracle & State Evaluation Hardening.
+1. Read `/home/ashwin/HashCode/.agents/teamwork/ORIGINAL_REQUEST.md`.
+2. Read `/home/ashwin/HashCode/.agents/teamwork/orchestrator/PROJECT.md` (specifically Milestone 2 and Findings O1, O2, R2).
+3. Read the worker's report: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/m2_report.md` and handoff: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/handoff.md`.
+4. Your working directory is `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_2/`. Do NOT modify any source files.
+5. Review the changes made in `torture_tool/oracle/evaluator.py`, `torture_tool/runner/iteration.py`, `torture_tool/tests/test_oracle_negative.py`, and `torture_tool/tests/test_oracle_hardening.py`.
+6. Verify mathematical and logical correctness of in-flight PUT value checking, all-or-nothing batch atomicity, sequence number ordering, and dump parser duplicate key rejection.
+7. Run the tests independently.
+8. Check boundary compliance (verify ONLY files inside `torture_tool/` were modified).
+9. Determine your verdict: APPROVE or REQUEST_CHANGES. Document your findings in `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_2/review.md` and write `handoff.md`.
+10. Send a completion message via `send_message` with your verdict when done.

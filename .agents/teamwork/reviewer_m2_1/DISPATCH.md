@@ -1,33 +1,14 @@
-## 2026-11-06T14:18:26Z
-You are reviewer_m2_1, a high-reliability reviewer for Milestone M2 (Engine Lifecycle, Locking & Single Ops: Phases E2 & E3).
-Your working directory is: /home/laik/workspace/srinathonn/.agents/teamwork/reviewer_m2_1/
-
-Read ORIGINAL_REQUEST.md at:
-/home/laik/workspace/srinathonn/.agents/teamwork/ORIGINAL_REQUEST.md
-
-Read the Worker's handoff report:
-/home/laik/workspace/srinathonn/.agents/teamwork/worker_m2_3/handoff.md
-
-Review Scope:
-Specifically examine Engine Lifecycle, Locking, and Integrity:
-1. `internal/engine/lock.go`:
-   - Permanent sidecar file `<path>.lock` must be opened with `os.OpenFile(..., os.O_CREATE|os.O_RDWR, 0666)`.
-   - Non-blocking advisory flock (`syscall.Flock(fd, syscall.LOCK_EX|syscall.LOCK_NB)`).
-   - Contention cleanly returns typed `ErrLocked`.
-   - Inode preservation invariant: `<path>.lock` is NEVER unlinked, deleted, or renamed.
-2. `internal/engine/engine.go`:
-   - Path canonicalization via `filepath.Abs` and `filepath.Clean`.
-   - Header validation: 32-byte header with `KVDB2026`, version 1, Castagnoli CRC32C.
-   - Fail-closed behavior on corrupted headers (`ErrCorruptHeader`, `ErrInvalidHeaderMagic`); never overwrite damaged existing files.
-   - Clean `Close()` sequence: flush, `db.Sync()`, close db, release flock, close lock fd. All API methods return `ErrClosed` if called after Close.
-3. Standard Library Compliance: Zero banned persistence/WAL dependencies (`.agents/rules/02_banned_libraries.md`).
-4. Verification:
-   - Run `go test -v -race ./internal/engine/...`
-   - Run `go test -v ./...`
-   - Verify all tests pass with 0 failures and 0 race warnings.
-
-Deliverable:
-Write a comprehensive review report to:
-`/home/laik/workspace/srinathonn/.agents/teamwork/reviewer_m2_1/handoff.md`
-Clearly stating your explicit verdict: `APPROVE` or `REQUEST_CHANGES`, supported by concrete code evidence and test execution outputs.
-Notify orchestrator when done via send_message.
+## 2026-11-06T19:25:08Z
+You are Reviewer 1 for Milestone 2: Independent Reference Oracle & State Evaluation Hardening.
+1. Read `/home/ashwin/HashCode/.agents/teamwork/ORIGINAL_REQUEST.md`.
+2. Read `/home/ashwin/HashCode/.agents/teamwork/orchestrator/PROJECT.md` (specifically Milestone 2 and Findings O1, O2, R2).
+3. Read the worker's report: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/m2_report.md` and handoff: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/handoff.md`.
+4. Your working directory is `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/`. Do NOT modify any source files.
+5. Review the changes made in `torture_tool/oracle/evaluator.py`, `torture_tool/runner/iteration.py`, `torture_tool/tests/test_oracle_negative.py`, and `torture_tool/tests/test_oracle_hardening.py`.
+6. Run the verification commands:
+   - `PYTHONPATH=/home/ashwin/HashCode python3 -m unittest torture_tool/tests/test_oracle_negative.py`
+   - `PYTHONPATH=/home/ashwin/HashCode python3 -m unittest torture_tool/tests/test_oracle_hardening.py`
+   - `PYTHONPATH=/home/ashwin/HashCode python3 -m unittest discover -s torture_tool/tests -p "test_*.py"`
+7. Check boundary compliance (verify ONLY files inside `torture_tool/` were modified).
+8. Determine your verdict: APPROVE or REQUEST_CHANGES. Document your findings in `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/review.md` and write `handoff.md`.
+9. Send a completion message via `send_message` with your verdict when done.

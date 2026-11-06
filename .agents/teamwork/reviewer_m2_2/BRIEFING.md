@@ -1,7 +1,7 @@
-# BRIEFING — 2026-11-06T14:32:00Z
+# BRIEFING — 2026-11-06T19:35:00Z
 
 ## Mission
-High-reliability and adversarial review for Milestone M2 (Engine Lifecycle, Locking & Single Ops: Phases E2 & E3), specifically examining write protocol, durability, KeyDir index, and concurrency.
+Adversarial quality review and stress-testing for Milestone 2: Independent Reference Oracle & State Evaluation Hardening, verifying mathematical and logical correctness of in-flight write checking, batch atomicity, monotonic sequence replay, and dump duplicate rejection with zero integrity violations.
 
 ## 🔒 My Identity
 - Archetype: reviewer
@@ -10,55 +10,68 @@ High-reliability and adversarial review for Milestone M2 (Engine Lifecycle, Lock
 - Original parent: 9fade4e7-7ff3-4d78-9ecd-6f9b6c00f5be
 - Milestone: M2
 - Instance: 2 of 2
+- Current Working directory: /home/ashwin/HashCode/.agents/teamwork/reviewer_m2_2
+- Current Parent: 708ca191-87cf-4549-afd5-d1bf897701e3
+- Current Milestone: Milestone 2: Independent Reference Oracle & State Evaluation Hardening (Reviewer 2 / Adversarial Critic)
 
 ## 🔒 Key Constraints
 - Review-only — do NOT modify implementation code
 - Zero third-party storage engines/WALs, standard library only
 - Check for integrity violations (hardcoded tests, facade implementations, fake logs)
+- Strict boundary compliance: verify modifications are strictly confined to `torture_tool/`
 
 ## Current Parent
-- Conversation ID: e3c1a427-350b-4f7f-93fb-8aca54ff70b9
-- Updated: 2026-11-06T14:32:00Z
+- Conversation ID: 708ca191-87cf-4549-afd5-d1bf897701e3
+- Updated: 2026-11-06T19:35:00Z
 
 ## Review Scope
 - **Files to review**:
-  - `internal/engine/write.go`
-  - `internal/engine/read.go`
-  - `internal/engine/keydir.go`
-  - `internal/engine/engine.go`
-  - `internal/engine/lock.go`
-  - Upstream worker handoff: `/home/laik/workspace/srinathonn/.agents/teamwork/worker_m2_3/handoff.md`
+  - `torture_tool/oracle/evaluator.py`
+  - `torture_tool/runner/iteration.py`
+  - `torture_tool/tests/test_oracle_negative.py`
+  - `torture_tool/tests/test_oracle_hardening.py`
+  - Worker handoff: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/handoff.md`
+  - Worker report: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/m2_report.md`
 - **Interface contracts**:
   - ORIGINAL_REQUEST.md
-  - 01_invariants.md
-  - 03_scenarios_matrix.md
-  - 10_code_quality_and_practices.md
+  - orchestrator/PROJECT.md (Findings O1, O2, R2)
 - **Review criteria**:
-  - 10-step write protocol in `Put` and `Delete`
-  - Physical `file.Sync()` strictly BEFORE updating KeyDir or returning ACK
-  - Rollback handling on partial write or sync failure (`db.Truncate(int64(validEOF))` & `db.Sync()`); poisoned flag if rollback fails
-  - Tombstone delete appends UABE frame with `OpDel`, updates sequence, removes from KeyDir; non-existent key delete succeeds cleanly and durably
-  - Zero-seek read via `ReadAt` at `ValueOffset` for `ValueLen` bytes under `e.mu.RLock()`
-  - Distinct handling of 0-length value: `([]byte{}, true, nil)` without disk I/O
-  - Non-existent key returns `(nil, false, nil)`
-  - Returned byte slices are defensive copies
-  - Concurrency & Race Safety (Scenarios D1-D4): RWMutex, no torn or intermediate reads
-  - Verification: `go test -v -race ./internal/engine/...`, `go test -v ./...`
-  - Integrity violation checks (no facades, no fake tests)
+  - Finding O1 & Vulnerability 2: In-flight PUT and batch value verification (torn/corrupt values flag `VALUE_CORRUPTED`).
+  - Batch atomicity: strict all-or-nothing (partial application flags `BATCH_PARTIAL_APPLICATION`).
+  - Finding O2: Protocol `seq_num` monotonic replay ordering.
+  - Finding R2: Strict dump parser integration with duplicate key rejection.
+  - Integrity violation checks: No hardcoded results, dummy facades, or self-certifying shortcuts.
+  - Test verification: Independent execution of full and targeted test suites.
+  - Boundary compliance: Only files within `torture_tool/` modified.
 
 ## Key Decisions Made
-- Issued verdict: APPROVE based on comprehensive code analysis, adversarial stress tests, and 100% pass rate under `-race`.
+- Confirmed zero integrity violations: implementations in `evaluator.py` and `iteration.py` are robust, generalized, and logically sound.
+- Confirmed mathematical and logical correctness of all 4 targeted invariants (O1, O2, R2, batch atomicity).
+- Successfully executed all 104 tests in the test suite independently (100% pass rate).
+- Verified strict file boundary compliance via `git status --porcelain`.
+- Issued verdict: APPROVE.
 
 ## Artifact Index
-- handoff.md — Comprehensive review report with APPROVE verdict
+- review.md — Comprehensive quality and adversarial review report
+- handoff.md — 5-component self-contained handoff report
 - progress.md — Liveness heartbeat
 
 ## Review Checklist
-- **Items reviewed**: `write.go`, `read.go`, `keydir.go`, `engine.go`, `lock.go`, all unit/concurrency/adversarial tests
+- **Items reviewed**: `evaluator.py`, `iteration.py`, `test_oracle_negative.py`, `test_oracle_hardening.py`
 - **Verdict**: APPROVE
-- **Unverified claims**: none
+- **Unverified claims**: None (all claims verified with test and code execution)
 
 ## Attack Surface
-- **Hypotheses tested**: Stale lock on SIGKILL, torn tail at EOF, fail-closed middle corruption, boundary limits (0-byte & 1MB), multi-process collision, torn reads under heavy concurrent R/W (D3/D4)
+- **Hypotheses tested**:
+  - In-flight PUT torn byte injection (caught by `VALUE_CORRUPTED`)
+  - In-flight PUT non-existent key with torn bytes (caught by `VALUE_CORRUPTED`)
+  - In-flight PUT key vanishing when it previously existed (caught by `ACKED_WRITE_LOST`)
+  - In-flight batch partial mutation (caught by `BATCH_PARTIAL_APPLICATION`)
+  - In-flight batch with all keys torn (caught by `VALUE_CORRUPTED`, closing Vulnerability 2)
+  - In-flight batch with 1 clean and 1 torn key (caught by both `BATCH_PARTIAL_APPLICATION` and `VALUE_CORRUPTED`)
+  - In-flight batch with 0 mutating items (vacuously satisfies atomicity)
+  - In-flight DEL followed by in-flight PUT on same key (accepts valid crash outcomes, rejects torn values)
+  - Out-of-order sequence number arrival (replayed monotonically by `seq_num`)
+  - Dump output with duplicate keys (rejected by `DumpParseError` and fails iteration with `DUMP_PARSE_ERROR`)
 - **Vulnerabilities found**: 0
-- **Untested angles**: Compaction & Server streaming mode (deferred to M4 per specification roadmap)
+- **Untested angles**: None within Milestone 2 scope

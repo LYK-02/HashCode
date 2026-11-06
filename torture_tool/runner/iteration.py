@@ -22,6 +22,7 @@ from torture_tool.oracle.journal import OracleJournal
 from torture_tool.process.controller import ChildProcessController
 from torture_tool.protocol.utils import hex_to_bytes
 from torture_tool.scheduler.crash_scheduler import CrashSchedule, CrashScheduler
+from torture_tool.verifier.dump_parser import DumpParseError, parse_dump_output
 
 
 @dataclass
@@ -42,22 +43,8 @@ class IterationResult:
 
 
 def parse_raw_dump(dump_text: str) -> Dict[bytes, bytes]:
-    """Parse standard sorted dump output: '<hex_key> <hex_val>\\n'."""
-    state: Dict[bytes, bytes] = {}
-    for line in dump_text.splitlines():
-        trimmed = line.strip()
-        if not trimmed:
-            continue
-        parts = trimmed.split(" ")
-        if len(parts) == 1:
-            # Key with empty value
-            k = hex_to_bytes(parts[0])
-            state[k] = b""
-        elif len(parts) >= 2:
-            k = hex_to_bytes(parts[0])
-            v = hex_to_bytes(parts[1])
-            state[k] = v
-    return state
+    """Parse standard sorted dump output: '<hex_key> <hex_val>\\n' using strict dump parser."""
+    return parse_dump_output(dump_text)
 
 
 class IterationRunner:
@@ -173,6 +160,8 @@ class IterationRunner:
         total_ops = sum(s.operations_started for s in worker_stats)
         total_acks = sum(s.acks_received for s in worker_stats)
         total_unresolved = sum(s.inflight_at_stop for s in worker_stats)
+        total_exceptions = sum(s.exceptions_encountered for s in worker_stats)
+        has_protocol_errors = bool(dispatcher.protocol_errors or dispatcher.unknown_responses)
 
         # 6. Post-recovery verification: Run kvdb check
         check_passed = False
@@ -191,6 +180,7 @@ class IterationRunner:
         # 7. Post-recovery verification: Run kvdb dump
         dump_state: Dict[bytes, bytes] = {}
         dump_passed = False
+        dump_error_msg: Optional[str] = None
         dump_cmd = [str(self.config.kvdb_bin), "dump", str(db_file)]
         try:
             dump_proc = subprocess.run(
@@ -200,16 +190,52 @@ class IterationRunner:
                 timeout=self.config.timeout,
             )
             if dump_proc.returncode == 0:
-                dump_state = parse_raw_dump(dump_proc.stdout)
-                dump_passed = True
-        except Exception:
+                try:
+                    dump_state = parse_dump_output(dump_proc.stdout)
+                    dump_passed = True
+                except DumpParseError as dpe:
+                    dump_passed = False
+                    dump_error_msg = f"DUMP_PARSE_ERROR: {dpe}"
+            else:
+                dump_passed = False
+                dump_error_msg = f"kvdb dump process failed with return code {dump_proc.returncode}"
+        except Exception as e:
             dump_passed = False
+            dump_error_msg = f"kvdb dump execution failed: {e}"
 
         # 8. Compare against independent oracle journal events
         journal_events = list(OracleJournal.read_events(self.journal_path))
         eval_result = OracleEvaluator.evaluate(journal_events, dump_state)
 
-        passed = check_passed and dump_passed and eval_result.passed
+        err_reasons: List[str] = []
+        if total_exceptions > 0:
+            err_reasons.append(
+                f"WORKER_EXCEPTION_OR_TIMEOUT: {total_exceptions} worker exception(s) encountered"
+            )
+        if has_protocol_errors:
+            details = []
+            if dispatcher.protocol_errors:
+                details.append(f"{len(dispatcher.protocol_errors)} protocol error(s): {dispatcher.protocol_errors[:2]}")
+            if dispatcher.unknown_responses:
+                details.append(f"{len(dispatcher.unknown_responses)} unknown response(s): {dispatcher.unknown_responses[:2]}")
+            err_reasons.append(f"PROTOCOL_VIOLATION: {', '.join(details)}")
+
+        if not check_passed:
+            err_reasons.append("kvdb check failed or did not return OK")
+        if not dump_passed:
+            err_reasons.append(dump_error_msg or "kvdb dump failed or could not be parsed")
+        if not eval_result.passed and eval_result.violations:
+            err_reasons.append(f"Oracle evaluation failed with {len(eval_result.violations)} invariant violation(s)")
+
+        error_message: Optional[str] = "; ".join(err_reasons) if err_reasons else None
+
+        passed = (
+            check_passed
+            and dump_passed
+            and eval_result.passed
+            and total_exceptions == 0
+            and not has_protocol_errors
+        )
         duration = (time.monotonic() - start_time) * 1000.0
 
         return IterationResult(
@@ -224,5 +250,6 @@ class IterationRunner:
             unresolved_ops=total_unresolved,
             check_passed=check_passed,
             eval_result=eval_result,
+            error_message=error_message,
             duration_ms=duration,
         )

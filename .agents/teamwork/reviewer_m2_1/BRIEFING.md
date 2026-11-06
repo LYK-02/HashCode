@@ -1,56 +1,59 @@
-# BRIEFING — 2026-11-06T14:35:00Z
+# BRIEFING — 2026-11-06T19:31:00Z
 
 ## Mission
-Primary code and functional review for Milestone M2 (Phases E2 & E3): single-writer locking, KeyDir in-memory index, zero-seek ReadAt, 10-step write protocol with physical sync, crash recovery, and CLI bindings.
+Objective review and adversarial stress-testing of Milestone 2 (Independent Reference Oracle & State Evaluation Hardening), verifying O1, O2, R2 fixes and ensuring zero integrity violations.
 
 ## 🔒 My Identity
-- Archetype: reviewer_and_critic
+- Archetype: reviewer AND adversarial critic
 - Roles: reviewer, critic
-- Working directory: /home/laik/workspace/srinathonn/.agents/teamwork/reviewer_m2_1/
-- Original parent: 9fade4e7-7ff3-4d78-9ecd-6f9b6c00f5be
-- Milestone: M2
+- Working directory: /home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1
+- Original parent: 708ca191-87cf-4549-afd5-d1bf897701e3
+- Milestone: Milestone 2: Independent Reference Oracle & State Evaluation Hardening
 - Instance: 1 of 1
 
 ## 🔒 Key Constraints
 - Review-only — do NOT modify implementation code
-- Check for integrity violations (hardcoded test results, facade implementations, shortcuts, fabricated verification) -> verdict MUST be REQUEST_CHANGES if found
-- Verify all claims independently with commands/code inspection
-- Never place source code or test files in .agents/teamwork/
+- Check boundary compliance: ONLY files inside `torture_tool/` modified
+- Zero tolerance for integrity violations: facade implementations, hardcoded test results, bypassing core logic, fabricated verification
+- Maintain BRIEFING.md and handoff.md per protocol
 
 ## Current Parent
-- Conversation ID: 9fade4e7-7ff3-4d78-9ecd-6f9b6c00f5be
-- Updated: 2026-11-06T14:35:00Z
+- Conversation ID: 708ca191-87cf-4549-afd5-d1bf897701e3
+- Updated: 2026-11-06T19:31:00Z
 
 ## Review Scope
-- **Files to review**:
-  - internal/engine/lock.go
-  - internal/engine/keydir.go
-  - internal/engine/read.go
-  - internal/engine/write.go
-  - internal/engine/engine.go
-  - cmd/kvdb/main.go
-  - tests in internal/engine/ and tests/e2e/
-- **Interface contracts**: docs/engine/05_WRITE_AND_COMMIT_PROTOCOL.md, docs/engine/11_CONCURRENCY_AND_LOCKING.md, .agents/teamwork/ORIGINAL_REQUEST.md, .agents/teamwork/PROJECT.md
-- **Review criteria**: Correctness, integrity, 10-step write protocol, crash recovery, torn tail truncation, thread-safety, zero-panic safety, allocation bounds, CLI compliance
-
-## Key Decisions Made
-- Verified complete compliance of `internal/engine` with standard library only (0 banned libraries).
-- Verified flock sidecar implementation avoids inode replacement race and cleanly releases on SIGKILL.
-- Verified 10-step write protocol enforces `file.Sync()` strictly before KeyDir publication and ACK.
-- Verified torn tail truncation at EOF while failing closed on middle corruption via forward scanner.
-- Verdict: APPROVE.
-
-## Artifact Index
-- .agents/teamwork/reviewer_m2_1/BRIEFING.md — Working memory
-- .agents/teamwork/reviewer_m2_1/progress.md — Liveness heartbeat
-- .agents/teamwork/reviewer_m2_1/handoff.md — Final review and challenge report
+- **Files to review**: `torture_tool/oracle/evaluator.py`, `torture_tool/runner/iteration.py`, `torture_tool/tests/test_oracle_negative.py`, `torture_tool/tests/test_oracle_hardening.py`
+- **Context files**: `/home/ashwin/HashCode/.agents/teamwork/ORIGINAL_REQUEST.md`, `/home/ashwin/HashCode/.agents/teamwork/orchestrator/PROJECT.md`, `/home/ashwin/HashCode/.agents/teamwork/worker_m2/m2_report.md`, `/home/ashwin/HashCode/.agents/teamwork/worker_m2/handoff.md`
+- **Review criteria**: Correctness, completeness, adversarial robustness, boundary compliance, integrity.
 
 ## Review Checklist
-- **Items reviewed**: `lock.go`, `keydir.go`, `read.go`, `write.go`, `engine.go`, `cmd/kvdb/main.go`, `engine_test.go`, `lock_adversarial_test.go`, `challenger_durability_test.go`
+- **Items reviewed**:
+  - `torture_tool/oracle/evaluator.py`: In-flight PUT and batch value validation, intra-batch overwrite collapsing, monotonic `seq_num` ACK ordering.
+  - `torture_tool/runner/iteration.py`: `parse_raw_dump` delegation to `parse_dump_output()` with `DumpParseError` handling.
+  - `torture_tool/tests/test_oracle_negative.py`: 5 new negative tests.
+  - `torture_tool/tests/test_oracle_hardening.py`: 9 new hardening tests.
 - **Verdict**: APPROVE
-- **Unverified claims**: none; all verified via test execution and code inspection
+- **Unverified claims**: None. All claims independently verified.
 
 ## Attack Surface
-- **Hypotheses tested**: Process collision bursts, SIGKILL release loops, torn tails at EOF, mid-file bit-flips, concurrent reader/writer race safety (D1-D4), quota overflow bounds
-- **Vulnerabilities found**: None critical; minor cosmetic edge case in batch whitespace trimming noted for M4 CLI polishing
-- **Untested angles**: Serve streaming protocol (scheduled for M4)
+- **Hypotheses tested**:
+  - Multiple concurrent in-flight PUTs targeting same key -> Verified torn bytes rejected, valid candidates pass.
+  - Concurrent in-flight DEL and PUT on acknowledged key -> Verified torn bytes rejected, base and candidate states pass.
+  - Torn in-flight batch items -> Verified rejected with VALUE_CORRUPTED and BATCH_PARTIAL_APPLICATION.
+  - Out-of-order ACK demux with seq_num -> Verified sorted monotonically before replay.
+  - Engine dump duplicate keys -> Verified rejected with DUMP_PARSE_ERROR.
+- **Vulnerabilities found**: None.
+- **Untested angles**: None within Milestone 2 scope.
+
+## Key Decisions Made
+- Confirmed zero integrity violations.
+- Confirmed boundary compliance (all modified files inside `torture_tool/`).
+- Issued verdict: APPROVE.
+- Completed review.md and handoff.md.
+
+## Artifact Index
+- `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/DISPATCH.md` — Dispatch log
+- `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/BRIEFING.md` — Working memory and identity
+- `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/progress.md` — Liveness heartbeat
+- `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/review.md` — Detailed review report
+- `/home/ashwin/HashCode/.agents/teamwork/reviewer_m2_1/handoff.md` — 5-component handoff report

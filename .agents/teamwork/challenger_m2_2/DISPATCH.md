@@ -1,24 +1,12 @@
-## 2026-11-06T14:19:11Z
-You are challenger_m2_2, a code-executing adversarial challenger for Milestone M2.
-Your working directory is: /home/laik/workspace/srinathonn/.agents/teamwork/challenger_m2_2/
-
-Read ORIGINAL_REQUEST.md at:
-/home/laik/workspace/srinathonn/.agents/teamwork/ORIGINAL_REQUEST.md
-
-Read the Worker's handoff report:
-/home/laik/workspace/srinathonn/.agents/teamwork/worker_m2_3/handoff.md
-
-Challenge Mission:
-Empirically stress-test and challenge the Write Protocol, Durability, and Concurrency invariants:
-1. Crash Scenarios A1-A7: Simulate process kill at mid-write, partial frame bytes, torn tail at EOF; verify recovery on reopen truncates torn tail and recovers all previous valid acknowledged writes.
-2. Rapid successive overwrites of the same key: Assert last write wins, and cold reopen returns the latest value with zero data corruption.
-3. Rapid interleaving of PUT and DEL: Resurrect deleted keys, delete non-existent keys; assert strict chronological correctness.
-4. Concurrency Scenarios D1-D4: Concurrent readers and writers under Go race detector (`-race`); verify readers NEVER observe torn/partial byte slices.
-5. Boundary values: 0-byte value (distinct from NOTFOUND), 1MB maximum value, binary payloads containing all 256 byte values.
-
-Run the tests (e.g. `go test -v -race -run "TestChallenger_.*" ./internal/engine/...` or your own test harness).
-Deliverable:
-Write a detailed report to:
-`/home/laik/workspace/srinathonn/.agents/teamwork/challenger_m2_2/handoff.md`
-State your explicit verdict: `APPROVE` (all invariants held empirically under adversarial stress) or `REQUEST_CHANGES` (demonstrated vulnerability or failure).
-Notify orchestrator when done via send_message.
+## 2026-11-06T19:26:53Z
+You are Challenger 2 for Milestone 2: Independent Reference Oracle & State Evaluation Hardening.
+1. Read `/home/ashwin/HashCode/.agents/teamwork/ORIGINAL_REQUEST.md`.
+2. Read `/home/ashwin/HashCode/.agents/teamwork/orchestrator/PROJECT.md` (specifically Milestone 2 and Findings O1, O2, R2).
+3. Read the worker's report: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/m2_report.md` and handoff: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/handoff.md`.
+4. Your working directory is `/home/ashwin/HashCode/.agents/teamwork/challenger_m2_2/`. Do NOT modify any source files in `torture_tool/`. Write scripts only in your directory.
+5. Adversarially challenge the live runtime and regression safety:
+   - Run live mock torture iterations (`./torture --seed 999 --iterations 10 --mode default --kvdb-bin .../fake_kvdb.py`) to confirm zero regressions in live crash-injection and recovery verification.
+   - Run multi-iteration runs across modes to ensure the hardened evaluator does not produce false alarms on valid in-flight operations.
+   - Write edge-case tests targeting overlapping in-flight batches and single PUTs targeting the exact same keys.
+6. Determine your verdict: CONFIRMED or FAILED. Document in `/home/ashwin/HashCode/.agents/teamwork/challenger_m2_2/challenge_report.md` and write `handoff.md`.
+7. Send a completion message via `send_message` with your verdict when done.

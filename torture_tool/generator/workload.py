@@ -30,9 +30,10 @@ class WorkloadConfig:
     batch_ratio: float = 0.20
     min_batch_size: int = 2
     max_batch_size: int = 20
+    shared_key_pool: bool = False
 
     @classmethod
-    def for_mode(cls, mode: str) -> WorkloadConfig:
+    def for_mode(cls, mode: str, shared_key_pool: bool = False) -> WorkloadConfig:
         """Return tuned workload configuration preset based on mode."""
         if mode == "default":
             return cls(
@@ -45,6 +46,7 @@ class WorkloadConfig:
                 batch_ratio=0.20,
                 min_batch_size=2,
                 max_batch_size=30,
+                shared_key_pool=shared_key_pool,
             )
         elif mode == "large-values":
             return cls(
@@ -57,6 +59,7 @@ class WorkloadConfig:
                 batch_ratio=0.10,
                 min_batch_size=2,
                 max_batch_size=5,
+                shared_key_pool=shared_key_pool,
             )
         elif mode == "large-batches":
             return cls(
@@ -69,6 +72,7 @@ class WorkloadConfig:
                 batch_ratio=0.80,
                 min_batch_size=100,
                 max_batch_size=10000,
+                shared_key_pool=shared_key_pool,
             )
         elif mode == "compaction":
             # High churn on small key space: heavy deletes and overwrites
@@ -82,6 +86,7 @@ class WorkloadConfig:
                 batch_ratio=0.15,
                 min_batch_size=5,
                 max_batch_size=25,
+                shared_key_pool=shared_key_pool,
             )
         elif mode == "recovery-crash":
             return cls(
@@ -94,6 +99,7 @@ class WorkloadConfig:
                 batch_ratio=0.15,
                 min_batch_size=10,
                 max_batch_size=50,
+                shared_key_pool=shared_key_pool,
             )
         elif mode == "disk-full":
             return cls(
@@ -106,6 +112,7 @@ class WorkloadConfig:
                 batch_ratio=0.15,
                 min_batch_size=5,
                 max_batch_size=20,
+                shared_key_pool=shared_key_pool,
             )
         else:
             raise ValueError(f"Unknown workload mode: '{mode}'")
@@ -155,12 +162,17 @@ class WorkloadGenerator:
         prng: random.Random,
         config: Optional[WorkloadConfig] = None,
         iteration: int = 1,
+        shared_key_pool: Optional[bool] = None,
     ) -> None:
         self.worker_id = str(worker_id)
         self.prng = prng
         self.config = config or WorkloadConfig.for_mode("default")
         self.iteration = iteration
         self._op_seq = 0
+        if shared_key_pool is not None:
+            self.shared_key_pool = shared_key_pool
+        else:
+            self.shared_key_pool = getattr(self.config, "shared_key_pool", False)
 
     def next_op_id(self) -> str:
         """Generate globally unique operation ID formatted as '<worker_id>-<iteration>-<seq>'."""
@@ -179,8 +191,15 @@ class WorkloadGenerator:
         return DelRequest(op_id=op_id, key=k)
 
     def next_key(self) -> bytes:
-        """Derive a key that includes worker_id prefix to prevent concurrent same-key races."""
+        """Derive a key from the key pool.
+
+        When shared_key_pool is True, workers share the exact same key space
+        (e.g. k_0000, k_0001) stimulating concurrent same-key races.
+        When False, keys are partitioned per worker_id (e.g. w1_k_0000).
+        """
         raw_key = generate_key(self.prng, self.config.key_pool_size)
+        if self.shared_key_pool:
+            return raw_key
         return f"{self.worker_id}_{raw_key.decode('ascii')}".encode("ascii")
 
     def generate_batch(self, count: Optional[int] = None) -> BatchRequest:

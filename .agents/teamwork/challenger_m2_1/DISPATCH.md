@@ -22,3 +22,17 @@ Write a detailed report to:
 `/home/laik/workspace/srinathonn/.agents/teamwork/challenger_m2_1/handoff.md`
 State your explicit verdict: `APPROVE` (all invariants held empirically under adversarial stress) or `REQUEST_CHANGES` (demonstrated vulnerability or failure).
 Notify orchestrator when done via send_message.
+
+
+## 2026-11-06T19:26:34Z
+You are Challenger 1 for Milestone 2: Independent Reference Oracle & State Evaluation Hardening.
+1. Read `/home/ashwin/HashCode/.agents/teamwork/ORIGINAL_REQUEST.md`.
+2. Read `/home/ashwin/HashCode/.agents/teamwork/orchestrator/PROJECT.md` (specifically Milestone 2 and Findings O1, O2, R2).
+3. Read the worker's report: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/m2_report.md` and handoff: `/home/ashwin/HashCode/.agents/teamwork/worker_m2/handoff.md`.
+4. Your working directory is `/home/ashwin/HashCode/.agents/teamwork/challenger_m2_1/`. Do NOT modify any source files in `torture_tool/`. Write scripts only in your directory.
+5. Adversarially challenge the Oracle evaluator and dump parser:
+   - Generate fuzz and boundary states: inject 1-bit flips in values, truncated values, random garbage payloads, missing keys, phantom keys, and duplicate keys in raw dump text.
+   - Verify that EVERY corrupt state produces an explicit violation (`VALUE_CORRUPTED`, `BATCH_PARTIAL_APPLICATION`, `DUMP_PARSE_ERROR`, etc.) and `passed == False`.
+   - Test out-of-order ACK replay permutations with `seq_num` to verify deterministic ordering.
+6. Determine your verdict: CONFIRMED or FAILED. Document in `/home/ashwin/HashCode/.agents/teamwork/challenger_m2_1/challenge_report.md` and write `handoff.md`.
+7. Send a completion message via `send_message` with your verdict when done.

@@ -1,23 +1,18 @@
-## 2026-11-06T12:35:56Z
-MANDATORY FIRST STEP: Read `/home/laik/workspace/srinathonn/.agents/teamwork/ORIGINAL_REQUEST.md` before starting work.
+## 2026-11-06T18:18:18Z
 
-Context: Independent differential oracle verification of Milestone M1 (Core Foundation & Codecs: Phases E0 & E1).
-Scope Document: `/home/laik/workspace/srinathonn/.agents/teamwork/PROJECT.md`
-Worker Handoff Report: `/home/laik/workspace/srinathonn/.agents/teamwork/worker_m1_1/handoff.md`
+You are Challenger 2 for Milestone 1: Core Bug Fixes & Stability Hardening.
+1. Read `/home/ashwin/HashCode/.agents/teamwork/ORIGINAL_REQUEST.md`.
+2. Read `/home/ashwin/HashCode/.agents/teamwork/orchestrator/PROJECT.md` (specifically Milestone 1 and bugs 1-5).
+3. Read the worker's report: `/home/ashwin/HashCode/.agents/teamwork/worker_m1/m1_report.md` and handoff: `/home/ashwin/HashCode/.agents/teamwork/worker_m1/handoff.md`.
+4. Your working directory is `/home/ashwin/HashCode/.agents/teamwork/challenger_m1_2/`. Do NOT modify any source files in `torture_tool/`. Write scripts only in your directory.
+5. Adversarially challenge the test execution and runtime stability:
+   - Run torture execution using mock `./torture --seed 42 --iterations 10 --mode default --kvdb-bin /home/ashwin/HashCode/torture_tool/tests/mocks/fake_kvdb.py` to ensure normal execution is completely preserved and has zero regressions.
+   - Run top-level test discovery across different sub-interpreters or working directories.
+   - Inject simulated protocol responses with bad tokens, trailing nulls, duplicate ACK IDs, verifying fail-fast behavior.
+6. Determine your verdict: CONFIRMED or FAILED. Document in `/home/ashwin/HashCode/.agents/teamwork/challenger_m1_2/challenge_report.md` and write `handoff.md`.
+7. Send a completion message via `send_message` with your verdict when done.
 
-Working directory: `/home/laik/workspace/srinathonn/.agents/teamwork/challenger_m1_2/`
-Identity: `challenger_m1_2`
-
-Task:
-Perform independent differential verification of codecs in `internal/format`:
-1. Build an independent reference oracle (e.g. in Go or Python) that computes Castagnoli CRC32C using the RFC 3720 standard polynomial (`0x82F63B78`) and independently constructs:
-   - Initial 32-byte DB Header (Gen 0) and Compacted DB Header (Gen 5).
-   - 28-byte UABE Frame Header for PUT and DEL.
-   - 4-byte Castagnoli Trailer CRC32C.
-2. Cross-verify byte-for-byte against the output of `EncodeHeader` and `EncodeFrame`.
-3. Verify that `DecodeHeader`, `DecodeFrameHeader`, and `DecodePayloadAndTrailer` accept the independent oracle's outputs without error, and that all round-trips preserve key/value data identically.
-4. Record your findings and provide an explicit verdict in `handoff.md`: `APPROVE` or `REJECT`.
-
-Deliverable:
-Write report to `/home/laik/workspace/srinathonn/.agents/teamwork/challenger_m1_2/handoff.md`.
-Message your caller upon completion with your verdict and report path.
+## 2026-11-06T18:47:18Z
+**Context**: Expedited Milestone 1 Verification
+**Content**: Status inquiry: Reviewer 1 (APPROVE), Reviewer 2 (APPROVE), and Forensic Auditor (CLEAN) have completed. Please wrap up your mock torture and protocol test runs, document your verdict in `challenge_report.md` and `handoff.md`, and report back so we can clear the gate.
+**Action**: Submit your verdict message.

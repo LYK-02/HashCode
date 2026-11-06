@@ -650,3 +650,944 @@ update memory what we diid till now
 
 ---
 
+### Prompt (2026-11-06 20:22:03)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-06 22:21:18)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+complete the tasks..
+```
+
+---
+
+### Prompt (2026-11-06 23:13:51)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-06 23:53:12)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Review the entire torture tool project and provide a concise progress report. Explain what has been implemented across T0–T10, completed features, current testing status, test results, remaining tasks, and any known issues. Estimate the overall completion percentage based on actual implementation and verification evidence, not assumptions. Summarize everything in simple language so I can clearly understand the current project status.
+```
+
+---
+
+### Prompt (2026-11-06 23:54:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-06 23:54:46)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Review the entire torture tool project and provide a concise progress report. Explain what has been implemented across T0–T10, completed features, current testing status, test results, remaining tasks, and any known issues. Estimate the overall completion percentage based on actual implementation and verification evidence, not assumptions. Summarize everything in simple language so I can clearly understand the current project status.
+```
+
+---
+
+### Prompt (2026-11-06 23:55:09)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-06 23:55:12)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Review the entire torture tool project and provide a concise progress report. Explain what has been implemented across T0–T10, completed features, current testing status, test results, remaining tasks, and any known issues. Estimate the overall completion percentage based on actual implementation and verification evidence, not assumptions. Summarize everything in simple language so I can clearly understand the current project status.
+```
+
+---
+
+### Prompt (2026-11-06 23:55:30)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-06 23:55:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Review the entire torture tool project and provide a concise progress report. Explain what has been implemented across T0–T10, completed features, current testing status, test results, remaining tasks, and any known issues. Estimate the overall completion percentage based on actual implementation and verification evidence, not assumptions. Summarize everything in simple language so I can clearly understand the current project status.
+```
+
+---
+
+### Prompt (2026-11-06 23:56:02)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-06 23:56:07)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Review the entire torture tool project and provide a concise progress report. Explain what has been implemented across T0–T10, completed features, current testing status, test results, remaining tasks, and any known issues. Estimate the overall completion percentage based on actual implementation and verification evidence, not assumptions. Summarize everything in simple language so I can clearly understand the current project status.
+```
+
+---
+
+### Prompt (2026-11-06 23:56:34)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-06 23:56:45)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Review the entire torture tool project and provide a concise progress report. Explain what has been implemented across T0–T10, completed features, current testing status, test results, remaining tasks, and any known issues. Estimate the overall completion percentage based on actual implementation and verification evidence, not assumptions. Summarize everything in simple language so I can clearly understand the current project status.
+```
+
+---
+
+### Prompt (2026-11-06 23:57:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:08:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:10:56)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:17:09)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:18:06)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:21:34)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:22:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:24:31)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:27:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:28:39)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:30:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:31:27)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:37:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:39:54)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:46:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:47:32)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:47:48)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 00:56:30)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 00:57:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:03:41)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 01:06:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:09:10)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 01:13:14)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:13:38)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 01:14:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:15:05)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 01:17:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:23:20)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 01:27:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:27:38)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+/teamwork @[/home/ashwin/HashCode/docs] @[/home/ashwin/HashCode/torture_tool] Study the attached `docs/torture_tool/` documentation and `torture_tool/` source code thoroughly. Understand every plan, specification, module, dependency, test and existing implementation before making changes.
+
+**First, audit the current implementation and produce a detailed, phased improvement plan.** Identify bugs, missing functionality, weaknesses and testing gaps. Do not start implementation until the plan is presented.
+
+After the plan, execute each phase systematically: fix existing errors, strengthen the independent oracle, concurrency, crash injection, ACK verification, recovery testing, reproducibility, reporting and every torture mode. Add comprehensive tests, run stress tests and verify actual results. Aim to make the torture tool exceptionally robust and reliable.
+
+**STRICT FILE BOUNDARY:**
+- Read `docs/torture_tool/` as the technical reference.
+- Modify, create or delete files ONLY inside `torture_tool/`.
+- Never modify `docs/`, `engine/`, root files or shared configurations.
+- Do not modify or interfere with teammates' work.
+
+Work phase by phase. Maintain a clear progress checklist, report changed files and actual test evidence, fix failures before proceeding, and never claim unverified success. Preserve existing functionality unless a documented improvement requires changing it.
+```
+
+---
+
+### Prompt (2026-11-07 01:27:45)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:27:45)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:27:59)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:05)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:08)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:13)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:14)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:24)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:27)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:31)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:32)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:46)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:28:51)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:29:01)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:29:15)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:29:26)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:31:49)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:37:37)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:40:16)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:46:44)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:49:05)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+
+### Prompt (2026-11-07 01:51:00)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Try to finish the tasks all faster.
+```
+
+---
+
+### Prompt (2026-11-07 01:51:49)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+How much work is still remaining in Milestone 3, and what is the realistic completion time? Please prioritize pending tasks, speed up implementation, and complete the remaining code, concurrency tests, and verification as quickly as possible. Fix all failures, update documentation, and provide a final report with test results and completion percentage. Stay strictly within torture_tool/ and do not compromise code quality or testing.
+```
+
+---
+

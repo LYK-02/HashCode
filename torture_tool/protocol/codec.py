@@ -173,3 +173,7 @@ def parse_request(line: str) -> Request:
     else:
         raise ProtocolParseError(f"Unknown request command '{cmd}'")
 
+
+# Alias for symmetry with encode_request / decode_response
+decode_request = parse_request
+

@@ -5,9 +5,8 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, List
 
-from torture_tool.runner.iteration import IterationResult
-
 if TYPE_CHECKING:
+    from torture_tool.runner.iteration import IterationResult
     from torture_tool.runner.suite import SuiteSummary
 
 
@@ -43,6 +42,8 @@ class ConsoleReporter:
 
         if summary.failed_iterations > 0:
             sys.stdout.write("\033[91mRESULT: FAILED (Invariants Violated)\033[0m\n")
+            if summary.first_failure and summary.first_failure.error_message:
+                sys.stdout.write(f"\nFailure Reason: {summary.first_failure.error_message}\n")
             if summary.first_failure and summary.first_failure.eval_result:
                 sys.stdout.write("\nFirst Discrepancy:\n")
                 for v in summary.first_failure.eval_result.violations[:3]:

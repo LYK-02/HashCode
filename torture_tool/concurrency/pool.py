@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import List
+from typing import List, Optional
 
 from torture_tool.concurrency.dispatcher import ResponseDispatcher
 from torture_tool.concurrency.worker import WorkerStats, WorkerThread
@@ -26,6 +26,7 @@ class WorkerPool:
         workload_config: WorkloadConfig,
         iteration: int = 1,
         request_timeout: float = 10.0,
+        shared_key_pool: Optional[bool] = None,
     ) -> None:
         self.num_workers = max(2, num_workers)
         self.seed_manager = seed_manager
@@ -35,6 +36,11 @@ class WorkerPool:
         self.workload_config = workload_config
         self.iteration = iteration
         self.request_timeout = request_timeout
+        self.shared_key_pool = (
+            shared_key_pool
+            if shared_key_pool is not None
+            else getattr(workload_config, "shared_key_pool", False)
+        )
 
         self.workers: List[WorkerThread] = []
 
@@ -49,6 +55,7 @@ class WorkerPool:
                 prng=prng,
                 config=self.workload_config,
                 iteration=self.iteration,
+                shared_key_pool=self.shared_key_pool,
             )
             w = WorkerThread(
                 worker_id=w_id,

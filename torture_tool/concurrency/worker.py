@@ -72,7 +72,10 @@ class WorkerThread(threading.Thread):
                 self.last_in_flight_op = req
 
                 # 1. Register future before transmitting
-                fut = self.dispatcher.register(op_id)
+                try:
+                    fut = self.dispatcher.register(op_id)
+                except ProcessDiedError:
+                    break
 
                 # 2. Log START event to independent oracle journal
                 self.journal.log_start(self.iteration, req)
@@ -113,6 +116,8 @@ class WorkerThread(threading.Thread):
                     self.stats.exceptions_encountered += 1
                     break
 
+            except ProcessDiedError:
+                break
             except Exception:
                 self.stats.exceptions_encountered += 1
                 break

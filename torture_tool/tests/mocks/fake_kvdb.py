@@ -116,6 +116,13 @@ def main():
 
         state_f = open(state_file, "a", buffering=1)
         buffer_queue = []
+        seq_num = 0
+        if os.path.exists(state_file):
+            try:
+                with open(state_file, "r") as f:
+                    seq_num = sum(1 for _ in f)
+            except OSError:
+                pass
 
         for line in sys.stdin:
             line = line.strip()
@@ -137,19 +144,22 @@ def main():
             if tag == "PING":
                 resp = f"PONG {op_id}\n"
             elif tag == "PUT":
+                seq_num += 1
                 k = parts[2]
                 v = parts[3] if len(parts) > 3 else ""
                 state_f.write(f"{k} {v}\n")
                 state_f.flush()
                 os.fsync(state_f.fileno())
-                resp = f"ACK {op_id}\n"
+                resp = f"ACK {op_id} {seq_num}\n"
             elif tag == "DEL":
+                seq_num += 1
                 k = parts[2]
                 state_f.write(f"{k} DEL_TOMBSTONE\n")
                 state_f.flush()
                 os.fsync(state_f.fileno())
-                resp = f"ACK {op_id}\n"
+                resp = f"ACK {op_id} {seq_num}\n"
             elif tag == "BATCH":
+                seq_num += 1
                 count = int(parts[2])
                 items_str = parts[3] if len(parts) > 3 else ""
                 batch_items = []
@@ -166,7 +176,7 @@ def main():
                 state_f.write(frame)
                 state_f.flush()
                 os.fsync(state_f.fileno())
-                resp = f"ACK {op_id}\n"
+                resp = f"ACK {op_id} {seq_num}\n"
             else:
                 resp = f"ERR {op_id} UNKNOWN_COMMAND\n"
 

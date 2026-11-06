@@ -65,7 +65,7 @@ class TestCli(unittest.TestCase):
                 "--artifact-dir",
                 "my_artifacts",
                 "--kvdb-bin",
-                "/bin/kvdb",
+                sys.executable,
             ]
         )
         self.assertEqual(config.seed, 999)
@@ -75,7 +75,22 @@ class TestCli(unittest.TestCase):
         self.assertEqual(config.timeout, 15.5)
         self.assertEqual(config.db_path, Path("/tmp/test.db"))
         self.assertEqual(config.artifact_dir, Path("my_artifacts"))
-        self.assertEqual(config.kvdb_bin, Path("/bin/kvdb"))
+        self.assertEqual(config.kvdb_bin, Path(sys.executable).resolve())
+
+    def test_timeout_zero_rejected(self):
+        with self.assertRaises(SystemExit) as cm:
+            parse_args(["--seed", "123", "--timeout", "0"])
+        self.assertEqual(cm.exception.code, 2)
+
+    def test_timeout_negative_rejected(self):
+        with self.assertRaises(SystemExit) as cm:
+            parse_args(["--seed", "123", "--timeout", "-10"])
+        self.assertEqual(cm.exception.code, 2)
+
+    def test_missing_kvdb_bin_rejected(self):
+        with self.assertRaises(SystemExit) as cm:
+            parse_args(["--seed", "123", "--kvdb-bin", "/nonexistent/kvdb_binary_test"])
+        self.assertEqual(cm.exception.code, 2)
 
     def test_invalid_mode_rejected(self):
         with self.assertRaises(SystemExit) as cm:
