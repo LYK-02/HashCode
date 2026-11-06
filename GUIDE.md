@@ -239,3 +239,4 @@ Give this structured 4-point response:
 - [x] **Verify 1M Recovery Benchmark:**
   - `go test -v -count=1 -run TestRecovery_1MillionKeys_Under2Seconds ./internal/engine` ($\approx 369\text{ ms} < 2.0\text{s}$)
 - [x] **Documentation Open:** Have [`README.md`](file://README.md), [`ARCHITECTURE.md`](file://ARCHITECTURE.md), and [`BREAKING.md`](file://BREAKING.md) open in tabs ready to present.
+

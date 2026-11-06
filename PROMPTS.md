@@ -1621,3 +1621,14 @@ does my project this and recover time real right and give me guide.md how to pre
 
 ---
 
+### Prompt (2026-11-07 02:43:30)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+make a md for team all thing in simple language about architecture how it working why how we overcome evry problem like recover time etc
+```
+
+---
+

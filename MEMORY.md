@@ -1758,3 +1758,24 @@ Only an invalid suffix at EOF is treated as a torn tail. Invalid bytes in the mi
      - Outlined the 3-sentence response formula for the Crash-Here code line questions.
      - Outlined the 4-part architectural defense and subtle edge cases (NTP clock skew, intra-batch conflict) for the TTL Key Expiry extension.
 - **Status:** COMPLETED.
+
+### [2026-11-07 02:43:30] Team Architecture & Systems Engineering Explainer (`TEAM_GUIDE.md`)
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Authored `TEAM_GUIDE.md` translating the full KVDB architecture, read/write/compaction protocols, and solutions to all major systems challenges into clear, plain, jargon-free English for the entire team.
+- **Why:** Provide the team with a shared, accessible architectural reference explaining how the engine works, why specific design choices were made, and how every failure boundary and optimization challenge was conquered.
+- **Fix / Actions Taken:**
+  1. **Core Persistence & Indexing Explanation**:
+     - Explained the Bitcask model: exactly one append-only `data.db` file paired with an in-memory `KeyDir` hash map in RAM.
+  2. **Step-by-Step Operation Breakdown**:
+     - Detailed the exact write path (`Quota` $\to$ `WriteAt` $\to$ `File.Sync()` $\to$ `KeyDir` $\to$ `ACK`), read path (`pread` at explicit offset without lock contention), and delete path (tombstone framing).
+  3. **The 6 Systems Traps & Engineering Solutions**:
+     - *Torn Writes:* UABE dual Castagnoli CRC32C framing and automatic `repairTornTail` truncation.
+     - *Batch Atomicity:* Single-frame envelope packing eliminating vulnerable commit markers.
+     - *1M Keys Recovery Speed:* Zero-allocation in-place parsing (`applyPayloadToKeyDir`), map capacity pre-allocation (`fileSize / 16`), and contiguous frame body reading, reducing recovery time to **286ms – 495ms** (avg **~369ms**).
+     - *Compaction Zero-File Trap:* 11-step protocol with temporary file `fsync`, atomic `os.Rename`, and parent directory descriptor sync.
+     - *Stale Locks:* Advisory `flock` on dedicated sidecar `<db>.lock` automatically reclaimed by the OS kernel exit handler on `kill -9`.
+     - *Fsyncgate / Dirty Page Amnesia:* Userspace pre-I/O quota checking preventing kernel buffer poisoning.
+  4. **Team Oral Defense Preparation**:
+     - Integrated quick-reference flashcards for the Crash-Here code line questions and the TTL Key Expiry design extension.
+- **Status:** COMPLETED.
