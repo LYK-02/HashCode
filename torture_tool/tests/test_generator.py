@@ -75,7 +75,10 @@ class TestCli(unittest.TestCase):
         self.assertEqual(config.timeout, 15.5)
         self.assertEqual(config.db_path, Path("/tmp/test.db"))
         self.assertEqual(config.artifact_dir, Path("my_artifacts"))
-        self.assertEqual(config.kvdb_bin, Path("/bin/kvdb"))
+        self.assertEqual(
+                config.kvdb_bin.resolve(),
+                Path("/bin/kvdb").resolve()
+        )
 
     def test_invalid_mode_rejected(self):
         with self.assertRaises(SystemExit) as cm:
