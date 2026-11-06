@@ -1,12 +1,33 @@
-# Byte-compiled / optimized / DLL files
+# Executables (compiled Go binary)
+/kvdb
+
+# Database files & locks
+*.db
+*.db.*
+data.db
+data.db.*
+*.lock
+*.wal
+*.tmp
+*.compact.tmp
+*.state
+*.log
+
+# Test data & qualification artifacts
+testdata/tmp/
+artifacts/
+*.test
+*.prof
+*.out
+
+# Python cache & tooling
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
+.pytest_cache/
 *.so
 
-# Distribution / packaging
+# Python distribution & virtual environments
 .Python
 build/
 develop-eggs/
@@ -25,26 +46,21 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
-# Virtual environments
 venv/
 .venv/
 ENV/
 env/
 
-# Testing and qualification artifacts
-artifacts/
-*.db
-*.db.*
-data.db
-data.db.*
-*.state
-*.log
-
-# Temporary / OS files
+# OS / Editor artifacts
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *~
+
+.idea/
+.vscode/
+
+# Agent metadata
+.agents/teamwork/
 
