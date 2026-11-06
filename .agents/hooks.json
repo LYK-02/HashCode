@@ -1,0 +1,17 @@
+{
+  "session-hooks": {
+    "enabled": true,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python3 scripts/prompt_logger.py",
+        "timeout": 15
+      },
+      {
+        "type": "command",
+        "command": "python3 scripts/memory_updater.py",
+        "timeout": 15
+      }
+    ]
+  }
+}
