@@ -2,7 +2,7 @@
 
 > Canonical Phase: **T1**  
 > Component: CLI Parser, Hierarchical PRNG, Deterministic Workload Synthesizer  
-> Status: **Planned**  
+> Status: **Completed & Verified**  
 > Related Docs: `docs/torture_tool/04_WORKLOAD_GENERATION.md`, `docs/torture_tool/08_SEEDS_AND_REPRODUCTION.md`, `docs/torture_tool/10_TORTURE_TEST_MODES.md`
 
 ---
@@ -98,8 +98,8 @@ To prevent race conditions and cross-thread PRNG contamination:
 
 ## 6. Verification and Completion Criteria
 
-- [ ] Unit test confirms identical seeds produce bitwise-identical operation streams.
-- [ ] Unit test confirms different seeds produce distinct operation streams.
-- [ ] Generator produces valid payloads with null bytes, empty values, and arbitrary binary bytes.
-- [ ] No global `random.*` functions used anywhere in the codebase.
+- [x] Unit test confirms identical seeds produce bitwise-identical operation streams.
+- [x] Unit test confirms different seeds produce distinct operation streams.
+- [x] Generator produces valid payloads with null bytes, empty values, and arbitrary binary bytes.
+- [x] No global `random.*` functions used anywhere in the codebase.
 
