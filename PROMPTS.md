@@ -235,3 +235,36 @@ all good and can we add artitecture diagram?
 
 ---
 
+### Prompt (2026-11-06 16:22:16)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+made both high level and low level artitecture in Architecture.md
+```
+
+---
+
+### Prompt (2026-11-06 16:27:49)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+just add simple diagram not html and all
+```
+
+---
+
+### Prompt (2026-11-06 16:28:28)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+made both high level and low level artitecture in Architecture.md and just add simple diagram not html and all
+```
+
+---
+

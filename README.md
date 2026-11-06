@@ -197,6 +197,5 @@ This repository fulfills all graded deliverables for the hackathon:
 5. **`ARCHITECTURE.md`** (Deliverable 5): Component design, byte layouts, 32-scenario matrix, and proof of guarantees.
 6. **`diagrams/`** (Deliverable 5 Assets):
    - [`architecture.mermaid`](file:///home/laik/workspace/srinathonn/diagrams/architecture.mermaid) — Source Mermaid architecture diagram matching §9A.
-   - [`architecture.svg`](file:///home/laik/workspace/srinathonn/diagrams/architecture.svg) — Pre-rendered offline vector blueprint for live demo inspection.
-   - [`architecture.html`](file:///home/laik/workspace/srinathonn/diagrams/architecture.html) — Interactive offline dashboard for judges.
+   - [`architecture.svg`](file:///home/laik/workspace/srinathonn/diagrams/architecture.svg) — Simple vector diagram for offline judging.
    - [`diagrams/README.md`](file:///home/laik/workspace/srinathonn/diagrams/README.md) — Diagram index and offline presentation guide.
