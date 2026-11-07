@@ -2095,3 +2095,25 @@ fix it and pull it
 
 ---
 
+### Prompt (2026-11-07 10:39:39)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+tell summmaery of my breaking poin where my project get bbreak all that stuff
+```
+
+---
+
+### Prompt (2026-11-07 10:48:02)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+@[/home/laik/workspace/srinathonn/demo.py] @[/home/laik/workspace/srinathonn/DEMO.md] add db method so jury can enter the value put key delete with our seed i am trusting u so be good
+```
+
+---
+

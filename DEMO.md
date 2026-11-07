@@ -25,7 +25,7 @@ To present the entire 15-minute live judging flow seamlessly to mentors and judg
 [0:00 - 1:00]  Build from clean clone          -> Build works first time (Single command)
 [1:00 - 4:00]  Standard Torture Run (200 iter) -> Zero failures (Judge's seed)
 [4:00 - 6:00]  Targeted Modes (Compaction/Rec) -> Zero failures (Targeted seeds)
-[6:00 - 8:00]  Manual Kills (serve mode)       -> kill -9 5-10x, check OK, dump intact
+[6:00 - 8:00]  Jury DB Playground & Live Kills -> Interactive Put/Get/Del/Seed & kill -9 proof
 [8:00 - 12:00] Crash-Here Oral Defense         -> 3 code lines: Disk state & open() action
 [12:00 - 15:00] Design Extension (Key Expiry)   -> Architectural changes & subtle edge cases
 ```
@@ -71,25 +71,73 @@ The judge tests high-stress edge cases:
 
 ---
 
-### Minute 6 to 8: Manual Kills in `serve` Mode
-The judge tests manual interactive kills:
+### Minute 6 to 8: Jury Interactive DB Playground & Live SIGKILL Proof
+Mentors and judges can directly interact with the database using their own values, keys, deletes, and seeds.
+
+#### Option A: Guided Interactive Playground (Recommended via `./demo.sh`)
+Launch the interactive runner:
 ```bash
-# 1. Start long-running server in background
-./kvdb serve /tmp/demo_db.kv &
+./demo.sh
+# Select [5] from menu or proceed to Step 5
+```
+**Interactive Actions Available for Mentors:**
+1. **PUT Key/Value:** Enter custom key and value. Writes immediately and calls `fsync()` to ensure physical media durability.
+2. **GET Key:** Read back the durable value directly from the engine's index and storage file.
+3. **DELETE Key:** Write an append-only tombstone frame and verify that `./kvdb get` returns `NOTFOUND`.
+4. **DUMP Live Keys:** View all live keys and values rendered in a clean decoded ASCII table.
+5. **CHECK Integrity:** Run `./kvdb check` to audit Castagnoli CRC32C checksums, headers, and zero corruption.
+6. **SEEDED OPERATIONS (Mentor's Seed):**
+   - Mentor enters any integer seed (e.g. `48291` or `98765`) and count (e.g. 20 ops).
+   - Engine deterministically generates reproducible `PUT` and `DEL` mutations.
+   - Verifies that all operations match the expected PRNG state.
+7. **SEEDED CRASH TEST (Mid-Stream SIGKILL + Durability Audit):**
+   - Streams mutations driven by the mentor's PRNG seed into a live `./kvdb serve` daemon.
+   - At 50% progress, sends a torn uncommitted packet and terminates the server with raw `kill -9`.
+   - Runs `./kvdb open` recovery and `./kvdb check`.
+   - Verifies:
+     - 100% of acknowledged writes are durably present in the database.
+     - Uncommitted in-flight write is safely pruned at valid EOF.
+     - Check outputs `OK` (zero corruption).
+8. **COMPACT Database:** Triggers crash-safe copy-on-write compaction and atomic file replacement.
+
+---
+
+#### Option B: Raw CLI Manual Commands (Fallback for Judges)
+If the mentor prefers typing raw bash commands directly into the terminal:
+```bash
+DB="/tmp/jury_manual.db"
+
+# 1. Initialize Database
+./kvdb open $DB
+
+# 2. Put custom mentor key
+./kvdb put $DB "jury_key" "jury_value_100"
+
+# 3. Retrieve and verify
+./kvdb get $DB "jury_key"
+# Output: jury_value_100
+
+# 4. Delete key and verify NOTFOUND
+./kvdb del $DB "jury_key"
+./kvdb get $DB "jury_key"
+# Output: NOTFOUND
+
+# 5. Live serve mode with SIGKILL mid-flight
+./kvdb serve $DB &
 PID=$!
 
-# 2. Write an acknowledged key and send in-flight bytes, then kill immediately
-echo "PUT 1 $(echo -n 'mentor_key' | xxd -p) $(echo -n 'mentor_val' | xxd -p)"
+# Send acknowledged write, then partial uncommitted bytes and kill
+echo "PUT 1 $(echo -n 'durable_key' | xxd -p) $(echo -n 'durable_val' | xxd -p)"
 kill -9 $PID
 
-# 3. Recover and verify integrity
-./kvdb open /tmp/demo_db.kv
-./kvdb check /tmp/demo_db.kv
-# Expected output: OK (zero corruption)
+# 6. Recover and verify integrity
+./kvdb open $DB
+./kvdb check $DB
+# Output: OK (zero corruption)
 
-# 4. Dump database and verify acknowledged write
-./kvdb dump /tmp/demo_db.kv
-./kvdb get /tmp/demo_db.kv "mentor_key"
+# 7. Verify acknowledged write survived kill -9
+./kvdb get $DB "durable_key"
+# Output: durable_val
 ```
 - **Expected:** `check` outputs `OK`. No half-applied batches or torn values. All acknowledged writes durable.
 
