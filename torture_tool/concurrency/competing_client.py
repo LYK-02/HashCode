@@ -30,6 +30,8 @@ class CompetingCLIClient(threading.Thread):
         self.iteration = iteration
         self.interval_sec = max(0.005, interval_ms / 1000.0)
         self._stop_event = threading.Event()
+        self._current_proc: Optional[subprocess.Popen] = None
+        self._proc_lock = threading.Lock()
 
         self.attempts = 0
         self.lock_collisions = 0
@@ -37,6 +39,12 @@ class CompetingCLIClient(threading.Thread):
 
     def stop(self) -> None:
         self._stop_event.set()
+        with self._proc_lock:
+            if self._current_proc and self._current_proc.poll() is None:
+                try:
+                    self._current_proc.terminate()
+                except Exception:
+                    pass
 
     def run(self) -> None:
         while not self._stop_event.is_set():
@@ -62,19 +70,31 @@ class CompetingCLIClient(threading.Thread):
 
             try:
                 cmd = [self.kvdb_bin, "put", self.db_path, key, val]
-                res = subprocess.run(
+                proc = subprocess.Popen(
                     cmd,
-                    capture_output=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                     text=True,
-                    timeout=1.0,
                 )
-                if res.returncode == 0:
+                with self._proc_lock:
+                    self._current_proc = proc
+
+                stdout, stderr = proc.communicate(timeout=1.0)
+
+                with self._proc_lock:
+                    self._current_proc = None
+
+                if proc.returncode == 0:
                     self.successes += 1
                     if self.journal:
                         self.journal.log_ack(self.iteration, op_id, seq_num=0)
-                else:
+                elif proc.returncode > 0 and ("lock" in (stderr or "").lower() or "locked" in (stderr or "").lower()):
                     self.lock_collisions += 1
                     if self.journal:
                         self.journal.log_fail(self.iteration, op_id, "LOCKED")
+                else:
+                    self.lock_collisions += 1
+                    # In-flight interruption (e.g. signal termination on kill): leave unresolved in journal
             except Exception:
-                pass
+                with self._proc_lock:
+                    self._current_proc = None

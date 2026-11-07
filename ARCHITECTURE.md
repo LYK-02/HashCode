@@ -30,6 +30,59 @@ the file synchronization step (`File.Sync()`).
 
 This view shows the main parts of the system and how they connect.
 
+```mermaid
+flowchart TD
+    subgraph Clients["Clients & Stress Harness"]
+        CLI["CLI Commands: put, get, del, batch, dump, check"]
+        Torture["Python Torture Harness: Chaos & Invariant Oracle"]
+        ServeMode["Streaming Line Protocol IPC: stdin/stdout Serve Daemon"]
+    end
+
+    subgraph Synchronization["OS & Concurrency Barrier"]
+        LockFile["Sidecar Lock File: data.db.lock with flock(LOCK_EX)"]
+        RWMutex["In-Process sync.RWMutex: Exclusive Writers / Shared Readers"]
+    end
+
+    subgraph Engine["Go KVDB Engine (Core Execution)"]
+        Router["Request Router & Dispatcher"]
+        QuotaGuard["Quota Guard: valid_eof + frame_size <= max_bytes"]
+        UABE["UABE Dual-CRC32C Frame Encoder & Decoder"]
+        SyncBarrier["Durability Barrier: os.File.Sync() (fsync)"]
+        Recovery["Recovery Monotonic Scanner: Idempotent Tail Repair"]
+        Compactor["Compaction Engine: Copy-on-Write + Atomic Rename"]
+    end
+
+    subgraph Memory["Volatile State (RAM)"]
+        KeyDir["KeyDir Hash Index in RAM: key -> offset, size, seq_no"]
+    end
+
+    subgraph Storage["Authoritative Storage (Single-File)"]
+        DataDB[("Authoritative Append-Only Log: data.db")]
+        CompactTmp[("Temporary Compaction File: data.db.compact.tmp")]
+    end
+
+    CLI --> Router
+    Torture --> Router
+    ServeMode --> Router
+
+    Router --> LockFile
+    Router --> RWMutex
+    RWMutex --> QuotaGuard
+    QuotaGuard --> UABE
+    UABE --> SyncBarrier
+    SyncBarrier --> DataDB
+    SyncBarrier --> KeyDir
+
+    Router -.->|"pread(offset, size)"| DataDB
+    KeyDir -.->|"Index Lookup"| Router
+
+    Recovery --> DataDB
+    Recovery --> KeyDir
+    Compactor --> KeyDir
+    Compactor --> CompactTmp
+    CompactTmp -->|"Atomic os.Rename"| DataDB
+```
+
 ```text
           CLIENTS AND TESTING
    +-------------------------------+
@@ -79,6 +132,36 @@ This view shows the main parts of the system and how they connect.
 ## 3. Low-level architecture
 
 This view shows the internal write, recovery, and compaction paths.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as "Client / Torture Harness"
+    participant Engine as "Go KVDB Engine"
+    participant Lock as "sync.RWMutex"
+    participant Quota as "Quota Guard"
+    participant Encoder as "UABE Frame Encoder"
+    participant Storage as "data.db (Page Cache / Storage)"
+    participant KeyDir as "KeyDir (RAM)"
+
+    Client->>Engine: "PUT key, val (or BATCH [...])"
+    Engine->>Lock: "Acquire write lock (mu.Lock())"
+    Engine->>Quota: "Check valid_eof + frame_len <= max_bytes"
+    alt Quota Exceeded
+        Quota-->>Engine: "ErrDiskFull"
+        Engine->>Lock: "Release lock (mu.Unlock())"
+        Engine-->>Client: "ERR disk full (No I/O executed)"
+    else Space Available
+        Engine->>Encoder: "Encode UABE Frame (Magic + Header CRC32C + Ops + Trailer CRC32C)"
+        Encoder-->>Engine: "Contiguous serialized frame buffer"
+        Engine->>Storage: "WriteAt(valid_eof, buffer) into OS Page Cache"
+        Engine->>Storage: "File.Sync() barrier (fsync flush to non-volatile media)"
+        Storage-->>Engine: "Media synchronization confirmed"
+        Engine->>KeyDir: "Update key offsets and advance valid_eof"
+        Engine->>Lock: "Release lock (mu.Unlock())"
+        Engine-->>Client: "ACK <op_id> (Golden Durability Promise)"
+    end
+```
 
 ```text
                          GO KVDB ENGINE
@@ -138,6 +221,19 @@ This view shows the internal write, recovery, and compaction paths.
 ## 4. On-disk file format
 
 The authoritative file is `data.db`.
+
+```mermaid
+flowchart LR
+    subgraph FileHeader["Authoritative File Header: 32 Bytes"]
+        direction LR
+        FH1["Magic: 'KVDB2026' (8B)"] --> FH2["Version: 1 (4B)"] --> FH3["Generation: uint64 (8B)"] --> FH4["Reserved: 0 (8B)"] --> FH5["Header CRC32C (4B)"]
+    end
+
+    subgraph UABEFrame["UABE Frame Envelope Format"]
+        direction LR
+        UF1["Frame Magic: 0x55414245 (4B)"] --> UF2["Header CRC32C (4B)"] --> UF3["Payload Len: uint64 (8B)"] --> UF4["Seq No: uint64 (8B)"] --> UF5["Op Count: 1..10000 (4B)"] --> UF6["Packed Operations (Variable)"] --> UF7["Trailer CRC32C (4B)"]
+    end
+```
 
 ```text
 data.db
@@ -201,6 +297,33 @@ Each frame ends with a 4-byte payload CRC32C checksum.
 
 KeyDir exists only in memory. When KVDB restarts, it rebuilds KeyDir from
 the authoritative file.
+
+```mermaid
+flowchart TD
+    Start(["Restart / Startup: open()"]) --> Lock["Acquire flock(LOCK_EX) on data.db.lock"]
+    Lock --> CleanTemp{"Check for leftover data.db.compact.tmp"}
+    CleanTemp -- Orphan Found --> RemoveTemp["os.Remove(temp)"] --> CheckFile
+    CleanTemp -- None --> CheckFile{"data.db exists and size >= 32 bytes?"}
+    
+    CheckFile -- No --> InitFile["Write 32B KVDB2026 Header and File.Sync()"] --> Ready(["Engine Ready"])
+    CheckFile -- Yes --> ValidateHdr["Read and validate 32B File Header (CRC32C)"]
+    
+    ValidateHdr --> ScanInit["Initialize 64KB Buffered Reader at offset 32"]
+    ScanInit --> ReadFrame["Read 28B UABE Frame Header"]
+    
+    ReadFrame --> CheckMagic{"Magic == UABE and Header CRC32C valid?"}
+    CheckMagic -- Valid --> ReadPayload["Read Payload and 4B Trailer CRC32C"]
+    
+    ReadPayload --> CheckTrailer{"Trailer CRC32C valid and declared length complete?"}
+    CheckTrailer -- Valid --> ApplyKeyDir["Apply operations to KeyDir and advance valid_eof"]
+    ApplyKeyDir --> CheckEOF{"Next frame at valid_eof?"}
+    CheckEOF -- Frame Available --> ReadFrame
+    CheckEOF -- Clean EOF --> Ready
+    
+    CheckMagic -- Invalid or Torn Header at EOF --> RepairTail["repairTornTail: ftruncate(valid_eof) and File.Sync()"]
+    CheckTrailer -- Incomplete or Torn Payload at EOF --> RepairTail
+    RepairTail --> Ready
+```
 
 ```text
              OPEN DATABASE
@@ -267,6 +390,18 @@ Compaction removes obsolete records and reduces database file size.
 - `total_size > 10MB`
 
 Both conditions must be true.
+
+```mermaid
+flowchart TD
+    Trigger["Compaction Check: dead_bytes > 50% AND total_size > 10MB"] --> Lock["Acquire Engine Write Lock (mu.Lock())"]
+    Lock --> OpenTemp["Create data.db.compact.tmp with Generation N+1"]
+    OpenTemp --> CopyLoop["Iterate KeyDir: Copy live keys as new UABE frames"]
+    CopyLoop --> SyncTemp["File.Sync() on temp file descriptor"]
+    SyncTemp --> AtomicRename["Atomic os.Rename(data.db.compact.tmp, data.db)"]
+    AtomicRename --> SyncDir["Sync parent directory descriptor (fsync dir_fd)"]
+    SyncDir --> Reopen["Reopen data.db and rebuild KeyDir"]
+    Reopen --> Unlock["Release Write Lock (mu.Unlock())"]
+```
 
 ```text
        OLD data.db

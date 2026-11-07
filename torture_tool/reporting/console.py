@@ -42,10 +42,17 @@ class ConsoleReporter:
 
         if summary.failed_iterations > 0:
             sys.stdout.write("\033[91mRESULT: FAILED (Invariants Violated)\033[0m\n")
-            if summary.first_failure and summary.first_failure.eval_result:
+            if summary.first_failure:
                 sys.stdout.write("\nFirst Discrepancy:\n")
-                for v in summary.first_failure.eval_result.violations[:3]:
-                    sys.stdout.write(f"  * {v.format_diagnostic()}\n")
+                if summary.first_failure.eval_result and summary.first_failure.eval_result.violations:
+                    for v in summary.first_failure.eval_result.violations[:3]:
+                        sys.stdout.write(f"  * {v.format_diagnostic()}\n")
+                elif summary.first_failure.error_message:
+                    sys.stdout.write(f"  * {summary.first_failure.error_message}\n")
+                elif not summary.first_failure.check_passed:
+                    sys.stdout.write("  * kvdb check returned non-zero exit code or integrity failure\n")
+                else:
+                    sys.stdout.write("  * Unknown failure condition\n")
         else:
             sys.stdout.write("\033[92mRESULT: 100% PASSED (All Core Invariants Preserved)\033[0m\n")
         sys.stdout.write("=" * 80 + "\n\n")

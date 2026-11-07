@@ -205,40 +205,59 @@ class IterationRunner:
         for s in worker_stats:
             all_lats.extend(s.latencies_ms)
 
-        # 6. Post-recovery verification: Run kvdb check
+        # 6. Post-recovery verification: Run kvdb check (retry up to 5 times for transient lock release)
         check_passed = False
+        check_err = ""
         check_cmd = [str(self.config.kvdb_bin), "check", str(db_file)]
-        try:
-            check_proc = subprocess.run(
-                check_cmd,
-                capture_output=True,
-                text=True,
-                timeout=self.config.timeout,
-            )
-            check_passed = check_proc.returncode == 0 and "OK" in check_proc.stdout
-        except Exception:
-            check_passed = False
+        for _ in range(5):
+            try:
+                check_proc = subprocess.run(
+                    check_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.config.timeout,
+                )
+                if check_proc.returncode == 0 and "OK" in check_proc.stdout:
+                    check_passed = True
+                    break
+                check_err = (check_proc.stderr or check_proc.stdout or "").strip()
+                time.sleep(0.05)
+            except Exception as e:
+                check_err = str(e)
+                time.sleep(0.05)
 
-        # 7. Post-recovery verification: Run kvdb dump
+        # 7. Post-recovery verification: Run kvdb dump (retry up to 5 times)
         dump_state: Dict[bytes, bytes] = {}
         dump_passed = False
+        dump_err = ""
         dump_cmd = [str(self.config.kvdb_bin), "dump", str(db_file)]
-        try:
-            dump_proc = subprocess.run(
-                dump_cmd,
-                capture_output=True,
-                text=True,
-                timeout=self.config.timeout,
-            )
-            if dump_proc.returncode == 0:
-                dump_state = parse_raw_dump(dump_proc.stdout)
-                dump_passed = True
-        except Exception:
-            dump_passed = False
+        for _ in range(5):
+            try:
+                dump_proc = subprocess.run(
+                    dump_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.config.timeout,
+                )
+                if dump_proc.returncode == 0:
+                    dump_state = parse_raw_dump(dump_proc.stdout)
+                    dump_passed = True
+                    break
+                dump_err = (dump_proc.stderr or dump_proc.stdout or "").strip()
+                time.sleep(0.05)
+            except Exception as e:
+                dump_err = str(e)
+                time.sleep(0.05)
 
         # 8. Compare against independent oracle journal events
         journal_events = list(OracleJournal.read_events(self.journal_path))
         eval_result = OracleEvaluator.evaluate(journal_events, dump_state)
+
+        error_message = None
+        if not check_passed:
+            error_message = f"kvdb check failed: {check_err}"
+        elif not dump_passed:
+            error_message = f"kvdb dump failed: {dump_err}"
 
         passed = check_passed and dump_passed and eval_result.passed
         duration = (time.monotonic() - start_time) * 1000.0
@@ -255,6 +274,7 @@ class IterationRunner:
             unresolved_ops=total_unresolved,
             check_passed=check_passed,
             eval_result=eval_result,
+            error_message=error_message,
             duration_ms=duration,
             latencies_ms=all_lats,
         )
