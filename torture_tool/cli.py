@@ -15,6 +15,7 @@ VALID_MODES = [
     "compaction",
     "recovery-crash",
     "disk-full",
+    "self-test",
 ]
 
 

@@ -152,6 +152,15 @@ class OracleEvaluator:
             elif kind == "BATCH":
                 for itm in inf.data.get("items", []):
                     all_possible_keys.add(hex_to_bytes(itm["k"]))
+        for fail_id in fail_set:
+            f_ev = start_map.get(fail_id)
+            if f_ev and f_ev.data:
+                f_kind = f_ev.data.get("kind")
+                if f_kind in ("PUT", "DEL"):
+                    all_possible_keys.add(hex_to_bytes(f_ev.data["key_hex"]))
+                elif f_kind == "BATCH":
+                    for itm in f_ev.data.get("items", []):
+                        all_possible_keys.add(hex_to_bytes(itm["k"]))
 
         for actual_k, actual_v in actual_state.items():
             if actual_k not in all_possible_keys:
@@ -166,34 +175,52 @@ class OracleEvaluator:
                     )
                 )
             elif actual_k not in base_state.live_keys:
-                # Key was deleted (or only ever in-flight). If no in-flight write explains its presence:
-                has_inflight_write = False
-                for inf in inflight_ops:
-                    if not inf.data:
-                        continue
-                    kind = inf.data.get("kind")
-                    if kind == "PUT" and hex_to_bytes(inf.data["key_hex"]) == actual_k:
-                        has_inflight_write = True
-                        break
-                    elif kind == "BATCH":
-                        for itm in inf.data.get("items", []):
-                            if hex_to_bytes(itm["k"]) == actual_k and itm["v"] is not None:
-                                has_inflight_write = True
-                                break
-                    if has_inflight_write:
+                # Key was deleted, failed, or only ever in-flight.
+                # If an explicit FAIL explained this key, it is handled below in the FAIL check.
+                is_failed_op = False
+                for fail_id in fail_set:
+                    f_ev = start_map.get(fail_id)
+                    if f_ev and f_ev.data:
+                        fk = f_ev.data.get("kind")
+                        if fk == "PUT" and hex_to_bytes(f_ev.data["key_hex"]) == actual_k:
+                            is_failed_op = True
+                            break
+                        elif fk == "BATCH":
+                            for itm in f_ev.data.get("items", []):
+                                if hex_to_bytes(itm["k"]) == actual_k:
+                                    is_failed_op = True
+                                    break
+                    if is_failed_op:
                         break
 
-                if not has_inflight_write:
-                    violations.append(
-                        InvariantViolation(
-                            violation_type=ViolationType.ACKED_WRITE_LOST,
-                            key=actual_k,
-                            expected=None,
-                            actual=actual_v,
-                            op_id=None,
-                            description="Key was acknowledged deleted, but resurrected in recovered state",
+                if not is_failed_op:
+                    has_inflight_write = False
+                    for inf in inflight_ops:
+                        if not inf.data:
+                            continue
+                        kind = inf.data.get("kind")
+                        if kind == "PUT" and hex_to_bytes(inf.data["key_hex"]) == actual_k:
+                            has_inflight_write = True
+                            break
+                        elif kind == "BATCH":
+                            for itm in inf.data.get("items", []):
+                                if hex_to_bytes(itm["k"]) == actual_k and itm["v"] is not None:
+                                    has_inflight_write = True
+                                    break
+                        if has_inflight_write:
+                            break
+
+                    if not has_inflight_write:
+                        violations.append(
+                            InvariantViolation(
+                                violation_type=ViolationType.ACKED_WRITE_LOST,
+                                key=actual_k,
+                                expected=None,
+                                actual=actual_v,
+                                op_id=None,
+                                description="Key was acknowledged deleted, but resurrected in recovered state",
+                            )
                         )
-                    )
 
         # Check: Every ACKed key must be present with correct value unless overwritten
         for base_k, base_v in base_state.live_keys.items():

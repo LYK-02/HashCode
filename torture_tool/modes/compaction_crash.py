@@ -38,6 +38,11 @@ class CompactionCrashRunner:
 
         if journal_path is None:
             journal_path = self.config.artifact_dir / f"oracle_compaction_iter_{iteration:04d}.jsonl"
+        if journal_path.exists():
+            try:
+                journal_path.unlink()
+            except OSError:
+                pass
         journal = OracleJournal(journal_path)
 
         # 1. Reset / initialize database

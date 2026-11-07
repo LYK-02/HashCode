@@ -38,6 +38,11 @@ class DiskFullRunner:
 
         if journal_path is None:
             journal_path = self.config.artifact_dir / f"oracle_diskfull_iter_{iteration:04d}.jsonl"
+        if journal_path.exists():
+            try:
+                journal_path.unlink()
+            except OSError:
+                pass
         journal = OracleJournal(journal_path)
 
         # Ensure fresh database for quota cycle

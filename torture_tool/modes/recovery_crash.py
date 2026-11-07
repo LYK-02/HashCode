@@ -40,6 +40,11 @@ class RecoveryCrashRunner:
         # Ensure journal path exists
         if journal_path is None:
             journal_path = self.config.artifact_dir / f"oracle_recovery_iter_{iteration:04d}.jsonl"
+        if journal_path.exists():
+            try:
+                journal_path.unlink()
+            except OSError:
+                pass
         journal = OracleJournal(journal_path)
 
         # 1. Reset / initialize database for clean recovery cycle

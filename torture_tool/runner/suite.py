@@ -52,6 +52,7 @@ class TestSuiteRunner:
         recovery_runner = None
         compaction_runner = None
         disk_full_runner = None
+        self_test_runner = None
         if self.config.mode == "recovery-crash":
             from torture_tool.modes.recovery_crash import RecoveryCrashRunner
 
@@ -64,6 +65,10 @@ class TestSuiteRunner:
             from torture_tool.modes.disk_full import DiskFullRunner
 
             disk_full_runner = DiskFullRunner(self.config)
+        elif self.config.mode == "self-test":
+            from torture_tool.modes.self_test import SelfTestRunner
+
+            self_test_runner = SelfTestRunner(self.config)
 
         terminal_ui = TerminalUI(total_iterations=self.config.iterations, mode=self.config.mode)
 
@@ -99,6 +104,8 @@ class TestSuiteRunner:
                     db_file=self.config.db_path,
                     journal_path=iter_journal_path,
                 )
+            elif self.config.mode == "self-test" and self_test_runner:
+                res = self_test_runner.run_self_test(iteration=iter_num)
             else:
                 iter_runner = IterationRunner(
                     config=self.config,

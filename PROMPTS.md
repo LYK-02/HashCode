@@ -1924,3 +1924,86 @@ Do not commit or push yet. Give me the final audit report, exact files to commit
 
 ---
 
+### Prompt (2026-11-07 05:58:24)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Audit my entire HashCode project (`./kvdb` + `./torture`) against the official hackathon rubric. Inspect source code, run all tests and six torture modes with multiple seeds, verify crash safety, durability, oracle independence, concurrency, documentation and demo readiness. Identify hidden bugs and missing requirements. Do not modify files. Provide evidence-based PASS/FAIL results, estimated score /100, prioritized fixes, and a final verdict: JUDGE READY, READY AFTER FIXES, or NOT READY. Be brutally honest.
+```
+
+---
+
+### Prompt (2026-11-07 06:49:26)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Audit all 32 official crash scenarios (A1–F4) in my HashCode project (`./kvdb` + `./torture`). Inspect source code and execute targeted tests for every scenario.
+
+Verify crash injection, SIGKILL timing, durable ACKs, atomic batches, concurrency, Oracle independence, recovery, compaction, disk-full handling, seed reproducibility and 1M-key recovery under 2 seconds.
+
+Do not modify any files.
+
+Provide a 32-row PASS / FAIL / NOT TESTED evidence table with actual commands, outputs and source-code references. Identify simulated tests, missing coverage, false positives and hidden bugs.
+
+Finally, tell me:
+1. Are all 32 scenarios genuinely satisfied?
+2. Can the torture tool detect violations in all 32?
+3. What could fail during judging?
+4. What improvements are required for 100% coverage?
+
+Be brutally honest. Never claim PASS without execution evidence.
+```
+
+---
+
+### Prompt (2026-11-07 06:55:57)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Your A1–F4 audit claims 32/32 PASS and 97/100, but several results lack sufficient evidence.
+
+Perform a **second-stage adversarial audit** focusing on these gaps:
+
+1. F1: Actually execute 500 consecutive random kill/restart cycles.
+2. F3: Benchmark recovery with exactly 1,000,000 keys, not extrapolated results.
+3. C1–C6: Prove SIGKILL at each exact recovery, truncation, compaction, rename and close boundary.
+4. A4/B3: Verify fsync and batch commit-marker crash ordering.
+5. D1–D3: Prove kills occur during genuinely in-flight concurrent operations.
+6. E4: Test quota exhaustion during compaction explicitly.
+7. Verify OracleJournal independence and detect false-positive assertions.
+
+Inspect source code, inject crashes at exact boundaries and capture actual outputs. Do not modify files.
+
+Update the 32-scenario matrix using PASS, FAIL or NOT TESTED. Remove unsupported PASS claims and provide evidence for every result.
+
+Be brutally honest.
+```
+
+---
+
+### Prompt (2026-11-07 07:01:43)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Upgrade and strengthen my Python torture tool (`torture_tool/`) with:
+
+1. Deterministic crash injection at exact engine checkpoints.
+2. Independent mutation testing with deliberate fault detection.
+3. Genuine 1-million-key recovery benchmarks and 500 consecutive random crash/restart cycles.
+4. A **Torture Tool Self-Test Mode** that injects database faults and proves the oracle detects them.
+
+**STRICT RULES:** Modify files ONLY inside `torture_tool/`. Never modify the Go engine, database, existing CLI behaviour, shared protocols or other project files. Preserve backward compatibility and ensure `./torture` and `./kvdb` continue working together.
+
+Run regression tests after improvements. Report every modified file, actual test results and remaining limitations. Do not fabricate results.
+```
+
+---
+
