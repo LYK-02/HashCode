@@ -2239,3 +2239,16 @@ First Discrepancy:
   2. Updated `DEMO.md` with schedule adjustments and detailed walkthroughs for Option A (interactive runner) and Option B (raw CLI commands).
   3. Verified offline and validated with automated test script.
 - **Status:** COMPLETED
+
+### [2026-11-07 11:21:56] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `in data.db not showing what i put in terminal`
+- **Why:** Clarify database file location and binary storage layout, and point the interactive runner to `./data.db`.
+- **Fix / Implementation Plan:**
+  1. Root cause identified: The interactive runner `demo.py` previously stored jury playground mutations in a temporary directory (`/tmp/kvdb_demo_.../jury_playground.db`), leaving `./data.db` in the workspace with only the 32-byte header. In addition, `data.db` is an append-only binary log and `./kvdb dump` outputs hex strings (`6e616d65 6162626173`).
+  2. Recovered the user's exact inputs (Key: `name`, Value: `abbas`, plus seed `98765` keys) and restored them into `./data.db`.
+  3. Modified `demo.py` so the Jury Playground operates directly on `./data.db` in the workspace root.
+  4. Added `--text` flag to `./kvdb dump <path> [--text]` in `cmd/kvdb/main.go` for human-readable terminal output.
+  5. Verified with `./kvdb get data.db name` and `./kvdb dump data.db --text`.
+- **Status:** COMPLETED

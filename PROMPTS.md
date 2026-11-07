@@ -2117,3 +2117,14 @@ tell summmaery of my breaking poin where my project get bbreak all that stuff
 
 ---
 
+### Prompt (2026-11-07 11:21:56)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+in data.db not showing what i put in terminal
+```
+
+---
+

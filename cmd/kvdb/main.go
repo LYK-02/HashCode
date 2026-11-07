@@ -29,7 +29,7 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "  get <path> <key>              Retrieve value for key\n")
 	fmt.Fprintf(os.Stderr, "  del <path> <key>              Delete key\n")
 	fmt.Fprintf(os.Stderr, "  batch <path> <file>           Execute atomic batch mutations\n")
-	fmt.Fprintf(os.Stderr, "  dump <path>                   Dump all live keys and values\n")
+	fmt.Fprintf(os.Stderr, "  dump <path> [--text]          Dump all live keys and values (hex or plaintext)\n")
 	fmt.Fprintf(os.Stderr, "  check <path>                  Check database integrity\n")
 	fmt.Fprintf(os.Stderr, "  serve <path>                  Run interactive streaming server\n")
 }
@@ -174,11 +174,12 @@ func main() {
 		os.Exit(0)
 
 	case "dump":
-		if len(os.Args) != 3 {
-			fmt.Fprintf(os.Stderr, "Usage: kvdb dump <path>\n")
+		if len(os.Args) < 3 || len(os.Args) > 4 {
+			fmt.Fprintf(os.Stderr, "Usage: kvdb dump <path> [--text]\n")
 			os.Exit(1)
 		}
 		path := os.Args[2]
+		asText := len(os.Args) == 4 && (os.Args[3] == "--text" || os.Args[3] == "-t")
 
 		eng, err := engine.Open(path, engine.Options{})
 		if err != nil {
@@ -193,10 +194,18 @@ func main() {
 			os.Exit(1)
 		}
 		for _, p := range pairs {
-			if len(p.Value) == 0 {
-				fmt.Printf("%s\n", hex.EncodeToString([]byte(p.Key)))
+			if asText {
+				if len(p.Value) == 0 {
+					fmt.Printf("%s\n", p.Key)
+				} else {
+					fmt.Printf("%s %s\n", p.Key, string(p.Value))
+				}
 			} else {
-				fmt.Printf("%s %s\n", hex.EncodeToString([]byte(p.Key)), hex.EncodeToString(p.Value))
+				if len(p.Value) == 0 {
+					fmt.Printf("%s\n", hex.EncodeToString([]byte(p.Key)))
+				} else {
+					fmt.Printf("%s %s\n", hex.EncodeToString([]byte(p.Key)), hex.EncodeToString(p.Value))
+				}
 			}
 		}
 		os.Exit(0)

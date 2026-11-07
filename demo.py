@@ -391,7 +391,7 @@ class DemoRunner:
         print("  - Seeded Deterministic Mode: Run reproducible mutation sequences with Jury's seed.")
         print("  - Live Crash-Here Test: Inject mid-write SIGKILL and prove 100% ACK durability & recovery.\n")
 
-        db_path = self.tmp_dir / "jury_playground.db"
+        db_path = self.root / "data.db"
         if not db_path.exists():
             subprocess.run([str(self.kvdb), "open", str(db_path)], check=True)
 
