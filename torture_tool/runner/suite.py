@@ -85,16 +85,19 @@ class TestSuiteRunner:
                 res = recovery_runner.run_nested_recovery_crash(
                     iteration=iter_num,
                     db_file=self.config.db_path,
+                    journal_path=iter_journal_path,
                 )
             elif self.config.mode == "compaction" and compaction_runner:
                 res = compaction_runner.run_compaction_crash(
                     iteration=iter_num,
                     db_file=self.config.db_path,
+                    journal_path=iter_journal_path,
                 )
             elif self.config.mode == "disk-full" and disk_full_runner:
                 res = disk_full_runner.run_disk_full_quota_cycle(
                     iteration=iter_num,
                     db_file=self.config.db_path,
+                    journal_path=iter_journal_path,
                 )
             else:
                 iter_runner = IterationRunner(
