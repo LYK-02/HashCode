@@ -1,4 +1,4 @@
-.PHONY: all build test clean demo-ready
+.PHONY: all build test clean demo-ready demo
 
 GO ?= go
 BINARY := kvdb
@@ -10,6 +10,9 @@ build:
 
 test:
 	GOPROXY=off $(GO) test -v -count=1 ./...
+
+demo: build
+	./demo.sh
 
 clean:
 	rm -f $(BINARY)

@@ -2019,3 +2019,68 @@ Run regression tests after improvements. Report every modified file, actual test
 
 ---
 
+### Prompt (2026-11-07 08:07:59)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+go test -v -count=1 -run TestRecovery_1MillionKeys_Under2Seconds ./internal/engine can we improve timing?
+```
+
+---
+
+### Prompt (2026-11-07 08:53:11)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+./torture --iterations 500 --seed 98765 --workers 2
+[░░░░░░░░░░░░░░░░░░░░░░░░]   4% | Iter:   21/ 500 | 40 ops/s | p99: 7.3ms | Kills:  21 | ACKs:    289 | Inv: VIOLATION
+
+================================================================================
+TORTURE TEST CAMPAIGN SUMMARY
+================================================================================
+Total Configured Iterations : 500
+Completed Iterations        : 21
+Passed Iterations           : 20
+Failed Iterations           : 1
+Kills With In-Flight Writes : 21
+Total Operations Started    : 359
+Total Durable ACKs          : 289
+Total Elapsed Time          : 7.20s
+================================================================================
+RESULT: FAILED (Invariants Violated)
+
+First Discrepancy:
+  * kvdb check failed: check error: CORRUPT_FRAME: payload truncated before complete subrecord
+================================================================================
+
+ fix it it should be 10000 iterations
+```
+
+---
+
+### Prompt (2026-11-07 09:20:37)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+check all point and make script @[/home/laik/workspace/srinathonn/DEMO.md] as i will run script and at each step it ask y or no or enter value to show mentor
+```
+
+---
+
+### Prompt (2026-11-07 09:46:53)
+
+- **User:** laik (LYK-02)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+git push
+```
+
+---
+

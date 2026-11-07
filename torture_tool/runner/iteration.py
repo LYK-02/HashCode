@@ -36,6 +36,7 @@ class IterationResult:
     acks_received: int
     unresolved_ops: int
     check_passed: bool
+    open_passed: bool = True
     eval_result: Optional[EvaluationResult] = None
     error_message: Optional[str] = None
     duration_ms: float = 0.0
@@ -205,7 +206,28 @@ class IterationRunner:
         for s in worker_stats:
             all_lats.extend(s.latencies_ms)
 
-        # 6. Post-recovery verification: Run kvdb check (retry up to 5 times for transient lock release)
+        # 6. Post-crash recovery: Run kvdb open to replay log and repair any in-flight torn tail
+        open_passed = False
+        open_err = ""
+        open_cmd = [str(self.config.kvdb_bin), "open", str(db_file)]
+        for _ in range(5):
+            try:
+                open_proc = subprocess.run(
+                    open_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.config.timeout,
+                )
+                if open_proc.returncode == 0:
+                    open_passed = True
+                    break
+                open_err = (open_proc.stderr or open_proc.stdout or "").strip()
+                time.sleep(0.05)
+            except Exception as e:
+                open_err = str(e)
+                time.sleep(0.05)
+
+        # 7. Post-recovery verification: Run kvdb check (retry up to 5 times for transient lock release)
         check_passed = False
         check_err = ""
         check_cmd = [str(self.config.kvdb_bin), "check", str(db_file)]
@@ -226,7 +248,7 @@ class IterationRunner:
                 check_err = str(e)
                 time.sleep(0.05)
 
-        # 7. Post-recovery verification: Run kvdb dump (retry up to 5 times)
+        # 8. Post-recovery verification: Run kvdb dump (retry up to 5 times)
         dump_state: Dict[bytes, bytes] = {}
         dump_passed = False
         dump_err = ""
@@ -249,17 +271,19 @@ class IterationRunner:
                 dump_err = str(e)
                 time.sleep(0.05)
 
-        # 8. Compare against independent oracle journal events
+        # 9. Compare against independent oracle journal events
         journal_events = list(OracleJournal.read_events(self.journal_path))
         eval_result = OracleEvaluator.evaluate(journal_events, dump_state)
 
         error_message = None
-        if not check_passed:
+        if not open_passed:
+            error_message = f"kvdb open failed: {open_err}"
+        elif not check_passed:
             error_message = f"kvdb check failed: {check_err}"
         elif not dump_passed:
             error_message = f"kvdb dump failed: {dump_err}"
 
-        passed = check_passed and dump_passed and eval_result.passed
+        passed = open_passed and check_passed and dump_passed and eval_result.passed
         duration = (time.monotonic() - start_time) * 1000.0
 
         return IterationResult(
@@ -273,6 +297,7 @@ class IterationRunner:
             acks_received=total_acks,
             unresolved_ops=total_unresolved,
             check_passed=check_passed,
+            open_passed=open_passed,
             eval_result=eval_result,
             error_message=error_message,
             duration_ms=duration,

@@ -3,6 +3,7 @@ package engine_test
 import (
 	"fmt"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -31,15 +32,25 @@ func TestRecovery_1MillionKeys_Under2Seconds(t *testing.T) {
 	t.Logf("Writing %d keys in %d batches of %d...", totalKeys, totalBatches, batchSize)
 	writeStart := time.Now()
 
+	ops := make([]format.Operation, batchSize)
+	val := []byte("val")
+	keyBuf := make([]byte, batchSize*9)
+
 	for b := 0; b < totalBatches; b++ {
-		ops := make([]format.Operation, batchSize)
 		for i := 0; i < batchSize; i++ {
 			keyIdx := b*batchSize + i
-			k := fmt.Sprintf("k%08d", keyIdx)
+			offset := i * 9
+			keySlice := keyBuf[offset : offset+9]
+			keySlice[0] = 'k'
+			n := keyIdx
+			for j := 8; j >= 1; j-- {
+				keySlice[j] = byte('0' + (n % 10))
+				n /= 10
+			}
 			ops[i] = format.Operation{
 				Type:  format.OpPut,
-				Key:   []byte(k),
-				Value: []byte("val"),
+				Key:   keySlice,
+				Value: val,
 			}
 		}
 		if err := db.Batch(ops); err != nil {
@@ -52,6 +63,8 @@ func TestRecovery_1MillionKeys_Under2Seconds(t *testing.T) {
 	if err := db.Close(); err != nil {
 		t.Fatalf("Close failed: %v", err)
 	}
+	db = nil
+	runtime.GC()
 
 	// Now measure recovery time upon Open()
 	t.Log("Beginning Recovery Benchmark for 1,000,000 keys...")

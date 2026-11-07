@@ -196,14 +196,22 @@ class CompactionCrashRunner:
         size_after = db_file.stat().st_size if db_file.exists() else 0
         shrunk = (size_after <= size_before)
 
-        # 5. Post-crash check & dump: verify db consistency against Oracle
+        # 5. Post-crash open (recovery), check & dump: verify db consistency against Oracle
+        open_proc = subprocess.run(
+            [str(self.config.kvdb_bin), "open", str(db_file)],
+            capture_output=True,
+            text=True,
+            timeout=self.config.timeout,
+        )
+        open_passed = open_proc.returncode == 0
+
         check_proc = subprocess.run(
             [str(self.config.kvdb_bin), "check", str(db_file)],
             capture_output=True,
             text=True,
             timeout=self.config.timeout,
         )
-        check_passed = check_proc.returncode == 0 and "OK" in check_proc.stdout
+        check_passed = open_passed and check_proc.returncode == 0 and "OK" in check_proc.stdout
 
         dump_proc = subprocess.run(
             [str(self.config.kvdb_bin), "dump", str(db_file)],

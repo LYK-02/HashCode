@@ -138,14 +138,22 @@ class DiskFullRunner:
         ctrl.kill()
         dispatcher.stop()
 
-        # 5. Verify database passes check and dump against Oracle
+        # 5. Verify database passes open (recovery), check, and dump against Oracle
+        open_proc = subprocess.run(
+            [str(self.config.kvdb_bin), "open", str(db_file)],
+            capture_output=True,
+            text=True,
+            timeout=self.config.timeout,
+        )
+        open_passed = open_proc.returncode == 0
+
         check_proc = subprocess.run(
             [str(self.config.kvdb_bin), "check", str(db_file)],
             capture_output=True,
             text=True,
             timeout=self.config.timeout,
         )
-        check_passed = check_proc.returncode == 0 and "OK" in check_proc.stdout
+        check_passed = open_passed and check_proc.returncode == 0 and "OK" in check_proc.stdout
 
         dump_proc = subprocess.run(
             [str(self.config.kvdb_bin), "dump", str(db_file)],

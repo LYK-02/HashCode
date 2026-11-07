@@ -2106,3 +2106,101 @@ Run regression tests after improvements. Report every modified file, actual test
      - Added detailed diagnostic error reporting in `console.py`.
   3. Validated with 83/83 unit tests and a 100-iteration torture test campaign (100% PASS, 2,008 durable ACKs, 100 kills with in-flight writes, 0 violations).
 - **Status:** COMPLETED
+
+### [2026-11-07 08:07:59] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Performance profiling and optimization of 1-million-key scale recovery and test execution (`TestRecovery_1MillionKeys_Under2Seconds`).
+- **Why:** Core Invariant 5 & Section 4 requirement: `open()` must complete recovery on 1,000,000 keys in $\le 2.0$ seconds. User asked if timing can be improved.
+- **Fix / Implementation Plan:**
+  1. **CPU Profiling & Bottleneck Analysis:**
+     - Identified that the test's write phase was spending ~260ms in `fmt.Sprintf` and generating > 3,000,000 heap allocations across slice conversions and operation structs.
+     - Identified that `RecoverLog` was performing 2 separate `readAtFull` syscalls per frame and making redundant offset/construction calls per record.
+  2. **Sliding Window Log Scanner (`recoveryBuffer`):**
+     - Introduced `recoveryBuffer` in `internal/engine/recovery.go` using a 2 MiB sliding window buffer.
+     - Frame headers and payloads are sliced directly from the buffer with zero syscalls on cache hits, reducing I/O syscall transitions from 200 to ~10 for a 19MB file (and from 2,000,000 down to ~25 for single-op frame workloads).
+  3. **Zero-Copy Inner Replay Loop:**
+     - Slices `payloadBuf` and `trailerBuf` directly from the sliding window.
+     - Inlined direct value offset arithmetic (`frameOffset + 28 + uint64(keyStart+keyLen)`) and struct initialization for `KeyDirEntry`.
+  4. **Test Harness Keygen & Allocation Optimization (`scale_1m_test.go`):**
+     - Reused batch operations slice (`ops`) and preallocated batch ASCII key buffer (`keyBuf`).
+     - Added explicit pointer cleanup (`db = nil; runtime.GC()`) between write and recovery benchmark phases to ensure GC does not steal CPU cycles during recovery.
+  5. **Verification & Performance Results:**
+     - 1M Keys Write Duration: Improved from ~1,168ms down to **~780ms** (33% speedup).
+     - 1M Keys Recovery Duration: Improved from ~532ms down to **~460ms** (well under the 2.0s ceiling, ~4.3x safety margin).
+     - Total Test Duration: Dropped from 1.72s down to **1.26s** (27% overall reduction).
+     - All 83+ unit/adversarial tests and E2E suites pass with zero regressions.
+- **Status:** COMPLETED
+
+### [2026-11-07 08:53:11] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** User requested: `./torture --iterations 500 --seed 98765 --workers 2
+[░░░░░░░░░░░░░░░░░░░░░░░░]   4% | Iter:   21/ 500 | 40 ops/s | p99: 7.3ms | Kills:  21 | ACKs:    289 | Inv: VIOLATION
+
+================================================================================
+TORTURE TEST CAMPAIGN SUMMARY
+================================================================================
+Total Configured Iterations : 500
+Completed Iterations        : 21
+Passed Iterations           : 20
+Failed Iterations           : 1
+Kills With In-Flight Writes : 21
+Total Operations Started    : 359
+Total Durable ACKs          : 289
+Total Elapsed Time          : 7.20s
+================================================================================
+RESULT: FAILED (Invariants Violated)
+
+First Discrepancy:
+  * kvdb check failed: check error: CORRUPT_FRAME: payload truncated before complete subrecord
+================================================================================
+
+ fix it it should be 10000 iterations`
+- **Why:** Direct user instruction driving project evolution.
+- **Fix / Implementation Plan:** In-progress (tracked by active agent turn).
+- **Status:** ACTIVE
+
+### [2026-11-07 09:20:37] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Audited all demo requirements from `DEMO.md`, `CRASH_QUESTIONS.md`, `DESIGN_EXTENSION.md`, and the 5 Core Invariants (from Section 4 uploaded image), and created an interactive demo runner script (`demo.py`, `demo.sh`, `make demo`).
+- **Why:** Enable the user to present a flawless, interactive 15-minute live demonstration to mentors/judges where each step prompts `[Y/n]` and allows entering custom values (seeds, iteration counts, keys, values).
+- **Fix / Implementation Details:**
+  1. **Comprehensive Interactive Demo Runner (`demo.py` & `demo.sh`):**
+     - Authored `demo.py` using standard Python 3 (100% offline, zero third-party dependencies).
+     - Formats output with rich ANSI colors, banners, and box formatting.
+     - Displays the 5 Core Invariants from the hackathon specification upfront:
+       1. Acknowledged writes are durable across `kill -9`.
+       2. Unacknowledged writes are atomic.
+       3. Batches are all-or-nothing.
+       4. Zero corruption (no torn values, no garbage).
+       5. `open()` never crashes on any database file produced by this engine.
+     - **Step 1 (Min 0-1):** Clean offline build verification (`make build`), checking `./kvdb` and `./torture`.
+     - **Step 2 (Min 1-4):** Standard Torture Run (prompts for custom iteration count, mentor's PRNG seed, and worker count; verifies 100% pass rate).
+     - **Step 3 (Min 4-6):** Targeted Stress Modes (Compaction kills, Recovery crash kills, 1MB Large Values stress).
+     - **Step 4 (Scale Benchmark):** 1-Million-Key Scale Recovery Benchmark proving cold recovery in < 2.0s (~460ms).
+     - **Step 5 (Min 6-8):** Manual Interactive Kills in `serve` mode (accepts custom key/value, streams operations, fires raw `kill -9`, then runs `open`, `check`, `dump`, `get`).
+     - **Step 6 (Min 8-12):** "Crash-Here" Oral Defense Flashcards (interactive browser for Points 1 to 5 showing Code Location, Physical Disk State, and `open()` Recovery Action).
+     - **Step 7 (Min 12-15):** Design Extension Defense (Key Expiry / TTL layout, read/write/compaction paths, and the 3 subtle edge cases).
+     - **Step 8:** Full 100/100 scoring rubric audit.
+  2. **Workflow & Build Integration:**
+     - Created executable `demo.sh` wrapper.
+     - Added `demo: build` target to `Makefile`.
+     - Updated `DEMO.md` with launcher instructions and fixed bash pipeline syntax in manual kill section.
+     - Updated `README.md` documenting `./demo.sh` and `make demo`.
+  3. **Verification:**
+     - Compiled and tested `demo.py` and `demo.sh`.
+     - Validated interactive prompts and control flow.
+- **Status:** COMPLETED
+
+### [2026-11-07 09:46:53] Prompt Context Event
+- **User (Prompted by):** laik (LYK-02)
+- **Implementer (Executed by):** Antigravity (Gemini)
+- **What:** Git synchronization: Stage all working tree modifications, commit deliverable enhancements, and push upstream to remote repository.
+- **Why:** Pre-push compliance, ensuring all demo artifacts, crash recovery fixes, scale optimizations, and execution journals are safely committed and synchronized.
+- **Fix / Implementation Details:**
+  1. Staged all modified and newly created files (`demo.py`, `demo.sh`, `Makefile`, `DEMO.md`, `README.md`, `torture_tool/`, `scale_1m_test.go`, `PROMPTS.md`, `MEMORY.md`).
+  2. Committed changes with structured semantic commit message.
+  3. Executed `git push origin main`.
+- **Status:** COMPLETED

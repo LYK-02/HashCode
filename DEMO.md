@@ -2,7 +2,20 @@
 
 > **Event:** "Kill It and Prove It" 24-Hour Engineering Hackathon  
 > **Environment:** Local laptop, Wi-Fi OFF (Offline), 1–2 Judges driving terminal.  
-> **Target:** 100 / 100 Points.
+> **Target:** 100 / 100 Points.  
+> **Interactive Runner:** Run `./demo.sh` (or `make demo`) for an automated, interactive step-by-step walkthrough.
+
+---
+
+## Interactive Demo Launcher
+
+To present the entire 15-minute live judging flow seamlessly to mentors and judges:
+```bash
+./demo.sh
+# or: make demo
+# or: python3 demo.py
+```
+*At each step, the script explains what is being proven, prompts `[Y/n]`, and allows entering custom judge seeds, iteration counts, and key-value inputs.*
 
 ---
 
@@ -61,21 +74,24 @@ The judge tests high-stress edge cases:
 ### Minute 6 to 8: Manual Kills in `serve` Mode
 The judge tests manual interactive kills:
 ```bash
-# 1. Start long-running server
+# 1. Start long-running server in background
 ./kvdb serve /tmp/demo_db.kv &
 PID=$!
 
-# 2. Pipe a batch of operations and kill immediately
-(echo "put key_alpha value_alpha"; echo "put key_beta value_beta") | kill -9 $PID
+# 2. Write an acknowledged key and send in-flight bytes, then kill immediately
+echo "PUT 1 $(echo -n 'mentor_key' | xxd -p) $(echo -n 'mentor_val' | xxd -p)"
+kill -9 $PID
 
-# 3. Verify integrity
+# 3. Recover and verify integrity
+./kvdb open /tmp/demo_db.kv
 ./kvdb check /tmp/demo_db.kv
-# Expected output: Integrity Check: OK
+# Expected output: OK (zero corruption)
 
-# 4. Dump database
+# 4. Dump database and verify acknowledged write
 ./kvdb dump /tmp/demo_db.kv
+./kvdb get /tmp/demo_db.kv "mentor_key"
 ```
-- **Expected:** Check outputs `OK`. No half-applied batches or torn values.
+- **Expected:** `check` outputs `OK`. No half-applied batches or torn values. All acknowledged writes durable.
 
 ---
 
