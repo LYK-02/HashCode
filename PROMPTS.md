@@ -1882,3 +1882,45 @@ Make the fix directly. Do not modify unrelated files.
 
 ---
 
+### Prompt (2026-11-07 05:28:16)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Audit the torture harness mode implementations for `compaction`, `recovery-crash`, and `disk-full`.
+
+Verify that each mode actually triggers its intended workload, including database operations, crash injection, recovery, compaction, and disk-full behavior.
+
+Investigate why `recovery-crash` completed 10/10 iterations with 0 operations, 0 ACKs, and 0 kills.
+
+Do not modify production code or weaken assertions. Identify any missing workload execution, incorrect mode dispatch, or misleading success reporting. Fix only confirmed issues within `torture_tool/`, add regression tests, and rerun the relevant tests.
+
+Report exact files changed and evidence of genuine workload execution.
+```
+
+---
+
+### Prompt (2026-11-07 05:46:41)
+
+- **User:** ashwin (Ashwin Nethan)
+- **Tool:** Antigravity (Gemini)
+- **Prompt:**
+```text
+Before pushing HashCode to GitHub main, perform a final pre-push audit.
+
+1. Verify both the Go KVDB engine and Python torture tool work together.
+2. Run the complete Python test suite.
+3. Run all six torture modes: default, large-values, large-batches, compaction, recovery-crash, and disk-full.
+4. Verify ACK durability, crash recovery, Oracle consistency, and strict directory boundaries.
+5. Review every modified file using git diff.
+6. Identify unrelated changes in MEMORY.md, PROMPTS.md, and hidden state files. Do not include unrelated changes.
+7. Verify the current branch and check whether origin/main has new commits.
+
+Do not weaken tests or modify the database engine unnecessarily.
+
+Do not commit or push yet. Give me the final audit report, exact files to commit, and any remaining risks.
+```
+
+---
+
